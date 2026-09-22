@@ -36,7 +36,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
     username: myoracle
-    password: '1q@W3e4r5t'
+    password: ${DB_PASSWORD}               # backend/.env 파일에서 로드됨
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml   # SQL은 src/main/resources/mapper/*.xml 에서 관리
@@ -111,3 +111,72 @@ npm run dev                # http://localhost:5173
 - `backend/src/main/resources/db/seed_sample.sql`: 수동 시딩용 참고 SQL
   (평소에는 DataSeeder 가 자동 처리하므로 실행 불필요)
 - SQL 변경 위치: `backend/src/main/resources/mapper/*.xml`
+
+---
+
+## 9. 다른 PC에서 소스 받아 작업하기 (초기 세팅)
+
+새로운 PC(Windows, Mac, Linux 등)에서 처음 세팅할 때의 절차입니다.
+
+### 1) 소스코드 다운로드 (Clone)
+작업할 폴더 위치에서 터미널(또는 Git Bash/PowerShell)을 열고 실행합니다:
+```bash
+git clone https://github.com/nakkune/springboot-vue-lunagrid.git
+cd springboot-vue-lunagrid
+```
+
+### 2) 필수 개발 환경 확인
+- **JDK**: 17 이상 설치 확인 (`java -version`)
+- **Node.js**: 18 이상 설치 확인 (`node -v`, `npm -v`)
+- **Oracle DB**: `localhost:1521/FREEPDB1` 접속 가능 여부 (다른 PC에 DB가 없다면 현재 PC의 IP로 `application.yml`의 host를 변경하거나 동일 DB 환경 구축 필요)
+
+### 3) 환경변수(.env) 설정
+DB 패스워드는 보안을 위해 Git에서 제외되어 있으므로, 템플릿 파일을 복사하여 `.env` 파일을 생성합니다:
+- **Linux / Mac**:
+  ```bash
+  cp backend/.env.example backend/.env
+  ```
+- **Windows (CMD / PowerShell)**:
+  ```cmd
+  copy backend\.env.example backend\.env
+  ```
+*필요 시 `backend/.env` 파일의 `DB_PASSWORD` 값을 로컬 DB 패스워드에 맞게 수정합니다.*
+
+### 4) 프론트엔드(Frontend) 의존성 설치 및 실행
+```bash
+cd frontend
+npm install       # node_modules 설치
+npm run dev       # 개발 서버 구동 (http://localhost:5173)
+```
+
+### 5) 백엔드(Backend) 실행
+새 터미널을 열고 프로젝트 루트의 `backend` 폴더로 이동하여 실행합니다:
+- **Linux / Mac**:
+  ```bash
+  cd backend
+  ./gradlew bootRun
+  ```
+- **Windows (CMD / PowerShell)**:
+  ```cmd
+  cd backend
+  gradlew.bat bootRun
+  ```
+
+---
+
+## 10. 앞으로 두 PC를 오가며 작업할 때의 기본 루틴
+
+두 대 이상의 PC에서 번갈아 작업할 때는 **"작업 시작 전 pull, 작업 끝난 후 push"** 규칙만 지키시면 충돌 없이 작업할 수 있습니다:
+
+### 작업 마치고 나올 때 (현재 PC):
+```bash
+git add .
+git commit -m "작업 내용 요약"
+git push
+```
+
+### 다른 PC에 앉아서 작업 시작할 때:
+```bash
+git pull
+# 만약 package.json에 라이브러리를 새로 추가했다면 frontend에서 npm install 한번 실행
+```
