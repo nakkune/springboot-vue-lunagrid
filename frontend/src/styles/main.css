@@ -1,0 +1,91 @@
+:root {
+  --brand-color: #4054e0;
+  --brand-dark: #2c3ac0;
+  --sidebar-bg: #1f2733;
+  --sidebar-text: #b7c0cf;
+  --sidebar-active: #ffffff;
+  --page-bg: #f4f6fa;
+  --card-radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: var(--page-bg);
+  color: #303133;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* 공통 페이지 헤더 */
+.page-header {
+  margin-bottom: 16px;
+}
+.page-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.page-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #8a919f;
+}
+
+/* 인증 화면 중앙 카드 */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #eef1fb 0%, #e3ebf7 55%, #eef4ef 100%);
+}
+.auth-card {
+  width: 400px;
+  padding: 36px 36px 28px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(31, 45, 90, 0.12);
+}
+.auth-title {
+  text-align: center;
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #232a3d;
+  letter-spacing: -0.5px;
+}
+.auth-subtitle {
+  text-align: center;
+  margin: 0 0 26px;
+  font-size: 13px;
+  color: #8a919f;
+}
+.auth-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: #8a919f;
+}
+.auth-footer a {
+  color: var(--brand-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-hint {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f5f7fc;
+  font-size: 12px;
+  color: #7a829a;
+  line-height: 1.6;
+}

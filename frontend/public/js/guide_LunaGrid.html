@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunaGrid v3.0.0 - 엔터프라이즈 개발자 가이드 & 라이브 실행 레퍼런스</title>
+  
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- LunaGrid CSS -->
+  <link rel="stylesheet" href="/css/luna-lib-grid.css">
+
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-sidebar: #0f172a;
+      --bg-card: #131d33;
+      --bg-preview: #111a2e;
+      --bg-code: #0b1120;
+      --border-color: #1e293b;
+      --border-light: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --primary: #3b82f6;
+      --primary-light: #60a5fa;
+      --accent: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 사이드바 */
+    .doc-sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 100;
+    }
+
+    .doc-sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .doc-sidebar::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+
+    .doc-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      padding: 4px 8px;
+    }
+
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .logo-title {
+      font-size: 15px;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-sub);
+      pointer-events: none;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-group-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-sub);
+      padding: 8px 8px 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffffff;
+      background-color: rgba(59, 130, 246, 0.12);
+    }
+
+    .nav-link.active {
+      color: #ffffff;
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border-left: 3px solid var(--primary);
+      font-weight: 600;
+    }
+
+    .sidebar-bottom-link {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn-demo-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--accent-gradient);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-demo-link:hover {
+      opacity: 0.92;
+    }
+
+    /* 메인 본문 */
+    .doc-main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 44px 56px 120px;
+      max-width: 1200px;
+    }
+
+    .doc-header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .doc-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .doc-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .doc-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 900px;
+    }
+
+    /* 섹션 스타일 */
+    .doc-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 36px;
+    }
+
+    .doc-section h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      letter-spacing: -0.3px;
+    }
+
+    .doc-section p, .doc-section ul, .doc-section ol {
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .doc-section ul, .doc-section ol {
+      padding-left: 22px;
+    }
+
+    .doc-section li {
+      margin-bottom: 6px;
+    }
+
+    /* 그리드 헤더 및 셀 높이 정밀 정렬 (헤더 높이 및 글자 수직 중앙 정렬 보정) */
+    .luna-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12.5px;
+    }
+
+    .luna-table thead {
+      height: 36px;
+    }
+
+    .luna-table th {
+      height: 36px !important;
+      line-height: 1.2 !important;
+      padding: 6px 10px !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      vertical-align: middle !important;
+      box-sizing: border-box !important;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .luna-table th .luna-header-text,
+    .luna-table th span,
+    .luna-table th div {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      line-height: 1.2;
+    }
+
+    .luna-table th .luna-sort-icon,
+    .luna-table th .luna-filter-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    .luna-table td {
+      height: 34px !important;
+      line-height: 1.35 !important;
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+      vertical-align: middle !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 라이브 그리드 인터랙티브 프리뷰 카드 */
+    .live-preview-container {
+      background-color: var(--bg-preview);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .live-preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .live-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .live-preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-preview-act {
+      padding: 4px 9px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-preview-act:hover {
+      background-color: #1e293b;
+      border-color: var(--primary-light);
+    }
+
+    .grid-box {
+      width: 100%;
+      height: 250px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* 코드 블록 */
+    .code-container {
+      position: relative;
+      background-color: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin: 14px 0 20px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 14px;
+      background-color: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border-color);
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .code-content {
+      padding: 14px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12.5px;
+      color: #38bdf8;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+
+    /* 테이블 */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+
+    .doc-table th {
+      background-color: var(--bg-card);
+      color: #ffffff;
+      padding: 9px 14px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .doc-table td {
+      padding: 9px 14px;
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      background-color: rgba(19, 29, 51, 0.4);
+    }
+
+    .doc-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: 'Fira Code', monospace;
+      background: rgba(59, 130, 246, 0.18);
+      color: var(--primary-light);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* 콜아웃 박스 */
+    .callout-box {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13.5px;
+      color: #93c5fd;
+    }
+
+    .callout-box strong {
+      color: #ffffff;
+    }
+
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid var(--primary);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+    .toast-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       좌측 사이드바 내비게이션
+       ========================================================================= -->
+  <aside class="doc-sidebar">
+    <a href="./guide_LunaGrid.html" class="doc-logo">
+      <div class="logo-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="9" y1="21" x2="9" y2="9"></line>
+        </svg>
+      </div>
+      <span class="logo-title">LunaGrid v3.0.0 Docs</span>
+    </a>
+
+    <div class="search-box">
+      <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="doc-search-input" class="search-input" placeholder="문서 검색 (기능, 옵션)...">
+    </div>
+
+    <!-- 메뉴 그룹 -->
+    <div class="nav-group">
+      <div class="nav-group-title">기본 개념 및 렌더링</div>
+      <a href="#arch" class="nav-link active">1. 듀얼 아키텍처 & 기본 그리드</a>
+      <a href="#control-bars" class="nav-link">2. 3대 컨트롤 바</a>
+      <a href="#renderers" class="nav-link">3. 7대 컬럼 렌더러</a>
+      <a href="#editors" class="nav-link">4. 인라인 에디터</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">엔터프라이즈 고급 기능</div>
+      <a href="#calc-fields" class="nav-link">5. 계산 필드 (동적 연산)</a>
+      <a href="#grouping" class="nav-link">6. 행 그룹핑 & 소계</a>
+      <a href="#sort-filter" class="nav-link">7. 다중 정렬 & 엑셀 필터</a>
+      <a href="#fixed-columns" class="nav-link">8. 좌우 컬럼 틀고정</a>
+      <a href="#clipboard" class="nav-link">9. 셀 블록 선택 & 엑셀 I/O</a>
+      <a href="#treeview" class="nav-link">10. 계층형 트리 그리드</a>
+      <a href="#summary-export" class="nav-link">11. 요약행 & 7종 Export</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">API 레퍼런스</div>
+      <a href="#api-data-adapter" class="nav-link">12. LunaDataAdapter API</a>
+      <a href="#api-tree-adapter" class="nav-link">13. TreeLunaDataAdapter API</a>
+      <a href="#api-gridview" class="nav-link">14. GridView API</a>
+    </div>
+
+    <div class="sidebar-bottom-link">
+      <a href="./luna-grid-demo.html" class="btn-demo-link">
+        <span>🚀 17단계 실시간 쇼케이스 &rarr;</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       메인 본문 컨텐츠 (각 섹션마다 실제 구동 그리드 & 데이터 탑재)
+       ========================================================================= -->
+  <main class="doc-main">
+    <header class="doc-header">
+      <div class="doc-header-badge">
+        <span>Enterprise Production Ready</span>
+        <span>•</span>
+        <span>v3.0.0 Architecture</span>
+      </div>
+      <h1>LunaGrid 개발자 가이드 & 라이브 예제</h1>
+      <p>
+        각 섹션별로 <strong>상세 설명, 표준 소스 코드, 실제로 구동되는 라이브 데이터 그리드</strong>를 함께 제공합니다. 아래의 그리드들을 직접 조작해보세요.
+      </p>
+    </header>
+
+    <!-- 1. 아키텍처 및 기본 그리드 -->
+    <section id="arch" class="doc-section">
+      <h2>1. 듀얼 아키텍처 & 기본 그리드 생성</h2>
+      <p>
+        LunaGrid는 <strong>LunaDataAdapter(데이터 관리 계층)</strong>와 <strong>GridView(DOM 렌더링 계층)</strong>이 분리되어 있어 대량의 데이터를 안정적으로 다룹니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 기본 데이터 바인딩</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoAddBasicRow()">➕ 행 추가</button>
+          </div>
+        </div>
+        <div id="grid-arch-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>JavaScript</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">// 1. DataAdapter & GridView 생성
+const dataAdapter = new LunaDataAdapter();
+const grid = new LunaGrid('#grid-container', {
+  title: '임직원 기초 명부',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  columns: [
+    { name: 'id', fieldName: 'id', header: { text: '사번' }, width: 80, align: 'center' },
+    { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 120, align: 'center' },
+    { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140 },
+    { name: 'role', fieldName: 'role', header: { text: '직급' }, width: 110, align: 'center' },
+    { name: 'salary', fieldName: 'salary', header: { text: '급여' }, width: 130, align: 'right', formatter: 'currency' }
+  ]
+});
+
+// 2. 데이터 주입
+dataAdapter.setRows([
+  { id: 'EMP-101', name: '김민준', dept: '플랫폼코어팀', role: '수석연구원', salary: 78000000 },
+  { id: 'EMP-102', name: '이서연', dept: 'AI엔지니어링', role: '책임연구원', salary: 85000000 },
+  { id: 'EMP-103', name: '박도현', dept: '클라우드인프라', role: '선임연구원', salary: 62000000 }
+]);</pre>
+      </div>
+    </section>
+
+    <!-- 2. 3대 컨트롤 바 -->
+    <section id="control-bars" class="doc-section">
+      <h2>2. 3대 컨트롤 바 (Indicator, StateBar, CheckBar)</h2>
+      <p>
+        행 순번(No.), 실시간 C/U/D 데이터 변경 상태(State), 다중 선택 체크박스(Check)를 그리드 좌측에 통합 렌더링합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 상태바 & 체크바</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoAddStateRow()">➕ 신규 행(C)</button>
+            <button class="btn-preview-act" onclick="demoUpdateStateRow()">✏️ 0번 행 수정(U)</button>
+            <button class="btn-preview-act" onclick="demoCommitState()">💾 상태 확정(Commit)</button>
+          </div>
+        </div>
+        <div id="grid-bars-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>JavaScript Options</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">const grid = new LunaGrid('#grid-bars', {
+  dataAdapter: dataAdapter,
+  indicator: { visible: true, label: 'No.', width: 45 },
+  stateBar:  { visible: true, label: '상태', width: 45 }, // C(생성), U(수정), D(삭제) 자동 추적
+  checkBar:  { visible: true, multiSelect: true, width: 40 },
+  columns: [ ... ]
+});</pre>
+      </div>
+    </section>
+
+    <!-- 3. 7대 컬럼 렌더러 -->
+    <section id="renderers" class="doc-section">
+      <h2>3. 7대 풍부한 컬럼 렌더러 (Column Renderers)</h2>
+      <p>
+        프로그레스 바, 상태 펄스 뱃지, 별점 평가, 미니 SVG 스파크라인 차트, 원형 아바타를 셀 내에 완벽하게 렌더링합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 시각화 렌더러 컬렉션</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoUpdateRenderers()">🎲 데이터 무작위 변경</button>
+          </div>
+        </div>
+        <div id="grid-renderers-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>Column Definition</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">columns: [
+  { name: 'avatar', renderer: 'avatar', width: 100, align: 'center' },
+  { name: 'project', header: { text: '프로젝트명' }, width: 160 },
+  { name: 'progress', renderer: { type: 'progress', min: 0, max: 100, showLabel: true }, width: 140 },
+  { name: 'status', renderer: { type: 'badge', colorMap: { '정상': 'success', '지연': 'danger' } }, width: 100, align: 'center' },
+  { name: 'rating', renderer: { type: 'rating', max: 5 }, width: 120, align: 'center' },
+  { name: 'trend', renderer: { type: 'sparkline', color: '#38bdf8' }, width: 120, align: 'center' }
+];</pre>
+      </div>
+    </section>
+
+    <!-- 4. 인라인 에디터 -->
+    <section id="editors" class="doc-section">
+      <h2>4. 인라인 에디터 (Inline Editors)</h2>
+      <p>
+        더블 클릭으로 셀 편집 모드에 진입합니다. 날짜 피커(DatePicker), 숫자 스핀(NumberSpin), 자동완성(AutoComplete), 셀렉트 드롭다운을 지원합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 더블 클릭하여 편집해보세요</span>
+        </div>
+        <div id="grid-editors-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>Editors Configuration</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">columns: [
+  { name: 'client', editor: { type: 'autoComplete', candidates: ['삼성전자', 'LG전자', '현대자동차', '네이버'] } },
+  { name: 'category', editor: { type: 'select', options: ['서버/인프라', '소프트웨어', '클라우드'] } },
+  { name: 'orderDate', editor: { type: 'datePicker', format: 'yyyy-MM-dd' } },
+  { name: 'qty', type: 'number', editor: { type: 'numberSpin', min: 1, max: 100 } }
+];</pre>
+      </div>
+    </section>
+
+    <!-- 5. 계산 필드 -->
+    <section id="calc-fields" class="doc-section">
+      <h2>5. 계산 필드 (Calculated Field & Expressions)</h2>
+      <p>
+        수량이나 단가를 수정하면 <code>valueExpression</code> 및 <code>valueCallback</code>을 통해 공급가액과 최종 결제액이 실시간 자동 연산됩니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 수량/단가 변경 시 실시간 자동 계산</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoIncreaseQty()">➕ 0번 행 수량 +2 증가</button>
+          </div>
+        </div>
+        <div id="grid-calc-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>Calculated Columns</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">columns: [
+  { name: 'qty', type: 'number', editor: 'numberSpin' },
+  { name: 'unitPrice', type: 'number', formatter: 'currency' },
+  // 1. 수식 표현식
+  { name: 'supplyAmount', valueExpression: 'qty * unitPrice', formatter: 'currency' },
+  // 2. 함수 콜백 (할인율 적용)
+  { name: 'finalAmount', valueCallback: (r) => (r.qty * r.unitPrice) * (1 - (r.discount || 0) / 100), formatter: 'currency' }
+];</pre>
+      </div>
+    </section>
+
+    <!-- 6. 행 그룹핑 -->
+    <section id="grouping" class="doc-section">
+      <h2>6. 드래그 앤 드롭 행 그룹핑 & 소계 (Grouping)</h2>
+      <p>
+        상단 패널로 컬럼 헤더를 끌어다 놓아 다단계 그룹핑을 수행하고 그룹별 소계(Subtotal)를 자동으로 산출합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 부서별 그룹핑 & 소계</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoToggleGrouping()">📊 그룹핑 전환</button>
+          </div>
+        </div>
+        <div id="grid-grouping-preview" class="grid-box"></div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>Grouping Config</span>
+          <button class="btn-copy">복사</button>
+        </div>
+        <pre class="code-content">const grid = new LunaGrid('#grid-grouping', {
+  dataAdapter: dataAdapter,
+  rowGrouping: {
+    enabled: true,
+    showGroupPanel: true,
+    groupSummary: true
+  },
+  columns: [ ... ]
+});
+grid.groupBy(['dept']);</pre>
+      </div>
+    </section>
+
+    <!-- 7. 다중 정렬 & 필터 -->
+    <section id="sort-filter" class="doc-section">
+      <h2>7. 다중 정렬 & 엑셀 스타일 체크박스 필터</h2>
+      <p>
+        헤더의 필터/정렬 아이콘을 클릭하여 엑셀과 동일한 고유값 다중 선택 필터링 및 Shift+클릭 다중 정렬을 수행합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 헤더 필터/정렬 아이콘을 클릭해보세요</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoApplyFilter()">🔍 '서울' 지역 필터</button>
+            <button class="btn-preview-act" onclick="demoResetFilter()">🔄 필터 해제</button>
+          </div>
+        </div>
+        <div id="grid-filter-preview" class="grid-box"></div>
+      </div>
+    </section>
+
+    <!-- 8. 틀고정 -->
+    <section id="fixed-columns" class="doc-section">
+      <h2>8. 좌우 컬럼 틀고정 (Sticky Fixed Columns)</h2>
+      <p>
+        가로 스크롤 시 좌측 2개 컬럼(사번, 성명)과 우측 1개 컬럼(합계)이 화면에 고정(Sticky)됩니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 가로로 스크롤해보세요</span>
+        </div>
+        <div id="grid-fixed-preview" class="grid-box"></div>
+      </div>
+    </section>
+
+    <!-- 9. 클립보드 & 셀 블록 -->
+    <section id="clipboard" class="doc-section">
+      <h2>9. 셀 블록 범위 선택 & 엑셀 복사/붙여넣기</h2>
+      <p>
+        마우스 드래그로 사각형 영역을 선택하고 Ctrl+C로 복사하거나 엑셀 시트 데이터를 Ctrl+V로 일괄 붙여넣기합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 마우스 드래그로 셀 범위를 선택해보세요</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoCopySelection()">📋 선택 영역 복사(Ctrl+C)</button>
+          </div>
+        </div>
+        <div id="grid-clipboard-preview" class="grid-box"></div>
+      </div>
+    </section>
+
+    <!-- 10. 계층형 트리 그리드 -->
+    <section id="treeview" class="doc-section">
+      <h2>10. 계층형 트리 그리드 (TreeView)</h2>
+      <p>
+        조직도, BOM 등 부모-자식 계층 데이터를 트리 형태로 시각화하고 펼치기/접기를 지원합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 트리 그리드: 노드 접기/펼치기</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoExpandTree()">🌲 전체 펼치기</button>
+            <button class="btn-preview-act" onclick="demoCollapseTree()">📁 전체 접기</button>
+          </div>
+        </div>
+        <div id="grid-tree-preview" class="grid-box"></div>
+      </div>
+    </section>
+
+    <!-- 11. 요약행 & Export -->
+    <section id="summary-export" class="doc-section">
+      <h2>11. 통계 요약행 (Summary Footer) & 7종 Export</h2>
+      <p>
+        하단 푸터에 SUM, AVG, COUNT 요약행을 실시간 표시하고 데이터를 Excel, CSV, JSON 등으로 즉시 다운로드합니다.
+      </p>
+
+      <!-- 라이브 프리뷰 -->
+      <div class="live-preview-container">
+        <div class="live-preview-header">
+          <span class="live-badge"><span class="live-badge-dot"></span> 라이브 동작 그리드: 요약 푸터 & 데이터 내보내기</span>
+          <div class="live-preview-actions">
+            <button class="btn-preview-act" onclick="demoExportExcel()">📊 Excel 다운로드</button>
+            <button class="btn-preview-act" onclick="demoExportCsv()">📑 CSV 다운로드</button>
+          </div>
+        </div>
+        <div id="grid-export-preview" class="grid-box"></div>
+      </div>
+    </section>
+
+    <!-- 12. DataAdapter API -->
+    <section id="api-data-adapter" class="doc-section">
+      <h2>12. LunaDataAdapter 핵심 API 명세</h2>
+      <p>단일 데이터 모델 계층으로 CRUD, 변경 상태(RowState) 추적, 계산 필드, Undo/Redo, 데이터 I/O를 전담합니다.</p>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>메서드</th>
+            <th>파라미터</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>setFields(fields)</code></td>
+            <td><code>Array&lt;FieldDef&gt;</code></td>
+            <td>필드 스키마 및 계산 필드(수식/콜백/서브타입) 정의</td>
+          </tr>
+          <tr>
+            <td><code>setRows(rows, startRow)</code></td>
+            <td><code>Array&lt;object&gt;, number</code></td>
+            <td>전체 데이터 행 주입 또는 Lazy Loading 부분 청크 업데이트</td>
+          </tr>
+          <tr>
+            <td><code>getRows(startRow, endRow)</code></td>
+            <td><code>number, number</code></td>
+            <td>행 데이터 배열 조회 (지정 범위)</td>
+          </tr>
+          <tr>
+            <td><code>getRowCount()</code></td>
+            <td>-</td>
+            <td>전체 행 개수 반환</td>
+          </tr>
+          <tr>
+            <td><code>addRow(row, position)</code></td>
+            <td><code>object, 'top'|'bottom'</code></td>
+            <td>신규 행 추가 (상태: CREATED, Undo 지원)</td>
+          </tr>
+          <tr>
+            <td><code>insertRow(index, row)</code></td>
+            <td><code>number, object</code></td>
+            <td>특정 위치에 행 삽입 (상태: CREATED, Undo 지원)</td>
+          </tr>
+          <tr>
+            <td><code>updateRow(rowIdOrIndex, values)</code></td>
+            <td><code>string|number, object</code></td>
+            <td>행 데이터 수정 (상태: UPDATED, diff 감지 및 Undo 지원)</td>
+          </tr>
+          <tr>
+            <td><code>removeRow(rowIdOrIndex)</code></td>
+            <td><code>string|number</code></td>
+            <td>행 삭제 (상태: DELETED, softDeleting 및 Undo 지원)</td>
+          </tr>
+          <tr>
+            <td><code>getValue(rowIdOrIndex, fieldName)</code></td>
+            <td><code>string|number, string</code></td>
+            <td>단일 셀 값 조회 (계산 필드 및 Dot Notation 지원)</td>
+          </tr>
+          <tr>
+            <td><code>setValue(rowIdOrIndex, fieldName, val)</code></td>
+            <td><code>string|number, string, any</code></td>
+            <td>단일 셀 값 수정</td>
+          </tr>
+          <tr>
+            <td><code>getJsonRow(rowIdOrIndex)</code></td>
+            <td><code>string|number</code></td>
+            <td>계산 필드가 적용된 완본 JSON 행 조회</td>
+          </tr>
+          <tr>
+            <td><code>commit()</code></td>
+            <td>-</td>
+            <td>모든 C/U/D 변경 사항 영구 확정 (RowState -> 'none')</td>
+          </tr>
+          <tr>
+            <td><code>rollback()</code></td>
+            <td>-</td>
+            <td>직전 Commit 시점으로 전체 데이터 원상 복구</td>
+          </tr>
+          <tr>
+            <td><code>undo() / redo()</code></td>
+            <td>-</td>
+            <td>데이터 변경 작업 실행 취소 및 다시 실행</td>
+          </tr>
+          <tr>
+            <td><code>getStateRows(state)</code></td>
+            <td><code>'created'|'updated'|'deleted'</code></td>
+            <td>상태별 행 데이터 목록 조회</td>
+          </tr>
+          <tr>
+            <td><code>fillJsonData(data, options)</code></td>
+            <td><code>Array&lt;object&gt;, object</code></td>
+            <td>JSON 데이터 모드별 적재 (set, append, insert, update)</td>
+          </tr>
+          <tr>
+            <td><code>fillCsvData(csvText, options)</code></td>
+            <td><code>string, object</code></td>
+            <td>CSV 텍스트 파싱 및 고속 데이터 적재</td>
+          </tr>
+          <tr>
+            <td><code>fillXmlData(xmlData, options)</code></td>
+            <td><code>string|XMLDoc, object</code></td>
+            <td>XML 문자열 또는 DOM 파싱 및 데이터 적재</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 13. TreeLunaDataAdapter API -->
+    <section id="api-tree-adapter" class="doc-section">
+      <h2>13. TreeLunaDataAdapter 핵심 API 명세</h2>
+      <p>계층형 트리 데이터 모델로 부모-자식 관계 관리, 노드 펼침/접힘, 서브노드 롤업 집계를 지원합니다.</p>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>메서드</th>
+            <th>파라미터</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>setTreeRows(treeData)</code></td>
+            <td><code>Array&lt;TreeItem&gt;</code></td>
+            <td>children 계층 객체 배열 주입 및 평탄화</td>
+          </tr>
+          <tr>
+            <td><code>getRootCount() / getRoots()</code></td>
+            <td>-</td>
+            <td>최상위 루트 노드 개수 및 목록 조회</td>
+          </tr>
+          <tr>
+            <td><code>getParent(nodeId)</code></td>
+            <td><code>string|number</code></td>
+            <td>해당 노드의 부모 노드 ID 조회</td>
+          </tr>
+          <tr>
+            <td><code>getChildren(nodeId)</code></td>
+            <td><code>string|number</code></td>
+            <td>해당 노드의 직계 자식 노드 ID 목록 반환</td>
+          </tr>
+          <tr>
+            <td><code>getDescendants(nodeId)</code></td>
+            <td><code>string|number</code></td>
+            <td>해당 노드의 모든 하위 자손 노드 ID 목록 반환</td>
+          </tr>
+          <tr>
+            <td><code>isLeaf(nodeId)</code></td>
+            <td><code>string|number</code></td>
+            <td>리프(말단) 노드 여부 확인</td>
+          </tr>
+          <tr>
+            <td><code>expand(nodeId) / collapse(nodeId)</code></td>
+            <td><code>string|number</code></td>
+            <td>특정 트리 노드 펼침 및 접힘</td>
+          </tr>
+          <tr>
+            <td><code>expandAll() / collapseAll()</code></td>
+            <td>-</td>
+            <td>전체 계층 트리 일괄 펼침 및 접힘</td>
+          </tr>
+          <tr>
+            <td><code>calcSubnodeSummary(summaryDefs)</code></td>
+            <td><code>object</code></td>
+            <td>하위 자식 노드 필드값(합계/평균/최대/최소)을 부모로 상향 롤업 집계</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 14. GridView API -->
+    <section id="api-gridview" class="doc-section">
+      <h2>14. GridView (LunaGrid) 핵심 API 명세</h2>
+      <p>UI 렌더링, 뷰 가상화, 엑셀 필터링, 정렬, 그룹핑, 클립보드 및 7종 Export를 제어합니다.</p>
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>메서드</th>
+            <th>파라미터</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>setDataAdapter(adapter)</code></td>
+            <td><code>LunaDataAdapter</code></td>
+            <td>그리드에 연결할 DataAdapter 인스턴스 교체 및 바인딩</td>
+          </tr>
+          <tr>
+            <td><code>getDataAdapter()</code></td>
+            <td>-</td>
+            <td>현재 바인딩된 DataAdapter 인스턴스 반환</td>
+          </tr>
+          <tr>
+            <td><code>setColumns(columns)</code></td>
+            <td><code>Array&lt;ColumnDef&gt;</code></td>
+            <td>그리드 컬럼 레이아웃, 너비, 렌더러, 에디터 재구성</td>
+          </tr>
+          <tr>
+            <td><code>refresh()</code></td>
+            <td>-</td>
+            <td>그리드 전체 뷰 및 가상 스크롤 영역 재렌더링</td>
+          </tr>
+          <tr>
+            <td><code>setTheme(themeName)</code></td>
+            <td><code>'dark'|'light'|'classic'|'blue'</code></td>
+            <td>실시간 CSS 테마 변경</td>
+          </tr>
+          <tr>
+            <td><code>groupBy(fieldNames)</code></td>
+            <td><code>Array&lt;string&gt;</code></td>
+            <td>특정 컬럼 기준 다단계 행 그룹핑 및 소계 렌더링</td>
+          </tr>
+          <tr>
+            <td><code>setFilter(fieldName, filterFn)</code></td>
+            <td><code>string, function</code></td>
+            <td>특정 컬럼에 커스텀 필터 조건 적용</td>
+          </tr>
+          <tr>
+            <td><code>setSorting(fieldName, direction)</code></td>
+            <td><code>string, 'asc'|'desc'</code></td>
+            <td>다중 정렬 적용 및 헤더 인디케이터 표시</td>
+          </tr>
+          <tr>
+            <td><code>exportToExcel(filename)</code></td>
+            <td><code>string</code></td>
+            <td>스타일이 보존된 Excel (.xlsx / XML) 파일 내보내기</td>
+          </tr>
+          <tr>
+            <td><code>exportToCsv(filename)</code></td>
+            <td><code>string</code></td>
+            <td>BOM UTF-8 인코딩 지원 CSV 파일 내보내기</td>
+          </tr>
+          <tr>
+            <td><code>exportToJson(filename, options)</code></td>
+            <td><code>string, object</code></td>
+            <td>그리드 현재 뷰 또는 원본 JSON 내보내기</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <div class="toast-box" id="doc-toast">메시지가 표시됩니다.</div>
+
+  <!-- LunaGrid Library -->
+  <script src="./js/luna-lib.js"></script>
+
+  <!-- 각 섹션별 라이브 그리드 인스턴스 초기화 스크립트 -->
+  <script>
+    function showDocToast(msg) {
+      const toast = document.getElementById('doc-toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // 전역 그리드 핸들 보관
+    let dpArch, gridArch;
+    let dpBars, gridBars;
+    let dpRenderers, gridRenderers;
+    let dpEditors, gridEditors;
+    let dpCalc, gridCalc;
+    let dpGrouping, gridGrouping;
+    let dpFilter, gridFilter;
+    let dpFixed, gridFixed;
+    let dpClipboard, gridClipboard;
+    let dpTree, gridTree;
+    let dpExport, gridExport;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 기본 아키텍처 그리드
+      dpArch = new LunaDataAdapter();
+      gridArch = new LunaGrid('#grid-arch-preview', {
+        title: '임직원 기본 명부',
+        dataAdapter: dpArch,
+        theme: 'dark',
+        columns: [
+          { name: 'id', fieldName: 'id', header: { text: '사번' }, width: 90, align: 'center' },
+          { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 120, align: 'center' },
+          { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 150 },
+          { name: 'role', fieldName: 'role', header: { text: '직급' }, width: 120, align: 'center' },
+          { name: 'salary', fieldName: 'salary', header: { text: '급여' }, width: 140, align: 'right', formatter: 'currency' }
+        ]
+      });
+      dpArch.setRows([
+        { id: 'EMP-101', name: '김민준', dept: '플랫폼코어팀', role: '수석연구원', salary: 78000000 },
+        { id: 'EMP-102', name: '이서연', dept: 'AI엔지니어링', role: '책임연구원', salary: 85000000 },
+        { id: 'EMP-103', name: '박도현', dept: '클라우드인프라', role: '선임연구원', salary: 62000000 }
+      ]);
+
+      // 2. 컨트롤 바 그리드
+      dpBars = new LunaDataAdapter();
+      gridBars = new LunaGrid('#grid-bars-preview', {
+        title: '3대 컨트롤 바 프리뷰',
+        dataAdapter: dpBars,
+        theme: 'dark',
+        indicator: { visible: true, label: 'No.', width: 45 },
+        stateBar: { visible: true, label: '상태', width: 45 },
+        checkBar: { visible: true, multiSelect: true, width: 40 },
+        columns: [
+          { name: 'code', fieldName: 'code', header: { text: '품목코드' }, width: 100, align: 'center' },
+          { name: 'item', fieldName: 'item', header: { text: '품목명' }, width: 180 },
+          { name: 'stock', fieldName: 'stock', header: { text: '재고량' }, width: 100, align: 'right', type: 'number' },
+          { name: 'price', fieldName: 'price', header: { text: '단가' }, width: 130, align: 'right', formatter: 'currency' }
+        ]
+      });
+      dpBars.setRows([
+        { code: 'SKU-01', item: '초고속 NVMe 2TB', stock: 150, price: 245000 },
+        { code: 'SKU-02', item: 'DDR5 32GB 메모리', stock: 85, price: 135000 },
+        { code: 'SKU-03', item: '4K 모니터 32"', stock: 40, price: 580000 }
+      ]);
+
+      // 3. 7대 렌더러 그리드
+      dpRenderers = new LunaDataAdapter();
+      gridRenderers = new LunaGrid('#grid-renderers-preview', {
+        title: '풍부한 컬럼 렌더러',
+        dataAdapter: dpRenderers,
+        theme: 'dark',
+        columns: [
+          { name: 'avatar', fieldName: 'avatar', header: { text: '담당자' }, width: 100, align: 'center', renderer: 'avatar' },
+          { name: 'project', fieldName: 'project', header: { text: '프로젝트명' }, width: 160 },
+          { name: 'progress', fieldName: 'progress', header: { text: '진척률' }, width: 140, renderer: { type: 'progress', min: 0, max: 100, showLabel: true } },
+          { name: 'status', fieldName: 'status', header: { text: '상태' }, width: 100, align: 'center', renderer: { type: 'badge', colorMap: { '정상': 'success', '지연': 'danger', '검토': 'warning' } } },
+          { name: 'rating', fieldName: 'rating', header: { text: '평점' }, width: 120, align: 'center', renderer: 'rating' },
+          { name: 'trend', fieldName: 'trend', header: { text: '추이' }, width: 120, align: 'center', renderer: { type: 'sparkline', color: '#38bdf8' } }
+        ]
+      });
+      dpRenderers.setRows([
+        { avatar: '김현우', project: '차세대 코어 3.0', progress: 92, status: '정상', rating: 5, trend: [10, 30, 60, 85, 92] },
+        { avatar: '이수진', project: '글로벌 결제 연동', progress: 45, status: '지연', rating: 3, trend: [20, 25, 30, 35, 45] },
+        { avatar: '박민호', project: '대용량 데이터 파이프라인', progress: 75, status: '검토', rating: 4, trend: [15, 35, 50, 65, 75] }
+      ]);
+
+      // 4. 인라인 에디터 그리드
+      dpEditors = new LunaDataAdapter();
+      gridEditors = new LunaGrid('#grid-editors-preview', {
+        title: '인라인 에디터 (더블 클릭하여 편집)',
+        dataAdapter: dpEditors,
+        theme: 'dark',
+        columns: [
+          { name: 'client', fieldName: 'client', header: { text: '고객사' }, width: 140, editor: { type: 'autoComplete', candidates: ['삼성전자', 'LG전자', '현대차', '네이버'] } },
+          { name: 'category', fieldName: 'category', header: { text: '구분' }, width: 130, align: 'center', editor: { type: 'select', options: ['서버', '소프트웨어', '클라우드'] } },
+          { name: 'orderDate', fieldName: 'orderDate', header: { text: '주문일' }, width: 130, align: 'center', editor: { type: 'datePicker' } },
+          { name: 'qty', fieldName: 'qty', header: { text: '수량' }, width: 100, align: 'right', type: 'number', editor: { type: 'numberSpin', min: 1, max: 100 } }
+        ]
+      });
+      dpEditors.setRows([
+        { client: '삼성전자', category: '서버', orderDate: '2026-08-15', qty: 10 },
+        { client: '네이버', category: '클라우드', orderDate: '2026-08-18', qty: 25 }
+      ]);
+
+      // 5. 계산 필드 그리드
+      dpCalc = new LunaDataAdapter();
+      gridCalc = new LunaGrid('#grid-calc-preview', {
+        title: '실시간 수식 계산 필드',
+        dataAdapter: dpCalc,
+        theme: 'dark',
+        columns: [
+          { name: 'item', fieldName: 'item', header: { text: '품목' }, width: 150 },
+          { name: 'qty', fieldName: 'qty', header: { text: '수량' }, width: 90, align: 'right', type: 'number', editor: 'numberSpin' },
+          { name: 'unitPrice', fieldName: 'unitPrice', header: { text: '단가' }, width: 120, align: 'right', type: 'number', formatter: 'currency' },
+          { name: 'supplyAmount', header: { text: '공급가액(수식)' }, width: 140, align: 'right', type: 'number', formatter: 'currency', valueExpression: 'qty * unitPrice' }
+        ]
+      });
+      dpCalc.setRows([
+        { item: '클라우드 인스턴스', qty: 4, unitPrice: 280000 },
+        { item: '보안 SSL 인증서', qty: 2, unitPrice: 450000 }
+      ]);
+
+      // 6. 행 그룹핑 그리드
+      dpGrouping = new LunaDataAdapter();
+      gridGrouping = new LunaGrid('#grid-grouping-preview', {
+        title: '부서별 행 그룹핑 & 소계',
+        dataAdapter: dpGrouping,
+        theme: 'dark',
+        rowGrouping: { enabled: true, showGroupPanel: true, groupSummary: true },
+        columns: [
+          { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140, align: 'center' },
+          { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 120, align: 'center' },
+          { name: 'salary', fieldName: 'salary', header: { text: '급여' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+        ]
+      });
+      dpGrouping.setRows([
+        { dept: '연구개발본부', name: '김철수', salary: 65000000 },
+        { dept: '연구개발본부', name: '이영희', salary: 58000000 },
+        { dept: '경영기획본부', name: '한예슬', salary: 52000000 }
+      ]);
+      if (gridGrouping.groupBy) gridGrouping.groupBy(['dept']);
+
+      // 7. 다중 정렬 & 필터 그리드
+      dpFilter = new LunaDataAdapter();
+      gridFilter = new LunaGrid('#grid-filter-preview', {
+        title: '다중 정렬 & 엑셀 필터',
+        dataAdapter: dpFilter,
+        theme: 'dark',
+        sorting: { enabled: true, multiSort: true },
+        filtering: { enabled: true, excelStyle: true },
+        columns: [
+          { name: 'region', fieldName: 'region', header: { text: '지역' }, width: 110, align: 'center' },
+          { name: 'product', fieldName: 'product', header: { text: '상품명' }, width: 160 },
+          { name: 'sales', fieldName: 'sales', header: { text: '판매량' }, width: 100, align: 'right', type: 'number' },
+          { name: 'revenue', fieldName: 'revenue', header: { text: '매출액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+        ]
+      });
+      dpFilter.setRows([
+        { region: '서울', product: 'OLED 모니터', sales: 45, revenue: 38250000 },
+        { region: '경기', product: '블루투스 헤드셋', sales: 120, revenue: 18000000 },
+        { region: '서울', product: '공기청정기', sales: 80, revenue: 24000000 },
+        { region: '부산', product: '기계식 키보드', sales: 90, revenue: 13500000 }
+      ]);
+
+      // 8. 틀고정 그리드
+      dpFixed = new LunaDataAdapter();
+      gridFixed = new LunaGrid('#grid-fixed-preview', {
+        title: '좌우 컬럼 틀고정 (Fixed Columns)',
+        dataAdapter: dpFixed,
+        theme: 'dark',
+        fixedColCount: 2,
+        fixedRightColCount: 1,
+        columns: [
+          { name: 'id', fieldName: 'id', header: { text: '사번(고정)' }, width: 100, align: 'center' },
+          { name: 'name', fieldName: 'name', header: { text: '성명(고정)' }, width: 110, align: 'center' },
+          { name: 'm1', fieldName: 'm1', header: { text: '1월' }, width: 90, align: 'right', type: 'number' },
+          { name: 'm2', fieldName: 'm2', header: { text: '2월' }, width: 90, align: 'right', type: 'number' },
+          { name: 'm3', fieldName: 'm3', header: { text: '3월' }, width: 90, align: 'right', type: 'number' },
+          { name: 'm4', fieldName: 'm4', header: { text: '4월' }, width: 90, align: 'right', type: 'number' },
+          { name: 'm5', fieldName: 'm5', header: { text: '5월' }, width: 90, align: 'right', type: 'number' },
+          { name: 'total', fieldName: 'total', header: { text: '합계(우측고정)' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+        ]
+      });
+      dpFixed.setRows([
+        { id: 'E-101', name: '강백호', m1: 300, m2: 400, m3: 350, m4: 420, m5: 500, total: 1970000 },
+        { id: 'E-102', name: '서태웅', m1: 500, m2: 520, m3: 600, m4: 580, m5: 620, total: 2820000 }
+      ]);
+
+      // 9. 클립보드 그리드
+      dpClipboard = new LunaDataAdapter();
+      gridClipboard = new LunaGrid('#grid-clipboard-preview', {
+        title: '셀 블록 범위 선택 & 클립보드',
+        dataAdapter: dpClipboard,
+        theme: 'dark',
+        selectionMode: 'range',
+        clipboard: { enabled: true },
+        columns: [
+          { name: 'code', fieldName: 'code', header: { text: '코드' }, width: 90, align: 'center' },
+          { name: 'item', fieldName: 'item', header: { text: '품목명' }, width: 160 },
+          { name: 'q1', fieldName: 'q1', header: { text: '1분기' }, width: 100, align: 'right', type: 'number' },
+          { name: 'q2', fieldName: 'q2', header: { text: '2분기' }, width: 100, align: 'right', type: 'number' },
+          { name: 'q3', fieldName: 'q3', header: { text: '3분기' }, width: 100, align: 'right', type: 'number' }
+        ]
+      });
+      dpClipboard.setRows([
+        { code: 'A01', item: '스마트폰 센서', q1: 1500, q2: 1800, q3: 2100 },
+        { code: 'A02', item: '카메라 모듈', q1: 850, q2: 920, q3: 1100 }
+      ]);
+
+      // 10. 트리뷰 그리드
+      dpTree = new TreeLunaDataAdapter();
+      gridTree = new TreeView('#grid-tree-preview', {
+        title: '계층형 트리 그리드',
+        dataAdapter: dpTree,
+        theme: 'dark',
+        treeColumn: 'deptName',
+        columns: [
+          { name: 'deptName', fieldName: 'deptName', header: { text: '조직명' }, width: 220 },
+          { name: 'leader', fieldName: 'leader', header: { text: '조직장' }, width: 120, align: 'center' },
+          { name: 'headcount', fieldName: 'headcount', header: { text: '인원' }, width: 90, align: 'right', type: 'number' }
+        ]
+      });
+      dpTree.setTreeRows([
+        {
+          id: 1, deptName: 'CEO & 이사회', leader: '김대표', headcount: 3,
+          children: [
+            {
+              id: 11, deptName: '기술연구소 (CTO)', leader: '이연구', headcount: 25,
+              children: [
+                { id: 111, deptName: '코어플랫폼팀', leader: '박수석', headcount: 12 },
+                { id: 112, deptName: 'AI랩', leader: '최수석', headcount: 13 }
+              ]
+            }
+          ]
+        }
+      ]);
+
+      // 11. 통계 요약행 및 Export 그리드
+      dpExport = new LunaDataAdapter();
+      gridExport = new LunaGrid('#grid-export-preview', {
+        title: '요약 푸터 & 데이터 내보내기',
+        dataAdapter: dpExport,
+        theme: 'dark',
+        footer: { visible: true },
+        columns: [
+          { name: 'dept', fieldName: 'dept', header: { text: '사업부' }, width: 140, align: 'center', footer: { text: '합계 / 평균' } },
+          { name: 'deals', fieldName: 'deals', header: { text: '수주건수' }, width: 100, align: 'right', type: 'number', footer: { expression: 'sum', format: '#,##0 건' } },
+          { name: 'contract', fieldName: 'contract', header: { text: '계약금액' }, width: 150, align: 'right', type: 'number', formatter: 'currency', footer: { expression: 'sum', formatter: 'currency' } }
+        ]
+      });
+      dpExport.setRows([
+        { dept: '엔터프라이즈사업부', deals: 12, contract: 1450000000 },
+        { dept: '금융공공사업부', deals: 15, contract: 2300000000 },
+        { dept: '글로벌사업부', deals: 6, contract: 850000000 }
+      ]);
+    });
+
+    // 프리뷰 인터랙티브 함수들
+    function demoAddBasicRow() {
+      const id = 100 + dpArch.getRowCount() + 1;
+      dpArch.addRow({ id: 'EMP-' + id, name: '신규입사자' + id, dept: '플랫폼코어팀', role: '연구원', salary: 55000000 });
+      showDocToast('기본 그리드에 신규 행이 추가되었습니다.');
+    }
+
+    function demoAddStateRow() {
+      dpBars.addRow({ code: 'SKU-NEW', item: '신규 그래픽카드', stock: 20, price: 1200000 });
+      showDocToast('신규 행(C: Created) 추가됨');
+    }
+
+    function demoUpdateStateRow() {
+      dpBars.setValue(0, 'price', dpBars.getValue(0, 'price') + 10000);
+      showDocToast('0번 행 수정됨(U: Updated)');
+    }
+
+    function demoCommitState() {
+      dpBars.clearRowStates();
+      showDocToast('모든 C/U/D 상태가 영구 확정(Commit)되었습니다.');
+    }
+
+    function demoUpdateRenderers() {
+      dpRenderers.getRows().forEach((r, idx) => {
+        const p = Math.floor(Math.random() * 100);
+        dpRenderers.setValue(idx, 'progress', p);
+        dpRenderers.setValue(idx, 'trend', [10, Math.floor(Math.random() * 60), p]);
+      });
+      showDocToast('진척도 및 차트 데이터가 무작위 업데이트되었습니다.');
+    }
+
+    function demoIncreaseQty() {
+      const q = dpCalc.getValue(0, 'qty');
+      dpCalc.setValue(0, 'qty', q + 2);
+      showDocToast(`수량 변경 (${q} -> ${q + 2}) -> 공급가액 자동 재계산 완료`);
+    }
+
+    function demoToggleGrouping() {
+      if (gridGrouping.groupBy) {
+        const cur = gridGrouping.getGroupFields ? gridGrouping.getGroupFields() : [];
+        if (cur.length > 0) {
+          gridGrouping.groupBy([]);
+          showDocToast('그룹핑 해제');
+        } else {
+          gridGrouping.groupBy(['dept']);
+          showDocToast('부서(dept) 기준 그룹핑 적용');
+        }
+      }
+    }
+
+    function demoApplyFilter() {
+      if (gridFilter.setFilter) {
+        gridFilter.setFilter('region', ['서울']);
+        showDocToast('필터 적용: 지역 = 서울');
+      }
+    }
+
+    function demoResetFilter() {
+      if (gridFilter.clearFilters) {
+        gridFilter.clearFilters();
+        showDocToast('필터 해제 완료');
+      }
+    }
+
+    function demoCopySelection() {
+      if (gridClipboard.copyToClipboard) {
+        gridClipboard.copyToClipboard();
+        showDocToast('선택 영역이 클립보드에 복사되었습니다.');
+      }
+    }
+
+    function demoExpandTree() {
+      if (gridTree.expandAll) {
+        gridTree.expandAll();
+        showDocToast('모든 계층 트리가 펼쳐졌습니다.');
+      }
+    }
+
+    function demoCollapseTree() {
+      if (gridTree.collapseAll) {
+        gridTree.collapseAll();
+        showDocToast('모든 계층 트리가 접혔습니다.');
+      }
+    }
+
+    function demoExportExcel() {
+      if (gridExport.exportData) {
+        gridExport.exportData('excel', 'summary_report.xlsx');
+        showDocToast('Excel 파일 다운로드 시작!');
+      }
+    }
+
+    function demoExportCsv() {
+      if (gridExport.exportData) {
+        gridExport.exportData('csv', 'summary_report.csv');
+        showDocToast('CSV 파일 다운로드 시작!');
+      }
+    }
+
+    // 문서 검색 및 코드 복사 바인딩
+    document.querySelectorAll('.btn-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.closest('.code-container').querySelector('.code-content').textContent;
+        navigator.clipboard.writeText(text).then(() => showDocToast('코드가 클립보드에 복사되었습니다.'));
+      });
+    });
+
+    document.getElementById('doc-search-input').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.style.display = link.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

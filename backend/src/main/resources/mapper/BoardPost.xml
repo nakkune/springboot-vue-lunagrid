@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.BoardPostMapper">
+
+    <sql id="listColumns">
+        POST_ID, BBS_ID, TITLE, NOTICE_YN, DEPTH_NO, VIEW_CNT, COMMENT_CNT,
+        REG_USER_NM, REG_DT
+    </sql>
+
+    <sql id="allColumns">
+        POST_ID, BBS_ID, TITLE, CONTENT, GROUP_NO, DEPTH_NO, SORT_ORD,
+        CATEGORY_CD, NOTICE_YN, NOTICE_START_DT, NOTICE_END_DT,
+        SECRET_YN, SECRET_PWD, VIEW_CNT, LIKE_CNT, COMMENT_CNT,
+        ATCH_FILE_GRP_ID, REG_USER_NM, REG_USER_ID, REG_IP,
+        REG_DT, MOD_USER_ID, MOD_DT, DEL_YN, DEL_DT, DEL_USER_ID
+    </sql>
+
+    <!-- 검색 조건 (TITLE/CONTENT/USER/ALL) -->
+    <sql id="searchCond">
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test='searchType == "TITLE"'>
+                    AND TITLE LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchType == "CONTENT"'>
+                    AND CONTENT LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test='searchType == "USER"'>
+                    AND REG_USER_NM LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <otherwise>
+                    AND (TITLE LIKE '%' || #{searchKeyword} || '%'
+                      OR CONTENT LIKE '%' || #{searchKeyword} || '%')
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+    <!-- 목록 조회 (공지 우선, 페이징, 첨부 여부 플래그) -->
+    <select id="selectPostList" resultType="com.example.portal.entity.BoardPost">
+        SELECT P.POST_ID,
+               P.BBS_ID,
+               P.TITLE,
+               P.NOTICE_YN,
+               P.DEPTH_NO,
+               P.VIEW_CNT,
+               P.COMMENT_CNT,
+               P.REG_USER_NM,
+               P.REG_DT,
+               CASE WHEN EXISTS (
+                   SELECT 1
+                   FROM TB_COM_ATTACH_FILE F
+                   WHERE F.ATCH_FILE_GRP_ID = P.ATCH_FILE_GRP_ID
+                     AND F.DEL_YN = 'N'
+               ) THEN 'Y' ELSE 'N' END AS FILE_YN
+        FROM TB_BBS_POST P
+        WHERE P.BBS_ID = #{bbsId}
+          AND P.DEL_YN = 'N'
+          <include refid="searchCond"/>
+        ORDER BY
+            NOTICE_YN DESC,
+            GROUP_NO DESC,
+            SORT_ORD ASC
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <!-- 목록 건수 -->
+    <select id="countPostList" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_BBS_POST
+        WHERE BBS_ID = #{bbsId}
+          AND DEL_YN = 'N'
+          <include refid="searchCond"/>
+    </select>
+
+    <!-- 상세 조회 -->
+    <select id="selectByPostId" resultType="com.example.portal.entity.BoardPost">
+        SELECT <include refid="allColumns"/>
+        FROM TB_BBS_POST
+        WHERE POST_ID = #{postId}
+    </select>
+
+    <!-- 원글 등록: selectKey로 POST_ID 선발급, GROUP_NO = 자기 자신의 POST_ID -->
+    <insert id="insertPost" parameterType="com.example.portal.entity.BoardPost">
+        <selectKey keyProperty="postId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_BBS_POST.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_BBS_POST (
+            POST_ID, BBS_ID, TITLE, CONTENT,
+            GROUP_NO, DEPTH_NO, SORT_ORD,
+            CATEGORY_CD, NOTICE_YN, NOTICE_START_DT, NOTICE_END_DT,
+            SECRET_YN, SECRET_PWD,
+            ATCH_FILE_GRP_ID, REG_USER_NM, REG_USER_ID, REG_IP
+        ) VALUES (
+            #{postId}, #{bbsId}, #{title}, #{content},
+            #{postId}, 0, 0,
+            #{categoryCd}, #{noticeYn}, #{noticeStartDt}, #{noticeEndDt},
+            #{secretYn}, #{secretPwd},
+            #{atchFileGrpId}, #{regUserNm}, #{regUserId}, #{regIp}
+        )
+    </insert>
+
+    <!-- 답글 등록 -->
+    <insert id="insertReply" parameterType="com.example.portal.entity.BoardPost">
+        <selectKey keyProperty="postId" resultType="long" order="BEFORE">
+            SELECT SEQ_TB_BBS_POST.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_BBS_POST (
+            POST_ID, BBS_ID, TITLE, CONTENT,
+            GROUP_NO, DEPTH_NO, SORT_ORD,
+            CATEGORY_CD, SECRET_YN, SECRET_PWD,
+            ATCH_FILE_GRP_ID, REG_USER_NM, REG_USER_ID, REG_IP
+        ) VALUES (
+            #{postId}, #{bbsId}, #{title}, #{content},
+            #{groupNo}, #{depthNo}, #{sortOrd},
+            #{categoryCd}, #{secretYn}, #{secretPwd},
+            #{atchFileGrpId}, #{regUserNm}, #{regUserId}, #{regIp}
+        )
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="com.example.portal.entity.BoardPost">
+        UPDATE TB_BBS_POST
+        <set>
+            TITLE = #{title},
+            CONTENT = #{content},
+            <if test="categoryCd != null">CATEGORY_CD = #{categoryCd},</if>
+            NOTICE_YN = #{noticeYn},
+            <if test="noticeStartDt != null">NOTICE_START_DT = #{noticeStartDt},</if>
+            <if test="noticeEndDt != null">NOTICE_END_DT = #{noticeEndDt},</if>
+            SECRET_YN = #{secretYn},
+            <if test="secretPwd != null">SECRET_PWD = #{secretPwd},</if>
+            ATCH_FILE_GRP_ID = #{atchFileGrpId},
+            MOD_USER_ID = #{modUserId},
+            MOD_DT = SYSDATE
+        </set>
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- Soft Delete -->
+    <update id="deletePost">
+        UPDATE TB_BBS_POST
+        SET DEL_YN = 'Y',
+            DEL_DT = SYSDATE,
+            DEL_USER_ID = #{delUserId}
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCnt">
+        UPDATE TB_BBS_POST
+        SET VIEW_CNT = VIEW_CNT + 1
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- 좋아요 증가 -->
+    <update id="incrementLikeCnt">
+        UPDATE TB_BBS_POST
+        SET LIKE_CNT = LIKE_CNT + 1
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- 댓글 수 업데이트 -->
+    <update id="updateCommentCnt">
+        UPDATE TB_BBS_POST
+        SET COMMENT_CNT = (SELECT COUNT(*) FROM TB_BBS_COMMENT WHERE POST_ID = #{postId} AND DEL_YN = 'N')
+        WHERE POST_ID = #{postId}
+    </update>
+
+    <!-- 그룹 내 최대 sortOrd 조회 -->
+    <select id="selectMaxSortOrd" resultType="java.lang.Integer">
+        SELECT NVL(MAX(SORT_ORD), 0)
+        FROM TB_BBS_POST
+        WHERE GROUP_NO = #{groupNo}
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.UserMapper">
+
+    <select id="selectByUserId" resultType="com.example.portal.entity.User">
+        SELECT *
+        FROM TB_COM_USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <insert id="insertUser" parameterType="com.example.portal.entity.User">
+        INSERT INTO TB_COM_USER (
+            USER_ID, USER_NM, PWD_HASH, PWD_SALT, EMAIL,
+            ACCT_STAT_CD, PWD_FAIL_CNT, USE_YN, REG_USER_ID, REG_DT, PWD_CHG_DT
+        ) VALUES (
+            #{userId}, #{userNm}, #{pwdHash}, #{pwdSalt}, #{email},
+            #{acctStatCd}, #{pwdFailCnt}, #{useYn}, #{regUserId}, SYSDATE, SYSDATE
+        )
+    </insert>
+
+    <update id="updateUser" parameterType="com.example.portal.entity.User">
+        UPDATE TB_COM_USER
+        <set>
+            <if test="pwdHash != null">PWD_HASH = #{pwdHash},</if>
+            <if test="pwdFailCnt != null">PWD_FAIL_CNT = #{pwdFailCnt},</if>
+            <if test="acctStatCd != null">ACCT_STAT_CD = #{acctStatCd},</if>
+            <if test="lockDt != null">LOCK_DT = #{lockDt},</if>
+            <if test="lastLoginDt != null">LAST_LOGIN_DT = #{lastLoginDt},</if>
+            <if test="lastLoginIp != null">LAST_LOGIN_IP = #{lastLoginIp},</if>
+            <if test="modUserId != null">MOD_USER_ID = #{modUserId},</if>
+            MOD_DT = SYSDATE
+        </set>
+        WHERE USER_ID = #{userId}
+    </update>
+
+</mapper>

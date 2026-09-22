@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.CommonCodeMapper">
+
+    <!-- ========================================================================= -->
+    <!-- 1. 공통 그룹 코드 (TB_COM_GRP_CD) -->
+    <!-- 컬럼: GRP_CD, GRP_CD_NM, GRP_CD_DESC, SYS_DIV_CD, USE_YN, REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT -->
+    <!-- ========================================================================= -->
+
+    <select id="selectGroupCodes" resultType="com.example.portal.entity.CommonGroupCode">
+        SELECT GRP_CD, GRP_CD_NM, GRP_CD_DESC, SYS_DIV_CD, USE_YN,
+               REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+        FROM TB_COM_GRP_CD
+        <where>
+            <if test="grpCd != null and grpCd != ''">
+                AND UPPER(GRP_CD) LIKE '%' || UPPER(#{grpCd}) || '%'
+            </if>
+            <if test="grpCdNm != null and grpCdNm != ''">
+                AND UPPER(GRP_CD_NM) LIKE '%' || UPPER(#{grpCdNm}) || '%'
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+        ORDER BY GRP_CD ASC
+    </select>
+
+    <select id="selectGroupCodeByCd" resultType="com.example.portal.entity.CommonGroupCode">
+        SELECT GRP_CD, GRP_CD_NM, GRP_CD_DESC, SYS_DIV_CD, USE_YN,
+               REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+        FROM TB_COM_GRP_CD
+        WHERE GRP_CD = #{grpCd}
+    </select>
+
+    <select id="countGroupCodeByCd" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_GRP_CD
+        WHERE GRP_CD = #{grpCd}
+    </select>
+
+    <insert id="insertGroupCode" parameterType="com.example.portal.entity.CommonGroupCode">
+        INSERT INTO TB_COM_GRP_CD (
+            GRP_CD, GRP_CD_NM, GRP_CD_DESC, SYS_DIV_CD, USE_YN,
+            REG_USER_ID, REG_DT
+        ) VALUES (
+            #{grpCd}, #{grpCdNm}, #{grpCdDesc, jdbcType=VARCHAR},
+            COALESCE(#{sysDivCd, jdbcType=VARCHAR}, 'COM'),
+            COALESCE(#{useYn, jdbcType=CHAR}, 'Y'),
+            #{regUserId, jdbcType=VARCHAR}, SYSDATE
+        )
+    </insert>
+
+    <update id="updateGroupCode" parameterType="com.example.portal.entity.CommonGroupCode">
+        UPDATE TB_COM_GRP_CD
+        SET GRP_CD_NM   = #{grpCdNm},
+            GRP_CD_DESC = #{grpCdDesc, jdbcType=VARCHAR},
+            SYS_DIV_CD  = COALESCE(#{sysDivCd, jdbcType=VARCHAR}, SYS_DIV_CD, 'COM'),
+            USE_YN      = COALESCE(#{useYn, jdbcType=CHAR}, USE_YN, 'Y'),
+            MOD_USER_ID = #{modUserId, jdbcType=VARCHAR},
+            MOD_DT      = SYSDATE
+        WHERE GRP_CD = #{grpCd}
+    </update>
+
+    <delete id="deleteGroupCode">
+        DELETE FROM TB_COM_GRP_CD
+        WHERE GRP_CD = #{grpCd}
+    </delete>
+
+    <!-- ========================================================================= -->
+    <!-- 2. 공통 상세 코드 (TB_COM_DTL_CD) -->
+    <!-- 컬럼: GRP_CD, DTL_CD, DTL_CD_NM, DTL_CD_DESC, SORT_ORD, ATTR_VAL1~5, USE_YN, REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT -->
+    <!-- ========================================================================= -->
+
+    <select id="selectDetailCodes" resultType="com.example.portal.entity.CommonDetailCode">
+        SELECT GRP_CD, DTL_CD, DTL_CD_NM, DTL_CD_DESC, SORT_ORD,
+               ATTR_VAL1, ATTR_VAL2, ATTR_VAL3, ATTR_VAL4, ATTR_VAL5,
+               USE_YN, REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+        FROM TB_COM_DTL_CD
+        WHERE GRP_CD = #{grpCd}
+        <if test="useYn != null and useYn != ''">
+            AND USE_YN = #{useYn}
+        </if>
+        ORDER BY SORT_ORD ASC, DTL_CD ASC
+    </select>
+
+    <select id="selectDetailCodeByPk" resultType="com.example.portal.entity.CommonDetailCode">
+        SELECT GRP_CD, DTL_CD, DTL_CD_NM, DTL_CD_DESC, SORT_ORD,
+               ATTR_VAL1, ATTR_VAL2, ATTR_VAL3, ATTR_VAL4, ATTR_VAL5,
+               USE_YN, REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+        FROM TB_COM_DTL_CD
+        WHERE GRP_CD = #{grpCd}
+          AND DTL_CD = #{dtlCd}
+    </select>
+
+    <select id="countDetailCodeByPk" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_DTL_CD
+        WHERE GRP_CD = #{grpCd}
+          AND DTL_CD = #{dtlCd}
+    </select>
+
+    <insert id="insertDetailCode" parameterType="com.example.portal.entity.CommonDetailCode">
+        INSERT INTO TB_COM_DTL_CD (
+            GRP_CD, DTL_CD, DTL_CD_NM, DTL_CD_DESC, SORT_ORD,
+            ATTR_VAL1, ATTR_VAL2, ATTR_VAL3, ATTR_VAL4, ATTR_VAL5,
+            USE_YN, REG_USER_ID, REG_DT
+        ) VALUES (
+            #{grpCd}, #{dtlCd}, #{dtlCdNm}, #{dtlCdDesc, jdbcType=VARCHAR},
+            COALESCE(#{sortOrd, jdbcType=NUMERIC}, 1),
+            #{attrVal1, jdbcType=VARCHAR}, #{attrVal2, jdbcType=VARCHAR},
+            #{attrVal3, jdbcType=VARCHAR}, #{attrVal4, jdbcType=VARCHAR},
+            #{attrVal5, jdbcType=VARCHAR},
+            COALESCE(#{useYn, jdbcType=CHAR}, 'Y'),
+            #{regUserId, jdbcType=VARCHAR}, SYSDATE
+        )
+    </insert>
+
+    <update id="updateDetailCode" parameterType="com.example.portal.entity.CommonDetailCode">
+        UPDATE TB_COM_DTL_CD
+        SET DTL_CD_NM   = #{dtlCdNm},
+            DTL_CD_DESC = #{dtlCdDesc, jdbcType=VARCHAR},
+            SORT_ORD    = COALESCE(#{sortOrd, jdbcType=NUMERIC}, SORT_ORD, 1),
+            ATTR_VAL1   = #{attrVal1, jdbcType=VARCHAR},
+            ATTR_VAL2   = #{attrVal2, jdbcType=VARCHAR},
+            ATTR_VAL3   = #{attrVal3, jdbcType=VARCHAR},
+            ATTR_VAL4   = #{attrVal4, jdbcType=VARCHAR},
+            ATTR_VAL5   = #{attrVal5, jdbcType=VARCHAR},
+            USE_YN      = COALESCE(#{useYn, jdbcType=CHAR}, USE_YN, 'Y'),
+            MOD_USER_ID = #{modUserId, jdbcType=VARCHAR},
+            MOD_DT      = SYSDATE
+        WHERE GRP_CD = #{grpCd}
+          AND DTL_CD = #{dtlCd}
+    </update>
+
+    <delete id="deleteDetailCode">
+        DELETE FROM TB_COM_DTL_CD
+        WHERE GRP_CD = #{grpCd}
+          AND DTL_CD = #{dtlCd}
+    </delete>
+
+    <!-- [핵심 요구사항] 특정 그룹에 속한 상세 코드 일괄 선행 삭제 -->
+    <delete id="deleteDetailsByGrpCd">
+        DELETE FROM TB_COM_DTL_CD
+        WHERE GRP_CD = #{grpCd}
+    </delete>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.BoardMasterMapper">
+
+    <sql id="allColumns">
+        BBS_ID, BBS_NM, BBS_DESC, BBS_TYPE_CD, REPLY_YN, COMMENT_YN, ATCH_FILE_YN,
+        MAX_FILE_CNT, MAX_FILE_SIZE, SECRET_YN, PAGE_PER_SIZE, USE_YN,
+        REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+    </sql>
+
+    <select id="selectAll" resultType="com.example.portal.entity.BoardMaster">
+        SELECT <include refid="allColumns"/>
+        FROM TB_BBS_MST
+        ORDER BY REG_DT DESC
+    </select>
+
+    <select id="selectActive" resultType="com.example.portal.entity.BoardMaster">
+        SELECT <include refid="allColumns"/>
+        FROM TB_BBS_MST
+        WHERE USE_YN = 'Y'
+        ORDER BY REG_DT DESC
+    </select>
+
+    <select id="selectByBbsId" resultType="com.example.portal.entity.BoardMaster">
+        SELECT <include refid="allColumns"/>
+        FROM TB_BBS_MST
+        WHERE BBS_ID = #{bbsId}
+    </select>
+
+    <insert id="insertBoardMaster" parameterType="com.example.portal.entity.BoardMaster">
+        INSERT INTO TB_BBS_MST (
+            BBS_ID, BBS_NM, BBS_DESC, BBS_TYPE_CD, REPLY_YN, COMMENT_YN, ATCH_FILE_YN,
+            MAX_FILE_CNT, MAX_FILE_SIZE, SECRET_YN, PAGE_PER_SIZE, USE_YN,
+            REG_USER_ID, REG_DT
+        ) VALUES (
+            #{bbsId}, #{bbsNm}, #{bbsDesc}, #{bbsTypeCd}, #{replyYn}, #{commentYn}, #{atchFileYn},
+            #{maxFileCnt}, #{maxFileSize}, #{secretYn}, #{pagePerSize}, #{useYn},
+            #{regUserId}, SYSDATE
+        )
+    </insert>
+
+    <update id="updateBoardMaster" parameterType="com.example.portal.entity.BoardMaster">
+        UPDATE TB_BBS_MST
+        <set>
+            <if test="bbsNm != null">BBS_NM = #{bbsNm},</if>
+            <if test="bbsDesc != null">BBS_DESC = #{bbsDesc},</if>
+            <if test="bbsTypeCd != null">BBS_TYPE_CD = #{bbsTypeCd},</if>
+            <if test="replyYn != null">REPLY_YN = #{replyYn},</if>
+            <if test="commentYn != null">COMMENT_YN = #{commentYn},</if>
+            <if test="atchFileYn != null">ATCH_FILE_YN = #{atchFileYn},</if>
+            <if test="maxFileCnt != null">MAX_FILE_CNT = #{maxFileCnt},</if>
+            <if test="maxFileSize != null">MAX_FILE_SIZE = #{maxFileSize},</if>
+            <if test="secretYn != null">SECRET_YN = #{secretYn},</if>
+            <if test="pagePerSize != null">PAGE_PER_SIZE = #{pagePerSize},</if>
+            <if test="useYn != null">USE_YN = #{useYn},</if>
+            <if test="modUserId != null">MOD_USER_ID = #{modUserId},</if>
+            MOD_DT = SYSDATE
+        </set>
+        WHERE BBS_ID = #{bbsId}
+    </update>
+
+    <delete id="deleteBoardMaster">
+        DELETE FROM TB_BBS_MST
+        WHERE BBS_ID = #{bbsId}
+    </delete>
+
+</mapper>

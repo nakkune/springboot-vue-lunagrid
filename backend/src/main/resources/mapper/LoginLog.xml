@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.LoginLogMapper">
+
+    <insert id="insertLoginLog" parameterType="com.example.portal.entity.LoginLog">
+        INSERT INTO TB_COM_LOGIN_LOG (
+            LOG_SEQ, USER_ID, LOGIN_DT, LOGIN_IP, LOGIN_SUCC_YN, FAIL_RSN_CD, USER_AGENT
+        ) VALUES (
+            SEQ_TB_COM_LOGIN_LOG.NEXTVAL, #{userId}, #{loginDt}, #{loginIp},
+            #{loginSuccYn}, #{failRsnCd}, #{userAgent}
+        )
+    </insert>
+
+</mapper>

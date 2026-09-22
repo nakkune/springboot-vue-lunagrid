@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.RoleMapper">
+
+    <select id="selectByRoleId" resultType="com.example.portal.entity.Role">
+        SELECT *
+        FROM TB_COM_ROLE
+        WHERE ROLE_ID = #{roleId}
+    </select>
+
+    <select id="selectAll" resultType="com.example.portal.entity.Role">
+        SELECT ROLE_ID, ROLE_NM, ROLE_DESC, SORT_ORD, USE_YN, REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+        FROM TB_COM_ROLE
+        WHERE USE_YN = 'Y'
+        ORDER BY SORT_ORD ASC
+    </select>
+
+    <insert id="insertRole" parameterType="com.example.portal.entity.Role">
+        INSERT INTO TB_COM_ROLE (
+            ROLE_ID, ROLE_NM, ROLE_DESC, SORT_ORD, USE_YN, REG_USER_ID, REG_DT
+        ) VALUES (
+            #{roleId}, #{roleNm}, #{roleDesc}, #{sortOrd}, #{useYn}, #{regUserId}, SYSDATE
+        )
+    </insert>
+
+</mapper>

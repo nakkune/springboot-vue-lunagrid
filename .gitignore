@@ -1,0 +1,45 @@
+# ==========================================
+# Common & OS / IDE
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+.idea/
+.vscode/
+*.iml
+.codegraph/
+
+# ==========================================
+# Environment Variables (.env)
+# ==========================================
+.env
+*.env
+!.env.example
+backend/.env
+frontend/.env
+
+# ==========================================
+# Backend (Spring Boot / Gradle)
+# ==========================================
+backend/.gradle/
+backend/build/
+backend/out/
+backend/bin/
+backend/.settings/
+backend/.project/
+backend/.classpath/
+
+# ==========================================
+# Frontend (Node / Vue / Vite)
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*

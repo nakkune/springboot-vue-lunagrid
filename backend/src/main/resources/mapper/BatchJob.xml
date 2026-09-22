@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.BatchJobMapper">
+
+    <sql id="allColumns">
+        JOB_ID, JOB_NM, JOB_DESC, CRON_EXPR, JOB_TYPE, JOB_PARAMS,
+        STATUS, USE_YN, LAST_RUN_DT, LAST_RUN_RESULT,
+        REG_USER_ID, REG_DT, MOD_USER_ID, MOD_DT
+    </sql>
+
+    <select id="selectAll" resultType="com.example.portal.entity.BatchJob">
+        SELECT <include refid="allColumns"/>
+        FROM TB_COM_BATCH_JOB
+        ORDER BY REG_DT DESC
+    </select>
+
+    <select id="selectByJobId" resultType="com.example.portal.entity.BatchJob">
+        SELECT <include refid="allColumns"/>
+        FROM TB_COM_BATCH_JOB
+        WHERE JOB_ID = #{jobId}
+    </select>
+
+    <select id="countByJobId" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_BATCH_JOB
+        WHERE JOB_ID = #{jobId}
+    </select>
+
+    <insert id="insertBatchJob" parameterType="com.example.portal.entity.BatchJob">
+        INSERT INTO TB_COM_BATCH_JOB (
+            JOB_ID, JOB_NM, JOB_DESC, CRON_EXPR, JOB_TYPE, JOB_PARAMS,
+            STATUS, USE_YN, REG_USER_ID, REG_DT
+        ) VALUES (
+            #{jobId}, #{jobNm}, #{jobDesc}, #{cronExpr}, #{jobType}, #{jobParams},
+            #{status}, #{useYn}, #{regUserId}, SYSDATE
+        )
+    </insert>
+
+    <update id="updateBatchJob" parameterType="com.example.portal.entity.BatchJob">
+        UPDATE TB_COM_BATCH_JOB
+        <set>
+            <if test="jobNm != null">JOB_NM = #{jobNm},</if>
+            <if test="jobDesc != null">JOB_DESC = #{jobDesc},</if>
+            <if test="cronExpr != null">CRON_EXPR = #{cronExpr},</if>
+            <if test="jobType != null">JOB_TYPE = #{jobType},</if>
+            <if test="jobParams != null">JOB_PARAMS = #{jobParams},</if>
+            <if test="status != null">STATUS = #{status},</if>
+            <if test="useYn != null">USE_YN = #{useYn},</if>
+            <if test="lastRunDt != null">LAST_RUN_DT = #{lastRunDt},</if>
+            <if test="lastRunResult != null">LAST_RUN_RESULT = #{lastRunResult},</if>
+            <if test="modUserId != null">MOD_USER_ID = #{modUserId},</if>
+            MOD_DT = SYSDATE
+        </set>
+        WHERE JOB_ID = #{jobId}
+    </update>
+
+    <delete id="deleteBatchJob">
+        DELETE FROM TB_COM_BATCH_JOB
+        WHERE JOB_ID = #{jobId}
+    </delete>
+
+</mapper>

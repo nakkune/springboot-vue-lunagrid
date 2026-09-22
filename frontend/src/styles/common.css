@@ -1,0 +1,1949 @@
+/**
+ * =============================================================================
+ * Enterprise Portal System - 통합 공통 CSS (common.css)
+ * =============================================================================
+ * 각 Vue 컴포넌트의 스타일을 중앙 집중 관리하는 공통 스타일시트입니다.
+ * 구조:
+ *  1. 전역 공통 유틸리티 & 헤더 & 가드 알림
+ *  2. 메인 레이아웃 & 네비게이션 사이드바 (MainLayout)
+ *  3. 공통 다이얼로그 (MenuEditDialog, BatchJobEditDialog)
+ *  4. 인증 화면 (LoginView, SignupView)
+ *  5. 대시보드 (DashboardView)
+ *  6. 메뉴 관리 & 역할 권한 설정 (MenuManageView, RoleMenuView)
+ *  7. 메뉴 로그 조회 (MenuLogView & MenuLogGridView + LunaGrid)
+ *  8. 배치 스케줄 관리 (BatchScheduleView)
+ *  9. SQL 스크립트 뷰어 (SqlScriptView)
+ * 10. 게시판 (BoardList, BoardDetail, BoardWrite)
+ * 11. 공통 코드 관리 (CommonCodeView + LunaGrid)
+ * =============================================================================
+ */
+
+/* =============================================================================
+   1. 전역 공통 유틸리티 & 헤더 & 공통 컴포넌트
+   ============================================================================= */
+.header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.guard-alert {
+  border-radius: var(--card-radius, 10px);
+}
+
+.muted {
+  color: #b0b6c3;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 20px;
+}
+
+.total-count {
+  font-size: 13px;
+  color: #8a919f;
+}
+
+.total-count strong {
+  color: var(--brand-color, #4054e0);
+  font-size: 15px;
+}
+
+/* =============================================================================
+   2. 메인 레이아웃 & 네비게이션 사이드바 (MainLayout)
+   ============================================================================= */
+.layout {
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--sidebar-bg, #1f2733);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.logo-text {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.sidebar-scroll {
+  flex: 1;
+}
+
+.sidebar-menu {
+  border-right: none;
+}
+
+.sidebar-menu:not(.el-menu--collapse) {
+  width: 100%;
+}
+
+.header {
+  background: #fff;
+  border-bottom: 1px solid #e8ebf1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.main-area {
+  padding: 20px;
+}
+
+/* 사이드바 메뉴 Element-Plus 오버라이드 */
+.sidebar-menu .el-sub-menu__title {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-menu .el-sub-menu__title:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.sidebar-menu .el-sub-menu__icon-arrow {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 12px;
+}
+
+.sidebar-menu .el-menu-item {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-menu .el-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.sidebar-menu .el-menu-item.is-active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar-menu .el-sub-menu .el-menu {
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+
+.sidebar-menu .el-menu-item-group__icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================================================
+   3. 공통 다이얼로그 (MenuEditDialog, BatchJobEditDialog)
+   ============================================================================= */
+/* 메뉴 수정 다이얼로그 */
+.menu-edit-dialog .dlg-body {
+  display: flex;
+  gap: 16px;
+  min-height: 460px;
+}
+
+.menu-edit-dialog .tree-pane {
+  width: 300px;
+  flex-shrink: 0;
+  border: 1px solid #e4e8ef;
+  border-radius: 10px;
+  background: #fafbfd;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-edit-dialog .tree-pane-header {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5a6272;
+  border-bottom: 1px solid #e4e8ef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-edit-dialog .tree-search {
+  margin: 10px 12px 6px;
+  width: auto;
+}
+
+.menu-edit-dialog .tree-scroll {
+  flex: 1;
+  height: 340px;
+  padding: 0 6px;
+}
+
+.menu-edit-dialog .tree-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  width: 100%;
+  padding-right: 4px;
+}
+
+.menu-edit-dialog .tree-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-edit-dialog .node-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.menu-edit-dialog .tree-node:hover .node-actions {
+  opacity: 1;
+}
+
+.menu-edit-dialog .act-btn {
+  padding: 2px;
+}
+
+.menu-edit-dialog .tree-icon {
+  color: var(--brand-color, #4054e0);
+}
+
+.menu-edit-dialog .tree-pane-footer {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #7a829a;
+  border-top: 1px solid #e4e8ef;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.menu-edit-dialog .loc-label b {
+  color: #3d4352;
+}
+
+.menu-edit-dialog .form-pane {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #e4e8ef;
+  border-radius: 10px;
+  padding: 8px 20px 16px;
+}
+
+.menu-edit-dialog .icon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-edit-dialog .icon-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 32px;
+  border: 1px solid #dfe4ec;
+  border-radius: 6px;
+  background: #f7f9fc;
+  color: var(--brand-color, #4054e0);
+}
+
+.menu-edit-dialog .sort-hint {
+  margin-left: 10px;
+}
+
+/* 배치 작업 편집 다이얼로그 */
+.batch-job-dialog .dlg-body {
+  min-height: 200px;
+}
+
+.batch-job-dialog .field-hint {
+  margin-left: 10px;
+  color: #9aa1af;
+  font-size: 12px;
+}
+
+/* =============================================================================
+   4. 인증 화면 (LoginView, SignupView)
+   ============================================================================= */
+.auth-card .submit-btn {
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* =============================================================================
+   5. 대시보드 (DashboardView)
+   ============================================================================= */
+.dashboard-container .welcome-card {
+  margin-bottom: 16px;
+}
+
+.dashboard-container .welcome-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-container .welcome-title {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.dashboard-container .welcome-desc {
+  margin: 0;
+  color: #8a919f;
+  font-size: 13px;
+}
+
+.dashboard-container .stat-row {
+  margin-bottom: 16px;
+}
+
+.dashboard-container .stat-card {
+  text-align: center;
+}
+
+.dashboard-container .stat-label {
+  font-size: 13px;
+  color: #8a919f;
+}
+
+.dashboard-container .stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--brand-color, #4054e0);
+  margin-top: 4px;
+}
+
+.dashboard-container .stat-unit {
+  font-size: 12px;
+  color: #b0b6c3;
+}
+
+.dashboard-container .sample-alert {
+  border-radius: var(--card-radius, 10px);
+}
+
+/* =============================================================================
+   6. 메뉴 관리 & 역할 권한 설정 (MenuManageView, RoleMenuView)
+   ============================================================================= */
+.role-menu-container .role-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .role-menu-container .role-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-menu-container .panel-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.role-menu-container .tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.role-menu-container .tree-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.role-menu-container .admin-hint {
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.role-menu-container .role-row {
+  appearance: none;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 12px 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.role-menu-container .role-row:hover {
+  background: #f5f7fc;
+}
+
+.role-menu-container .role-row.active {
+  background: #eef1fd;
+  box-shadow: inset 3px 0 0 var(--brand-color, #4054e0);
+}
+
+.role-menu-container .role-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #303133;
+}
+
+.role-menu-container .role-row.active .role-name {
+  color: var(--brand-color, #4054e0);
+}
+
+.role-menu-container .role-id {
+  font-size: 12px;
+  color: #b0b6c3;
+}
+
+.role-menu-container .empty-hint {
+  padding: 20px;
+  text-align: center;
+  color: #b0b6c3;
+  font-size: 13px;
+}
+
+/* =============================================================================
+   7. 메뉴 로그 조회 (MenuLogView & MenuLogGridView + LunaGrid)
+   ============================================================================= */
+.menu-log-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-log-container .page-title-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1d20;
+  margin: 0 0 4px 0;
+}
+
+.menu-log-container .page-subtitle-text {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.menu-log-container .log-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-log-container .search-card {
+  border-radius: 8px;
+  border: 1px solid #e3e8ee;
+  background-color: #ffffff;
+  padding: 12px 16px;
+}
+
+.menu-log-container .quick-preset-col {
+  display: flex;
+  align-items: center;
+}
+
+.menu-log-container .preset-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.menu-log-container .preset-label {
+  font-size: 12px;
+  color: #606266;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.menu-log-container .search-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed #e9ecef;
+}
+
+.menu-log-container .search-btn {
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: 600;
+}
+
+.menu-log-container .result-card {
+  border-radius: 8px;
+  border: 1px solid #e3e8ee;
+}
+
+.menu-log-container .list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.menu-log-container .log-table {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.menu-log-container .seq-num {
+  font-size: 12px;
+  color: #868e96;
+}
+
+.menu-log-container .user-id-badge {
+  font-family: monospace;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.menu-log-container .menu-name-text {
+  font-weight: 500;
+  color: #212529;
+}
+
+.menu-log-container .url-code {
+  background-color: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #475569;
+}
+
+.menu-log-container .ip-text {
+  font-family: monospace;
+  font-size: 12px;
+  color: #495057;
+}
+
+.menu-log-container .time-text {
+  font-size: 13px;
+  color: #343a40;
+}
+
+/* 메뉴 로그 그리드 (MenuLogGridView) */
+.menu-log-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-log-grid-container .title-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-log-grid-container .version-badge {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.menu-log-grid-container .page-title-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.menu-log-grid-container .page-subtitle-text {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.menu-log-grid-container .log-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-log-grid-container .search-card {
+  border-radius: 8px;
+}
+
+.menu-log-grid-container .quick-preset-col {
+  display: flex;
+  align-items: center;
+}
+
+.menu-log-grid-container .preset-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-log-grid-container .preset-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.menu-log-grid-container .search-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 12px;
+}
+
+.menu-log-grid-container .search-btn {
+  min-width: 90px;
+}
+
+.menu-log-grid-container .grid-card {
+  border-radius: 8px;
+}
+
+.menu-log-grid-container .grid-card-body {
+  min-height: auto;
+}
+
+.menu-log-grid-container .luna-grid-target {
+  width: 100%;
+}
+
+.menu-log-grid-container .luna-grid-container {
+  min-height: auto !important;
+  height: auto !important;
+}
+
+.menu-log-grid-container .luna-grid-wrapper {
+  min-height: auto !important;
+  height: auto !important;
+  flex: none !important;
+  overflow-y: visible !important;
+}
+
+.menu-log-grid-container .luna-grid-footer {
+  display: none !important;
+}
+
+.menu-log-grid-container .grid-footer-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  margin-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.menu-log-grid-container .total-info {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.menu-log-grid-container .total-info strong {
+  color: #0f172a;
+}
+
+.menu-log-grid-container .luna-grid-toolbar,
+.menu-log-grid-container .luna-group-panel {
+  display: none !important;
+}
+
+.menu-log-grid-container .luna-table th {
+  text-align: center !important;
+}
+
+.menu-log-grid-container .luna-table th .luna-header-cell-inner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.menu-log-grid-container .luna-table th .luna-header-text {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.menu-log-grid-container .luna-table td.cell-range-top { box-shadow: inset 0 2px 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-bottom { box-shadow: inset 0 -2px 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-left { box-shadow: inset 2px 0 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-right { box-shadow: inset -2px 0 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-top.cell-range-bottom { box-shadow: inset 0 2px 0 var(--luna-accent, #6366f1), inset 0 -2px 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-left.cell-range-right { box-shadow: inset 2px 0 0 var(--luna-accent, #6366f1), inset -2px 0 0 var(--luna-accent, #6366f1) !important; }
+.menu-log-grid-container .luna-table td.cell-range-top.cell-range-bottom.cell-range-left.cell-range-right {
+  box-shadow: inset 0 0 0 2px var(--luna-accent, #6366f1) !important;
+}
+
+.menu-log-grid-container .luna-table td.cell-focused,
+.menu-log-grid-container .luna-table td.focused-cell,
+.menu-log-grid-container .luna-table td.luna-cell-focused {
+  outline: none !important;
+  box-shadow: inset 0 0 0 2px var(--luna-accent, #6366f1) !important;
+  z-index: 5;
+}
+
+/* =============================================================================
+   8. 배치 스케줄 관리 (BatchScheduleView)
+   ============================================================================= */
+.batch-schedule-container .cron-text {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #606266;
+}
+
+/* =============================================================================
+   9. SQL 스크립트 뷰어 (SqlScriptView)
+   ============================================================================= */
+.sql-script-container .script-section {
+  margin-bottom: 24px;
+}
+
+.sql-script-container .script-section:last-child {
+  margin-bottom: 0;
+}
+
+.sql-script-container .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sql-script-container .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.sql-script-container .sql-block {
+  background: #1f2733;
+  color: #e6e8ed;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 13px;
+  font-family: 'Courier New', Consolas, monospace;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 0;
+}
+
+/* =============================================================================
+   10. 게시판 (BoardList, BoardDetail, BoardWrite)
+   ============================================================================= */
+/* 게시판 목록 */
+.board-list-page .no-board-alert {
+  margin-bottom: 12px;
+  border-radius: var(--card-radius, 10px);
+}
+
+.board-list-page .board-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #e8ebf1;
+}
+
+.board-list-page .tab-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a919f;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+
+.board-list-page .tab-btn:hover {
+  color: #303133;
+}
+
+.board-list-page .tab-btn.active {
+  color: var(--brand-color, #4054e0);
+}
+
+.board-list-page .tab-btn.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--brand-color, #4054e0);
+}
+
+.board-list-page .list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ebeef5;
+  flex-wrap: wrap;
+}
+
+.board-list-page .search-area {
+  display: flex;
+  gap: 8px;
+}
+
+.board-list-page .search-type {
+  width: 110px;
+}
+
+.board-list-page .search-input {
+  width: 220px;
+}
+
+.board-list-page .board-table .el-table__cell {
+  padding: 10px 0;
+}
+
+.board-list-page .board-table thead th.el-table__cell {
+  background: #f7f8fa;
+  color: #606266;
+  font-weight: 600;
+}
+
+.board-list-page .board-table tbody tr {
+  cursor: pointer;
+}
+
+.board-list-page .board-table .notice-row td.el-table__cell {
+  background: #fdf3f3;
+}
+
+.board-list-page .notice-tag {
+  letter-spacing: 1px;
+}
+
+.board-list-page .row-no {
+  color: #98a0ae;
+  font-variant-numeric: tabular-nums;
+}
+
+.board-list-page .title-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.board-list-page .reply-mark {
+  color: #c0c6d1;
+  flex-shrink: 0;
+}
+
+.board-list-page .lock-icon {
+  color: #e6a23c;
+  flex-shrink: 0;
+}
+
+.board-list-page .attach-icon {
+  color: #8a919f;
+  flex-shrink: 0;
+}
+
+.board-list-page .board-table tbody tr:hover .attach-icon {
+  color: var(--brand-color, #4054e0);
+}
+
+.board-list-page .title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-list-page .board-table tbody tr:hover .title-text {
+  color: var(--brand-color, #4054e0);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.board-list-page .comment-count {
+  color: var(--brand-color, #4054e0);
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* 게시글 상세 (BoardDetail) */
+.board-detail-page .detail-topbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.board-detail-page .topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.board-detail-page .post-card {
+  margin-bottom: 12px;
+}
+
+.board-detail-page .post-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.board-detail-page .post-title {
+  margin: 0 0 14px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #232a3d;
+  letter-spacing: -0.3px;
+  word-break: break-word;
+}
+
+.board-detail-page .post-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #8a919f;
+}
+
+.board-detail-page .author-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.board-detail-page .author-avatar.sm {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.board-detail-page .author-name {
+  font-weight: 600;
+  color: #303133;
+}
+
+.board-detail-page .meta-divider {
+  width: 1px;
+  height: 11px;
+  background: #dcdfe6;
+}
+
+.board-detail-page .meta-spacer {
+  flex: 1;
+}
+
+.board-detail-page .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.board-detail-page .meta-edited {
+  font-size: 12px;
+}
+
+.board-detail-page .post-divider {
+  margin: 18px 0;
+}
+
+.board-detail-page .post-content {
+  min-height: 240px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #303133;
+  word-break: break-word;
+}
+
+.board-detail-page .post-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.board-detail-page .attach-section {
+  margin-top: 22px;
+  padding: 14px 16px;
+  background: #f9fafc;
+  border: 1px solid #eef0f5;
+  border-radius: 10px;
+}
+
+.board-detail-page .attach-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #606266;
+  margin-bottom: 8px;
+}
+
+.board-detail-page .attach-row {
+  appearance: none;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 6px;
+  border-top: 1px dashed #e8ebf1;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+}
+
+.board-detail-page .attach-row:first-of-type {
+  border-top: none;
+}
+
+.board-detail-page .af-icon {
+  color: #8a919f;
+  flex-shrink: 0;
+}
+
+.board-detail-page .af-name {
+  color: #303133;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-detail-page .attach-row:hover .af-name {
+  color: var(--brand-color, #4054e0);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.board-detail-page .af-meta {
+  color: #b0b6c3;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.board-detail-page .af-dl {
+  color: var(--brand-color, #4054e0);
+  flex-shrink: 0;
+}
+
+.board-detail-page .reaction-bar {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.board-detail-page .like-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 26px;
+  border: 1px solid #dcdfe6;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #606266;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.board-detail-page .like-btn:hover {
+  border-color: var(--brand-color, #4054e0);
+  color: var(--brand-color, #4054e0);
+}
+
+.board-detail-page .like-btn.liked {
+  background: var(--brand-color, #4054e0);
+  border-color: var(--brand-color, #4054e0);
+  color: #fff;
+}
+
+.board-detail-page .sibling-card {
+  margin-bottom: 12px;
+}
+
+.board-detail-page .sibling-row {
+  appearance: none;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 0;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px dashed #f0f2f5;
+  font-size: 13px;
+}
+
+.board-detail-page .sibling-row:last-child {
+  border-bottom: none;
+}
+
+.board-detail-page .sibling-icon {
+  color: #b0b6c3;
+}
+
+.board-detail-page .sibling-label {
+  font-weight: 700;
+  color: #606266;
+  flex-shrink: 0;
+}
+
+.board-detail-page .sibling-title {
+  color: #8a919f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.board-detail-page .sibling-row:hover .sibling-title {
+  color: var(--brand-color, #4054e0);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.board-detail-page .comment-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #303133;
+}
+
+.board-detail-page .no-comments {
+  text-align: center;
+  padding: 28px 0;
+  color: #b0b6c3;
+  font-size: 14px;
+}
+
+.board-detail-page .comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.board-detail-page .comment-item {
+  display: flex;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f5f6f8;
+}
+
+.board-detail-page .comment-item:last-child {
+  border-bottom: none;
+}
+
+.board-detail-page .comment-item.reply {
+  padding-left: 12px;
+  background: #fafbfc;
+}
+
+.board-detail-page .reply-mark {
+  color: #c0c6d1;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.board-detail-page .comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.board-detail-page .comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+.board-detail-page .comment-author {
+  font-size: 13px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.board-detail-page .comment-date {
+  font-size: 12px;
+  color: #b0b6c3;
+}
+
+.board-detail-page .comment-actions {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.board-detail-page .comment-content {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #303133;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.board-detail-page .inline-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.board-detail-page .reply-form {
+  margin-top: 8px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+}
+
+.board-detail-page .new-comment-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #303133;
+}
+
+.board-detail-page .new-comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+/* 게시글 작성/수정 (BoardWrite) */
+.board-write-page .write-form {
+  max-width: 960px;
+}
+
+.board-write-page .write-form .el-form-item__label {
+  font-weight: 600;
+  color: #303133;
+}
+
+.board-write-page .option-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: #f7f8fa;
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+.board-write-page .option-item {
+  margin-bottom: 0 !important;
+}
+
+.board-write-page .category-item .el-select {
+  width: 140px;
+}
+
+.board-write-page .pwd-item .el-input {
+  width: 220px;
+}
+
+.board-write-page .content-item .el-textarea__inner {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.board-write-page .attach-area {
+  width: 100%;
+}
+
+.board-write-page .attach-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.board-write-page .attach-hint {
+  font-size: 12px;
+  color: #b0b6c3;
+}
+
+.board-write-page .attach-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.board-write-page .attach-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-bottom: 1px solid #f5f6f8;
+  font-size: 13px;
+}
+
+.board-write-page .attach-list li:last-child {
+  border-bottom: none;
+}
+
+.board-write-page .af-icon {
+  color: #8a919f;
+}
+
+.board-write-page .af-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #303133;
+}
+
+.board-write-page .af-size {
+  color: #b0b6c3;
+  flex-shrink: 0;
+}
+
+.board-write-page .form-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid #ebeef5;
+}
+
+.board-write-page .spacer {
+  flex: 1;
+}
+
+/* =============================================================================
+   11. 공통 코드 관리 (CommonCodeView + LunaGrid)
+   ============================================================================= */
+.common-code-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.common-code-container .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.common-code-container .title-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.common-code-container .page-title-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.common-code-container .version-badge {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.common-code-container .mode-badge {
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.common-code-container .page-subtitle-text {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.common-code-container .guard-alert {
+  margin-top: 8px;
+}
+
+.common-code-container .content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.common-code-container .search-card {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.common-code-container .search-card .el-card__body {
+  padding: 16px 20px 0 20px;
+}
+
+.common-code-container .search-btn-col {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.common-code-container .grid-card {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.common-code-container .grid-card .el-card__body {
+  padding: 14px 18px 18px 18px;
+}
+
+.common-code-container .grid-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.common-code-container .header-left-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.common-code-container .grid-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.common-code-container .count-tag {
+  font-weight: 600;
+}
+
+.common-code-container .active-tag {
+  font-weight: 600;
+}
+
+.common-code-container .grid-help-tip {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-left: 6px;
+}
+
+.common-code-container .grid-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.common-code-container .grid-wrapper {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.common-code-container .luna-grid-target {
+  width: 100%;
+}
+
+/* 루나그리드 6개 행 기준 높이 최적화 (행당 38px * 6행 = 228px) */
+.common-code-container .luna-grid-wrapper {
+  height: 228px !important;
+  min-height: 228px !important;
+  max-height: 228px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+.common-code-container .luna-table thead th {
+  height: 38px !important;
+  box-sizing: border-box !important;
+}
+
+.common-code-container .luna-table tbody tr {
+  height: 38px !important;
+  box-sizing: border-box !important;
+}
+
+.common-code-container .luna-table tbody td {
+  height: 38px !important;
+  box-sizing: border-box !important;
+}
+
+.common-code-container .luna-grid-empty {
+  height: 228px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* 루나그리드 컬럼 커스텀 */
+.common-code-container .col-code {
+  font-weight: 600;
+  color: #2563eb;
+  letter-spacing: 0.5px;
+}
+
+.common-code-container .col-readonly-code {
+  color: #64748b;
+  background-color: #f1f5f9;
+}
+
+/* 루나그리드 내장 간이 툴바(전체검색/내보내기) 및 그룹핑 드래그 패널 숨김 */
+.common-code-container .luna-grid-toolbar {
+  display: none !important;
+}
+
+.common-code-container .luna-group-panel {
+  display: none !important;
+}
+
+/* 루나그리드 하단 페이징 컨트롤: 좌측(건수/페이지크기), 중앙(페이징번호), 우측(균형) 3단 그리드 정렬 */
+.common-code-container .luna-grid-footer {
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr !important;
+  align-items: center !important;
+  padding: 8px 16px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.common-code-container .luna-grid-footer .luna-grid-info {
+  position: static !important;
+  grid-column: 1 !important;
+  justify-self: start !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  white-space: nowrap !important;
+}
+
+.common-code-container .luna-grid-footer .luna-pagination {
+  grid-column: 2 !important;
+  justify-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+.common-code-container .luna-grid-footer .luna-footer-spacer {
+  grid-column: 3 !important;
+  justify-self: end !important;
+  display: block !important;
+}
+
+.common-code-container .luna-grid-footer .luna-page-size-select {
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid #dcdfe6 !important;
+  background-color: #ffffff !important;
+  color: #606266 !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  transition: border-color 0.2s !important;
+}
+
+.common-code-container .luna-grid-footer .luna-page-size-select:hover,
+.common-code-container .luna-grid-footer .luna-page-size-select:focus {
+  border-color: #409eff !important;
+}
+
+/* 셀 수정 마크 숨김 처리 */
+.common-code-container .luna-table td.dirty::after,
+.common-code-container .luna-table td.dirty:after {
+  display: none !important;
+}
+
+/* 체크박스 셀 너비 확보 */
+.common-code-container .luna-table th.luna-checkbox-cell,
+.common-code-container .luna-table td.luna-checkbox-cell {
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+.common-code-container .luna-table th.luna-checkbox-cell .luna-checkbox,
+.common-code-container .luna-table td.luna-checkbox-cell .luna-checkbox {
+  margin: 0 auto !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+/* 헤더 필수 입력 표시 (*) 빨간색(red) 스타일 */
+.common-code-container .luna-table th .luna-header-required,
+.common-code-container .luna-header-required {
+  color: #ef4444 !important;
+  font-weight: bold !important;
+  margin-left: 2px !important;
+}
+
+/* ==========================================================================
+   12. 메뉴설정 (그리드) - MenuManageGridView
+   ========================================================================== */
+.menu-manage-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-manage-grid-container .header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.menu-manage-grid-container .header-row h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 6px 0;
+}
+
+.menu-manage-grid-container .header-row p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.menu-manage-grid-container .toolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.menu-manage-grid-container .guard-alert {
+  margin-top: 8px;
+}
+
+.menu-manage-grid-container .grid-card {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.menu-manage-grid-container .grid-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.menu-manage-grid-container .grid-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.menu-manage-grid-container .header-left-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-manage-grid-container .grid-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.menu-manage-grid-container .grid-guide-text {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-left: 4px;
+}
+
+.menu-manage-grid-container .grid-wrapper {
+  width: 100%;
+  min-height: 520px;
+  position: relative;
+}
+
+.menu-manage-grid-container .luna-grid-target {
+  width: 100%;
+  height: 540px;
+}
+
+.menu-manage-grid-container .col-code {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-weight: 600 !important;
+  color: #2563eb !important;
+}
+
+/* 페이징 가운데 정렬 */
+.menu-manage-grid-container .luna-grid-footer,
+.menu-manage-grid-container .luna-grid-pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+  padding: 8px 12px !important;
+}
+
+.menu-manage-grid-container .luna-pagination-controls {
+  margin: 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.menu-manage-grid-container .luna-paging-info {
+  position: absolute !important;
+  left: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: #6b7280 !important;
+}
+
+.menu-manage-grid-container .luna-page-size-selector {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+}
+
+/* 하단 푸터의 건수/표시 정보 숨김 (하단 왼쪽 미노출) */
+.menu-manage-grid-container .luna-grid-footer .luna-grid-info {
+  display: none !important;
+}
+
+/* 상단 툴바: 페이저블(건수 및 개씩 보기)을 상단 왼쪽으로 배치 */
+.menu-manage-grid-container .luna-grid-toolbar {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  padding: 10px 16px !important;
+  background-color: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.menu-manage-grid-container .luna-grid-toolbar-left {
+  display: none !important; /* 빈 아이콘 숨김 */
+}
+
+.menu-manage-grid-container .luna-grid-toolbar-right {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.menu-manage-grid-container .luna-toolbar-grid-info {
+  order: 1 !important;
+  margin-right: auto !important;
+  justify-content: flex-start !important;
+  font-size: 13px !important;
+  color: #475569 !important;
+  gap: 12px !important;
+}
+
+.menu-manage-grid-container .luna-grid-toolbar-actions {
+  order: 2 !important;
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.menu-manage-grid-container .luna-page-size-select {
+  padding: 4px 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.menu-manage-grid-container .luna-grid-toolbar-actions .luna-btn {
+  padding: 5px 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* 루나그리드 행 상태 (StateBar) 및 삭제(D) 상태 행 스타일 */
+.luna-state-badge {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 3px;
+  font-size: 9.5px;
+  font-weight: 800;
+}
+
+.luna-state-badge.luna-state-c {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.luna-state-badge.luna-state-u {
+  background-color: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+.luna-state-badge.luna-state-d {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+.luna-table tbody tr.luna-row-deleted,
+.luna-table tbody tr.luna-row-deleted td {
+  background-color: #fef2f2 !important;
+  color: #9ca3af !important;
+  text-decoration: line-through !important;
+}
+
+.luna-table tbody tr.luna-row-deleted:hover,
+.luna-table tbody tr.luna-row-deleted:hover td {
+  background-color: #fee2e2 !important;
+}
+
+.luna-table tbody tr.luna-row-deleted td.luna-indicator-cell,
+.luna-table tbody tr.luna-row-deleted td.luna-statebar-cell,
+.luna-table tbody tr.luna-row-deleted td.luna-checkbox-cell {
+  text-decoration: none !important;
+}
+
+/* 루나그리드 셀 인라인 편집 시 셀에 100% 꽉 차는 풀블리드(Full-Bleed) 스타일 */
+.luna-table td.editing,
+.menu-manage-grid-container .luna-table td.editing,
+.common-code-container .luna-table td.editing,
+.menu-log-grid-container .luna-table td.editing {
+  padding: 0 !important;
+  margin: 0 !important;
+  vertical-align: top !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  outline: none !important;
+  overflow: hidden !important;
+}
+
+.luna-table td.editing .luna-inline-editor,
+.menu-manage-grid-container .luna-table td.editing .luna-inline-editor,
+.luna-inline-editor {
+  display: block !important;
+  position: static !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  border: 2px solid #ea580c !important;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-size: 13px !important;
+  outline: none !important;
+  box-shadow: none !important;
+  line-height: 34px !important;
+}
+
+.luna-table td.editing select.luna-inline-editor,
+.menu-manage-grid-container .luna-table td.editing select.luna-inline-editor {
+  padding: 0 6px !important;
+  cursor: pointer !important;
+}
+
+
+
+
+

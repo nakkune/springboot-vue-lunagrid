@@ -1,0 +1,3547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunaGrid v3.0.0 - 기능별 인터랙티브 예제 포털 (Step-by-Step Feature Showcase)</title>
+
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- LunaGrid Core CSS -->
+  <link rel="stylesheet" href="/css/luna-lib-grid.css">
+
+  <style>
+    :root {
+      --bg-canvas: #090d16;
+      --bg-sidebar: #0f172a;
+      --bg-panel: #131d33;
+      --bg-card: #18233c;
+      --bg-code: #0b1120;
+      --border-color: #1e293b;
+      --border-hover: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: #60a5fa;
+      --accent: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --sidebar-width: 320px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* =========================================================================
+       1. 사이드바 (Sidebar Navigation: 17 Steps)
+       ========================================================================= */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-text span {
+      font-size: 11px;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    .sidebar-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-wrapper svg {
+      position: absolute;
+      left: 10px;
+      color: var(--text-sub);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      background-color: var(--bg-canvas);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 12.5px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .step-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .step-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .step-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+
+    .step-group-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-sub);
+      padding: 10px 10px 4px;
+      margin-top: 6px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .step-item:hover {
+      background-color: rgba(30, 41, 59, 0.7);
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .step-item.active {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.18) 0%, rgba(139, 92, 246, 0.1) 100%);
+      color: #ffffff;
+      border-color: rgba(59, 130, 246, 0.4);
+      font-weight: 600;
+    }
+
+    .step-num {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-sub);
+      flex-shrink: 0;
+    }
+
+    .step-item.active .step-num {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .step-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .step-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .step-desc-short {
+      font-size: 11px;
+      color: var(--text-sub);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .step-item.active .step-desc-short {
+      color: var(--primary-light);
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-color);
+      background-color: rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .doc-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--primary-light);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .doc-link-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* =========================================================================
+       2. 메인 컨텐츠 영역 (Main Stage)
+       ========================================================================= */
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      background-color: var(--bg-canvas);
+    }
+
+    .stage-header {
+      padding: 20px 28px 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stage-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .stage-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stage-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .stage-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    .stage-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag-item {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .stage-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* =========================================================================
+       3. 인터랙티브 작업공간 (Interactive Workspace)
+       ========================================================================= */
+    .stage-body {
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .action-toolbar {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .btn-ctrl {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-ctrl:hover {
+      background-color: #1e293b;
+      border-color: var(--primary-light);
+      color: #ffffff;
+    }
+
+    .btn-ctrl.btn-primary {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-ctrl.btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-ctrl.btn-success {
+      background-color: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .btn-ctrl.btn-success:hover {
+      background-color: var(--success);
+      color: #ffffff;
+    }
+
+    .btn-ctrl.btn-danger {
+      background-color: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    .btn-ctrl.btn-danger:hover {
+      background-color: var(--danger);
+      color: #ffffff;
+    }
+
+    .select-ctrl {
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .select-ctrl:focus {
+      border-color: var(--primary);
+    }
+
+    /* 그리드 렌더링 컨테이너 */
+    .grid-stage-card {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #grid-sandbox {
+      width: 100%;
+      height: 560px;
+      min-height: 560px;
+      border-radius: 6px;
+    }
+
+    /* 하단 코드 & 로그 탭 패널 */
+    .code-console-panel {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-tabs-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 12px;
+    }
+
+    .panel-tab-btns {
+      display: flex;
+      gap: 2px;
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--primary-light);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-copy-code {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy-code:hover {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .tab-content-body {
+      background-color: var(--bg-code);
+      padding: 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #38bdf8;
+      max-height: 260px;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .tab-content-body::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .tab-content-body::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+
+    .log-console {
+      color: #4ade80;
+    }
+
+    .log-entry {
+      margin-bottom: 4px;
+      padding-bottom: 2px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .log-time {
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-right: 6px;
+    }
+
+    .log-tag {
+      color: #facc15;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    /* 토스트 알림 */
+    .toast-popup {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid #3b82f6;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    .toast-popup.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. 좌측 17단계 기능 목록 사이드바
+       ========================================================================= -->
+  <aside class="app-sidebar">
+    <div class="sidebar-header">
+      <a href="./luna-grid-demo.html" class="app-logo">
+        <div class="logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>LunaGrid Showcase</h1>
+          <span>v3.0.0 Enterprise Architecture</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-search">
+      <div class="search-input-wrapper">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-step-input" class="search-input" placeholder="기능 또는 키워드 검색...">
+      </div>
+    </div>
+
+    <ul class="step-list" id="step-list-container">
+      <!-- JavaScript로 동적 생성 및 필터링 -->
+    </ul>
+
+    <div class="sidebar-footer">
+      <a href="./guide_LunaGrid.html" class="doc-link-btn" title="엔터프라이즈 개발자 가이드 문서로 이동">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <span>📖 개발자 가이드 문서 (Docs)</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       2. 우측 메인 실행 샌드박스 & 코드 스테이지
+       ========================================================================= -->
+  <main class="app-main">
+    <!-- 단계 헤더 -->
+    <header class="stage-header">
+      <div class="stage-topline">
+        <div class="stage-title-wrap">
+          <span class="stage-badge" id="view-step-num">Step 01</span>
+          <h2 class="stage-title" id="view-step-title">기본 그리드 생성 & DataAdapter 바인딩</h2>
+        </div>
+        <div class="stage-tags" id="view-step-tags">
+          <!-- 동적 태그 -->
+        </div>
+      </div>
+      <p class="stage-desc" id="view-step-desc">
+        LunaDataAdapter를 이용한 데이터 계층 분리와 GridView 렌더링 계층의 기초적인 인스턴스화 예제입니다.
+      </p>
+    </header>
+
+    <!-- 인터랙티브 작업공간 -->
+    <div class="stage-body">
+      <!-- 기능 제어 툴바 -->
+      <div class="action-toolbar">
+        <div class="toolbar-left" id="action-buttons-container">
+          <!-- 스텝별 인터랙티브 버튼 동적 생성 -->
+        </div>
+        <div class="toolbar-right">
+          <span class="toolbar-title">테마 / 언어:</span>
+          <select id="select-theme-ctrl" class="select-ctrl">
+            <option value="classic">🏛️ Classic</option>
+            <option value="dark" selected>🌙 Dark</option>
+            <option value="light">☀️ Light</option>
+            <option value="blue">🌊 Blue</option>
+            <option value="energyblue">⚡ Energy Blue</option>
+            <option value="bootstrap">🅱️ Bootstrap</option>
+            <option value="material">🎨 Material</option>
+          </select>
+          <select id="select-locale-ctrl" class="select-ctrl">
+            <option value="ko" selected>🇰🇷 한국어</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="zh">🇨🇳 中文</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 그리드 렌더링 카드 -->
+      <div class="grid-stage-card">
+        <div id="grid-sandbox"></div>
+      </div>
+
+      <!-- 코드 & 실시간 로그 탭 패널 -->
+      <div class="code-console-panel">
+        <div class="panel-tabs-header">
+          <div class="panel-tab-btns">
+            <button class="tab-btn active" data-tab="js">
+              <span>⚡ JavaScript 소스</span>
+            </button>
+            <button class="tab-btn" data-tab="data">
+              <span>📦 샘플 데이터</span>
+            </button>
+            <button class="tab-btn" data-tab="logs">
+              <span>📡 실시간 이벤트 로그</span>
+            </button>
+          </div>
+          <div class="tab-actions">
+            <button class="btn-copy-code" id="btn-copy-code" title="코드 클립보드 복사">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>코드 복사</span>
+            </button>
+            <button class="btn-copy-code" id="btn-clear-logs" style="display:none;" title="로그 비우기">
+              <span>🗑️ 로그 삭제</span>
+            </button>
+          </div>
+        </div>
+
+        <pre class="tab-content-body" id="tab-content-viewer">// 소스 코드가 여기에 표시됩니다.</pre>
+      </div>
+    </div>
+  </main>
+
+  <!-- 복사 완료 토스트 -->
+  <div class="toast-popup" id="toast-popup">메시지가 표시됩니다.</div>
+
+  <!-- LunaGrid Engine -->
+  <script src="./js/luna-lib.js?v=3.0.1"></script>
+
+  <!-- 쇼케이스 통합 애플리케이션 스크립트 -->
+  <script>
+    // =========================================================================
+    // 17단계 기능별 예제 메타데이터 및 실행 핸들러 정의
+    // =========================================================================
+    let currentGrid = null;
+    let currentDataAdapter = null;
+    let currentStepIndex = 0;
+    let activeTab = 'js';
+    const logBuffer = [];
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-popup');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function appendLog(tag, message) {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0] + '.' + String(now.getMilliseconds()).padStart(3, '0');
+      const entry = { time: timeStr, tag, message };
+      logBuffer.unshift(entry);
+      if (logBuffer.length > 50) logBuffer.pop();
+
+      if (activeTab === 'logs') {
+        renderLogs();
+      }
+    }
+
+    function renderLogs() {
+      const viewer = document.getElementById('tab-content-viewer');
+      if (logBuffer.length === 0) {
+        viewer.innerHTML = '<span style="color:#64748b;">(아직 기록된 이벤트가 없습니다. 그리드를 조작해 보세요.)</span>';
+        return;
+      }
+      viewer.innerHTML = logBuffer.map(l => 
+        `<div class="log-entry"><span class="log-time">[${l.time}]</span><span class="log-tag">[${l.tag}]</span>${escapeHtml(l.message)}</div>`
+      ).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // =========================================================================
+    // 17개 단계별 상세 설정 정의
+    // =========================================================================
+    const STEPS = [
+      // -----------------------------------------------------------------------
+      // Step 01. 기본 그리드 생성 & DataAdapter 바인딩
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-01',
+        num: 'Step 01',
+        group: '기초 입문 (Basics)',
+        title: '기본 그리드 생성 & DataAdapter 바인딩',
+        shortDesc: 'LunaDataAdapter 데이터 모델 분리 및 기초 렌더링',
+        desc: '엔터프라이즈 듀얼 아키텍처의 핵심인 LunaDataAdapter(데이터 계층)와 GridView(렌더링 계층)를 생성하고 바인딩하는 가장 기본적인 예제입니다.',
+        tags: ['LunaDataAdapter', 'GridView', 'Data Binding', 'Hello World'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '임직원 기초 명부 (더블클릭 편집 가능)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            editable: true,
+            columns: [
+              { name: 'id', fieldName: 'id', header: { text: 'ID' }, width: 70, align: 'center', readOnly: true },
+              { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 120, align: 'center', editor: 'text' },
+              { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140, align: 'center', editor: 'text' },
+              { name: 'role', fieldName: 'role', header: { text: '직급' }, width: 120, align: 'center', editor: 'text' },
+              { name: 'email', fieldName: 'email', header: { text: '이메일' }, width: 220, editor: 'text' }
+            ]
+          });
+
+          const rows = [
+            { id: 101, name: '김민준', dept: '플랫폼개발팀', role: '수석 연구원', email: 'minjun.kim@luna.io' },
+            { id: 102, name: '이서연', dept: '데이터엔지니어링', role: '책임 연구원', email: 'sy.lee@luna.io' },
+            { id: 103, name: '박도현', dept: '클라우드인프라', role: '선임 연구원', email: 'dh.park@luna.io' },
+            { id: 104, name: '최지우', dept: '보안아키텍처', role: '연구원', email: 'jw.choi@luna.io' },
+            { id: 105, name: '정하은', dept: 'UI/UX디자인', role: '선임 디자이너', email: 'he.jung@luna.io' },
+            { id: 106, name: '윤재원', dept: '플랫폼개발팀', role: '책임 연구원', email: 'jw.yoon@luna.io' },
+            { id: 107, name: '한소미', dept: '데이터엔지니어링', role: '선임 연구원', email: 'sm.han@luna.io' },
+            { id: 108, name: '강태양', dept: '클라우드인프라', role: '수석 연구원', email: 'ty.kang@luna.io' },
+            { id: 109, name: '임수빈', dept: '품질보증(QA)팀', role: '책임 연구원', email: 'sb.lim@luna.io' },
+            { id: 110, name: '오세훈', dept: 'AI전략연구소', role: '수석 연구원', email: 'sh.oh@luna.io' },
+            { id: 111, name: '백지영', dept: '서비스운영팀', role: '선임 매니저', email: 'jy.baek@luna.io' },
+            { id: 112, name: '송민호', dept: '전략기획팀', role: '책임 매니저', email: 'mh.song@luna.io' }
+          ];
+          dp.setRows(rows);
+          appendLog('INIT', `기본 그리드 로드 완료 (총 ${dp.getRowCount()}건)`);
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '➕ 행 추가 (Append)',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              const newId = 100 + dp.getRowCount() + 1;
+              dp.addRow({ id: newId, name: '신규입사자 ' + newId, dept: '미배치', role: '인턴', email: 'new' + newId + '@luna.io' });
+              appendLog('DATA', `신규 행 추가됨 (ID: ${newId})`);
+            }
+          },
+          {
+            label: '🔄 데이터셋 갱신',
+            cls: '',
+            onClick: (grid, dp) => {
+              dp.setRows([
+                { id: 201, name: '강동원', dept: 'AI Lab', role: '팀장', email: 'dw.kang@luna.io' },
+                { id: 202, name: '한지민', dept: '전략기획팀', role: '이사', email: 'jm.han@luna.io' }
+              ]);
+              appendLog('DATA', '데이터셋이 신규 목록(2건)으로 교체되었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 01. 기본 그리드 생성 & DataAdapter 바인딩 전체 소스
+// =========================================================================
+
+// 1. 데이터 모델(LunaDataAdapter) 인스턴스 생성
+const dataAdapter = new LunaDataAdapter();
+
+// 2. 그리드 뷰(LunaGrid) 인스턴스 생성 및 옵션 바인딩
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '임직원 기초 명부',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  columns: [
+    { name: 'id', fieldName: 'id', header: { text: 'ID' }, width: 70, align: 'center' },
+    { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 120, align: 'center' },
+    { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140, align: 'center' },
+    { name: 'role', fieldName: 'role', header: { text: '직급' }, width: 120, align: 'center' },
+    { name: 'email', fieldName: 'email', header: { text: '이메일' }, width: 220 }
+  ]
+});
+
+// 3. 기초 데이터셋 정의 및 주입 (12건)
+const rows = [
+  { id: 101, name: '김민준', dept: '플랫폼개발팀', role: '수석 연구원', email: 'minjun.kim@luna.io' },
+  { id: 102, name: '이서연', dept: '데이터엔지니어링', role: '책임 연구원', email: 'sy.lee@luna.io' },
+  { id: 103, name: '박도현', dept: '클라우드인프라', role: '선임 연구원', email: 'dh.park@luna.io' },
+  { id: 104, name: '최지우', dept: '보안아키텍처', role: '연구원', email: 'jw.choi@luna.io' },
+  { id: 105, name: '정하은', dept: 'UI/UX디자인', role: '선임 디자이너', email: 'he.jung@luna.io' },
+  { id: 106, name: '윤재원', dept: '플랫폼개발팀', role: '책임 연구원', email: 'jw.yoon@luna.io' },
+  { id: 107, name: '한소미', dept: '데이터엔지니어링', role: '선임 연구원', email: 'sm.han@luna.io' },
+  { id: 108, name: '강태양', dept: '클라우드인프라', role: '수석 연구원', email: 'ty.kang@luna.io' },
+  { id: 109, name: '임수빈', dept: '품질보증(QA)팀', role: '책임 연구원', email: 'sb.lim@luna.io' },
+  { id: 110, name: '오세훈', dept: 'AI전략연구소', role: '수석 연구원', email: 'sh.oh@luna.io' },
+  { id: 111, name: '백지영', dept: '서비스운영팀', role: '선임 매니저', email: 'jy.baek@luna.io' },
+  { id: 112, name: '송민호', dept: '전략기획팀', role: '책임 매니저', email: 'mh.song@luna.io' }
+];
+dataAdapter.setRows(rows);
+
+// 4. 액션 1: 신규 행 추가 함수 (Append)
+function onAddRow() {
+  const newId = 100 + dataAdapter.getRowCount() + 1;
+  dataAdapter.addRow({
+    id: newId,
+    name: '신규입사자 ' + newId,
+    dept: '미배치',
+    role: '인턴',
+    email: 'new' + newId + '@luna.io'
+  });
+}
+
+// 5. 액션 2: 데이터셋 전체 교체 함수
+function onReloadData() {
+  dataAdapter.setRows([
+    { id: 201, name: '강동원', dept: 'AI Lab', role: '팀장', email: 'dw.kang@luna.io' },
+    { id: 202, name: '한지민', dept: '전략기획팀', role: '이사', email: 'jm.han@luna.io' }
+  ]);
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 02. 엔터프라이즈 3대 컨트롤 바
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-02',
+        num: 'Step 02',
+        group: '기초 입문 (Basics)',
+        title: '엔터프라이즈 3대 컨트롤 바 (Indicator / State / Check)',
+        shortDesc: '행 순번 No., C/U/D 실시간 상태, 다중 선택 체크박스 바',
+        desc: '그리드 좌측에 위치하여 실시간 데이터 변경 상태(Created, Updated, Deleted)와 체크박스 선택, 행 번호를 시각화하는 컨트롤 바 제어 예제입니다.',
+        tags: ['indicator', 'stateBar', 'checkBar', 'RowState'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '컨트롤 바 & 실시간 C/U/D 변경 상태 추적 (더블클릭 편집 가능)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            editable: true, // 셀 인라인 편집 활성화 (값 변경 시 StateBar 'U' 자동 반영)
+            indicator: { visible: true, label: 'No.', width: 45 },
+            stateBar: { visible: true, label: '상태', width: 45 },
+            checkBar: { visible: true, multiSelect: true, width: 40 },
+            columns: [
+              { name: 'prodId', fieldName: 'prodId', header: { text: '제품코드' }, width: 100, align: 'center', editor: 'text' },
+              { name: 'prodName', fieldName: 'prodName', header: { text: '제품명' }, width: 160, editor: 'text' },
+              { name: 'stock', fieldName: 'stock', header: { text: '재고량' }, width: 90, align: 'right', type: 'number', editor: 'number' },
+              { name: 'price', fieldName: 'price', header: { text: '단가' }, width: 120, align: 'right', formatter: 'currency', editor: 'number' }
+            ]
+          });
+
+          const rows = [
+            { prodId: 'SKU-001', prodName: '초고속 NVMe SSD 2TB', stock: 120, price: 245000 },
+            { prodId: 'SKU-002', prodName: 'DDR5 32GB 메모리', stock: 85, price: 135000 },
+            { prodId: 'SKU-003', prodName: '4K 게이밍 모니터 32"', stock: 42, price: 580000 },
+            { prodId: 'SKU-004', prodName: '인체공학 무선 기계식 키보드', stock: 150, price: 189000 },
+            { prodId: 'SKU-005', prodName: '정밀 무선 마우스', stock: 95, price: 89000 },
+            { prodId: 'SKU-006', prodName: 'USB4 썬더볼트 독', stock: 64, price: 210000 },
+            { prodId: 'SKU-007', prodName: '노이즈캔슬링 블루투스 헤드셋', stock: 110, price: 320000 },
+            { prodId: 'SKU-008', prodName: '광시야각 4K 웹캠', stock: 78, price: 145000 },
+            { prodId: 'SKU-009', prodName: '알루미늄 랩톱 스탠드', stock: 200, price: 45000 },
+            { prodId: 'SKU-010', prodName: 'PD 100W 고속 충전기', stock: 180, price: 38000 },
+            { prodId: 'SKU-011', prodName: '휴대용 외장 SSD 1TB', stock: 90, price: 128000 },
+            { prodId: 'SKU-012', prodName: '스마트 LED 데스크 램프', stock: 55, price: 79000 }
+          ];
+          dp.setRows(rows);
+
+          grid.onCellClicked = (idx) => {
+            appendLog('CLICK', `셀 클릭: Row ${idx.dataRow}, Field: ${idx.fieldName}`);
+          };
+          grid.onEditCommit = (cell, oldVal, newVal) => {
+            appendLog('STATE', `셀 값 변경 완료 [${cell.fieldName}]: ${oldVal} -> ${newVal} (StateBar 'U' 갱신됨)`);
+          };
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '➕ 신규 행 추가 (C 표시)',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              const idx = dp.addRow({ prodId: 'SKU-999', prodName: '신규 그래픽카드', stock: 10, price: 1200000 });
+              appendLog('STATE', `신규 행 추가 완료 (RowState: CREATED, 행 인덱스: ${idx})`);
+            }
+          },
+          {
+            label: '✏️ 1번 행 단가 수정 (U 표시)',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              dp.setValue(0, 'price', dp.getValue(0, 'price') + 5000);
+              appendLog('STATE', `0번 행 단가 변경 -> StateBar가 'U'(Updated)로 자동 갱신됨`);
+            }
+          },
+          {
+            label: '🗑️ 체크된 행 삭제 (D 표시)',
+            cls: 'btn-danger',
+            onClick: (grid, dp) => {
+              const checked = grid.getCheckedRows();
+              if (checked.length === 0) {
+                showToast('체크박스에서 삭제할 행을 먼저 선택해주세요!');
+                return;
+              }
+              dp.removeRows(checked);
+              appendLog('STATE', `선택된 ${checked.length}개 행 삭제 처리 완료 (RowState: DELETED)`);
+            }
+          },
+          {
+            label: '💾 상태 확정/초기화 (Commit)',
+            cls: '',
+            onClick: (grid, dp) => {
+              dp.commit();
+              appendLog('STATE', '모든 C/U/D 행 상태가 확정(Commit)되어 정상(NONE)으로 초기화되었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 02. 엔터프라이즈 3대 컨트롤 바 전체 소스
+// =========================================================================
+
+// 1. DataAdapter 생성
+const dataAdapter = new LunaDataAdapter();
+
+// 2. 3대 컨트롤 바(Indicator, StateBar, CheckBar) 활성화 그리드 생성
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '컨트롤 바 & 실시간 C/U/D 변경 상태 추적 (더블클릭 편집 가능)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  editable: true, // 셀 인라인 편집 활성화 (값 변경 시 StateBar 'U' 자동 반영)
+  // 좌측 3대 엔터프라이즈 컨트롤 바
+  indicator: { visible: true, label: 'No.', width: 45 },
+  stateBar:  { visible: true, label: '상태', width: 45 }, // C(생성), U(수정), D(삭제) 자동 추적
+  checkBar:  { visible: true, multiSelect: true, width: 40 },
+  columns: [
+    { name: 'prodId', fieldName: 'prodId', header: { text: '제품코드' }, width: 100, align: 'center', editor: 'text' },
+    { name: 'prodName', fieldName: 'prodName', header: { text: '제품명' }, width: 160, editor: 'text' },
+    { name: 'stock', fieldName: 'stock', header: { text: '재고량' }, width: 90, align: 'right', type: 'number', editor: 'number' },
+    { name: 'price', fieldName: 'price', header: { text: '단가' }, width: 120, align: 'right', formatter: 'currency', editor: 'number' }
+  ]
+});
+
+// 3. 초기 데이터 주입
+dataAdapter.setRows([
+  { prodId: 'SKU-001', prodName: '초고속 NVMe SSD 2TB', stock: 120, price: 245000 },
+  { prodId: 'SKU-002', prodName: 'DDR5 32GB 메모리', stock: 85, price: 135000 },
+  { prodId: 'SKU-003', prodName: '4K 게이밍 모니터 32"', stock: 42, price: 580000 },
+  { prodId: 'SKU-004', prodName: '인체공학 무선 기계식 키보드', stock: 150, price: 189000 },
+  { prodId: 'SKU-005', prodName: '정밀 무선 마우스', stock: 95, price: 89000 }
+]);
+
+// 4. 셀 클릭 이벤트 핸들러
+grid.onCellClicked = (idx) => {
+  console.log('셀 클릭: 행 ' + idx.dataRow + ', 필드: ' + idx.fieldName);
+};
+
+// 5. 액션 1: 신규 행 추가 (StateBar에 'C' 표시)
+function onAddNewRow() {
+  dataAdapter.addRow({ prodId: 'SKU-999', prodName: '신규 그래픽카드', stock: 10, price: 1200000 });
+}
+
+// 6. 액션 2: 행 수정 (StateBar에 'U' 표시)
+function onUpdateFirstRow() {
+  const currentPrice = dataAdapter.getValue(0, 'price');
+  dataAdapter.setValue(0, 'price', currentPrice + 5000);
+}
+
+// 7. 액션 3: 체크된 행 삭제 (StateBar에 'D' 표시)
+function onDeleteCheckedRows() {
+  const checked = grid.getCheckedRows();
+  if (checked.length > 0) {
+    dataAdapter.removeRows(checked);
+  }
+}
+
+// 8. 액션 4: 모든 변경 상태 확정 (Commit)
+function onCommitAll() {
+  dataAdapter.commit(); // C/U/D 상태가 초기화되어 'none'으로 저장됨
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 03. 컬럼 타입 & 서식 포매터
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-03',
+        num: 'Step 03',
+        group: '기초 입문 (Basics)',
+        title: '데이터 타입 & 서식 포매터 (Formatters)',
+        shortDesc: 'Number, Currency(통화), Date(날짜), Custom Formatter',
+        desc: '다양한 데이터 형식(통화 포맷팅, 세자리 콤마, 소수점 자릿수 제어, YYYY-MM-DD 날짜 서식)을 깔끔하게 표현하는 포매터 기능입니다.',
+        tags: ['formatter', 'currency', 'decimal', 'datetime', 'custom'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '재무 회계 데이터 포매팅',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            columns: [
+              { name: 'code', fieldName: 'code', header: { text: '거래번호' }, width: 90, align: 'center' },
+              { name: 'date', fieldName: 'date', header: { text: '거래일자' }, width: 110, align: 'center', type: 'datetime', format: 'yyyy-MM-dd' },
+              { name: 'amount', fieldName: 'amount', header: { text: '결제금액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' },
+              { name: 'vat', fieldName: 'vat', header: { text: '부가세(10%)' }, width: 120, align: 'right', type: 'number', formatter: 'currency' },
+              { name: 'marginRate', fieldName: 'marginRate', header: { text: '마진율' }, width: 100, align: 'right', type: 'number', 
+                formatter: (val) => val != null ? Number(val).toFixed(1) + ' %' : '-' 
+              },
+              { name: 'status', fieldName: 'status', header: { text: '승인상태' }, width: 110, align: 'center',
+                formatter: (val) => {
+                  if (val === 'APPROVED') return '✅ 승인완료';
+                  if (val === 'PENDING') return '⏳ 승인대기';
+                  return '❌ 반려';
+                }
+              }
+            ]
+          });
+
+          const rows = [
+            { code: 'TX-8801', date: '2026-08-15', amount: 15400000, vat: 1540000, marginRate: 24.5, status: 'APPROVED' },
+            { code: 'TX-8802', date: '2026-08-16', amount: 8900000, vat: 890000, marginRate: 18.2, status: 'APPROVED' },
+            { code: 'TX-8803', date: '2026-08-17', amount: 2350000, vat: 235000, marginRate: 12.0, status: 'PENDING' },
+            { code: 'TX-8804', date: '2026-08-18', amount: 45000000, vat: 4500000, marginRate: 31.8, status: 'APPROVED' },
+            { code: 'TX-8805', date: '2026-08-18', amount: 1200000, vat: 120000, marginRate: 8.5, status: 'REJECTED' },
+            { code: 'TX-8806', date: '2026-08-19', amount: 19800000, vat: 1980000, marginRate: 27.4, status: 'APPROVED' },
+            { code: 'TX-8807', date: '2026-08-19', amount: 3400000, vat: 340000, marginRate: 15.0, status: 'PENDING' },
+            { code: 'TX-8808', date: '2026-08-20', amount: 28500000, vat: 2850000, marginRate: 22.1, status: 'APPROVED' },
+            { code: 'TX-8809', date: '2026-08-20', amount: 6200000, vat: 620000, marginRate: 19.8, status: 'APPROVED' },
+            { code: 'TX-8810', date: '2026-08-21', amount: 950000, vat: 95000, marginRate: 5.2, status: 'REJECTED' }
+          ];
+          dp.setRows(rows);
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '💱 통화 포맷 순환 (KRW ➔ USD ➔ JPY)',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              const loc = grid.getLocale();
+              const curr = loc.currency || 'KRW';
+              let nextLocale = 'en';
+              if (curr === 'KRW') nextLocale = 'en';
+              else if (curr === 'USD') nextLocale = 'ja';
+              else nextLocale = 'ko';
+
+              LunaGridLocaleManager.setLocale(nextLocale);
+              grid.setLocale(nextLocale);
+              const updatedLoc = grid.getLocale();
+              appendLog('LOCALE', `글로벌 통화 포맷이 [${updatedLoc.currency} (${updatedLoc.currencySymbol})] (${nextLocale.toUpperCase()}) 로 변경되었습니다.`);
+            }
+          },
+          {
+            label: '📅 거래일자 서식 변경 (yyyy-MM-dd ↔ yyyy년 MM월 dd일)',
+            cls: 'btn-secondary',
+            onClick: (grid, dp) => {
+              const col = grid.columnByName('date');
+              if (col) {
+                col.dateFormat = col.dateFormat === 'yyyy년 MM월 dd일' ? 'yyyy-MM-dd' : 'yyyy년 MM월 dd일';
+                grid.refresh();
+                appendLog('FORMATTER', `거래일자 서식이 [${col.dateFormat}] 로 변경되었습니다.`);
+              }
+            }
+          },
+          {
+            label: '📈 마진율 +5.0% 인상 & 실시간 리렌더링',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              const rows = dp.getRows();
+              rows.forEach((r, idx) => {
+                const currentRate = Number(r.marginRate || 0);
+                dp.setValue(idx, 'marginRate', Math.min(100, currentRate + 5.0));
+              });
+              appendLog('UPDATE', `모든 행의 마진율이 +5.0% 인상되었습니다. 커스텀 포매터가 실시간 적용됩니다.`);
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 03. 데이터 타입 & 서식 포매터(Formatters) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '재무 회계 데이터 포매팅',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  columns: [
+    { name: 'code', fieldName: 'code', header: { text: '거래번호' }, width: 90, align: 'center' },
+    // 날짜 포매터 (yyyy-MM-dd)
+    { name: 'date', fieldName: 'date', header: { text: '거래일자' }, width: 110, align: 'center', type: 'datetime', format: 'yyyy-MM-dd' },
+    // 내장 통화(Currency) 포매터 (로케일에 따라 ₩ / $ / ¥ 자동 변환)
+    { name: 'amount', fieldName: 'amount', header: { text: '결제금액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' },
+    { name: 'vat', fieldName: 'vat', header: { text: '부가세(10%)' }, width: 120, align: 'right', type: 'number', formatter: 'currency' },
+    // 커스텀 함수형 포매터 (소수점 1자리 % 서식)
+    { 
+      name: 'marginRate', 
+      fieldName: 'marginRate', 
+      header: { text: '마진율' }, 
+      width: 100, 
+      align: 'right', 
+      type: 'number', 
+      formatter: (val) => val != null ? Number(val).toFixed(1) + ' %' : '-' 
+    },
+    // 상태 뱃지형 텍스트 포매터
+    { 
+      name: 'status', 
+      fieldName: 'status', 
+      header: { text: '승인상태' }, 
+      width: 110, 
+      align: 'center',
+      formatter: (val) => {
+        if (val === 'APPROVED') return '✅ 승인완료';
+        if (val === 'PENDING') return '⏳ 승인대기';
+        return '❌ 반려';
+      }
+    }
+  ]
+});
+
+// 초기 데이터 주입 (10건)
+dataAdapter.setRows([
+  { code: 'TX-8801', date: '2026-08-15', amount: 15400000, vat: 1540000, marginRate: 24.5, status: 'APPROVED' },
+  { code: 'TX-8802', date: '2026-08-16', amount: 8900000, vat: 890000, marginRate: 18.2, status: 'APPROVED' },
+  { code: 'TX-8803', date: '2026-08-17', amount: 2350000, vat: 235000, marginRate: 12.0, status: 'PENDING' },
+  { code: 'TX-8804', date: '2026-08-18', amount: 45000000, vat: 4500000, marginRate: 31.8, status: 'APPROVED' },
+  { code: 'TX-8805', date: '2026-08-18', amount: 1200000, vat: 120000, marginRate: 8.5, status: 'REJECTED' },
+  { code: 'TX-8806', date: '2026-08-19', amount: 19800000, vat: 1980000, marginRate: 27.4, status: 'APPROVED' },
+  { code: 'TX-8807', date: '2026-08-19', amount: 3400000, vat: 340000, marginRate: 15.0, status: 'PENDING' },
+  { code: 'TX-8808', date: '2026-08-20', amount: 28500000, vat: 2850000, marginRate: 22.1, status: 'APPROVED' },
+  { code: 'TX-8809', date: '2026-08-20', amount: 6200000, vat: 620000, marginRate: 19.8, status: 'APPROVED' },
+  { code: 'TX-8810', date: '2026-08-21', amount: 950000, vat: 95000, marginRate: 5.2, status: 'REJECTED' }
+]);
+
+// 액션 1: 글로벌 통화 포맷 순환 (KRW ➔ USD ➔ JPY)
+function onCycleCurrency() {
+  const currentCurr = grid.getLocale().currency || 'KRW';
+  const nextLocale = currentCurr === 'KRW' ? 'en' : (currentCurr === 'USD' ? 'ja' : 'ko');
+  LunaGridLocaleManager.setLocale(nextLocale);
+  grid.setLocale(nextLocale);
+}
+
+// 액션 2: 날짜 서식 동적 변경
+function onToggleDateFormat() {
+  const col = grid.columnByName('date');
+  col.dateFormat = col.dateFormat === 'yyyy년 MM월 dd일' ? 'yyyy-MM-dd' : 'yyyy년 MM월 dd일';
+  grid.refresh();
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 04. 7대 풍부한 컬럼 렌더러
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-04',
+        num: 'Step 04',
+        group: 'UI/UX 시각화 (Visualization)',
+        title: '7대 풍부한 컬럼 렌더러 (Column Renderers)',
+        shortDesc: 'Progress Bar, Badge, Rating 별점, Sparkline SVG 차트, Avatar',
+        desc: '단순한 텍스트를 넘어 프로그레스 바, 뱃지, 별점 평가, 미니 SVG 스파크라인 차트, 프로필 아바타를 셀 내에 화려하게 렌더링합니다.',
+        tags: ['progress', 'badge', 'rating', 'sparkline', 'avatar', 'switch'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '프로젝트 KPI 및 팀원 성과 대시보드',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            rowHeight: 38,
+            columns: [
+              { name: 'avatar', fieldName: 'avatar', header: { text: '담당자' }, width: 110, align: 'center', renderer: 'avatar' },
+              { name: 'projName', fieldName: 'projName', header: { text: '프로젝트명' }, width: 160 },
+              { name: 'progress', fieldName: 'progress', header: { text: '진척도' }, width: 150, 
+                renderer: { type: 'progress', min: 0, max: 100, showLabel: true } 
+              },
+              { name: 'status', fieldName: 'status', header: { text: '상태' }, width: 100, align: 'center',
+                renderer: { 
+                  type: 'badge', 
+                  colorMap: { '진행중': 'primary', '완료': 'success', '지연': 'danger', '검토대기': 'warning' } 
+                }
+              },
+              { name: 'rating', fieldName: 'rating', header: { text: '만족도' }, width: 130, align: 'center',
+                renderer: { type: 'rating', max: 5 }
+              },
+              { name: 'trend', fieldName: 'trend', header: { text: '주간추이' }, width: 130, align: 'center',
+                renderer: { type: 'sparkline', color: '#38bdf8' }
+              }
+            ]
+          });
+
+          const rows = [
+            { avatar: '김현우', projName: '차세대 코어 엔진 3.0', progress: 92, status: '진행중', rating: 5, trend: [10, 25, 45, 60, 85, 92] },
+            { avatar: '이수진', projName: '글로벌 결제 모듈 연동', progress: 100, status: '완료', rating: 4, trend: [20, 40, 60, 80, 95, 100] },
+            { avatar: '박민호', projName: '대용량 데이터 파이프라인', progress: 35, status: '지연', rating: 3, trend: [15, 20, 25, 30, 32, 35] },
+            { avatar: '최유나', projName: '보안 인증 및 감사 로깅', progress: 78, status: '진행중', rating: 5, trend: [30, 45, 55, 65, 70, 78] },
+            { avatar: '정재훈', projName: '모바일 반응형 웹 최적화', progress: 50, status: '검토대기', rating: 4, trend: [10, 20, 30, 40, 45, 50] },
+            { avatar: '강다은', projName: 'AI 추천 큐레이션 모델', progress: 85, status: '진행중', rating: 5, trend: [25, 40, 55, 70, 80, 85] },
+            { avatar: '윤성민', projName: 'MSA 서비스 메시 전환', progress: 68, status: '진행중', rating: 4, trend: [10, 30, 45, 55, 60, 68] },
+            { avatar: '한지우', projName: '실시간 이상징후 탐지 FDS', progress: 95, status: '완료', rating: 5, trend: [35, 50, 70, 85, 90, 95] },
+            { avatar: '임도현', projName: 'CDN 글로벌 엣지 가속화', progress: 28, status: '지연', rating: 2, trend: [10, 15, 20, 22, 25, 28] },
+            { avatar: '송하린', projName: '디자인 시스템 토큰 구축', progress: 90, status: '완료', rating: 5, trend: [40, 60, 75, 85, 88, 90] }
+          ];
+          dp.setRows(rows);
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '🎲 무작위 진척도/추이 업데이트',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              dp.getRows().forEach((r, idx) => {
+                const newProg = Math.floor(Math.random() * 100);
+                const newTrend = [10, Math.floor(Math.random() * 50), Math.floor(Math.random() * 80), newProg];
+                dp.setValue(idx, 'progress', newProg);
+                dp.setValue(idx, 'trend', newTrend);
+              });
+              appendLog('RENDER', '진척도 및 스파크라인 차트 데이터가 실시간 갱신되었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 04. 7대 풍부한 컬럼 렌더러(Column Renderers) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '프로젝트 KPI 및 팀원 성과 대시보드',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  rowHeight: 38,
+  columns: [
+    // 1. 아바타(Avatar) 렌더러
+    { name: 'avatar', fieldName: 'avatar', header: { text: '담당자' }, width: 110, align: 'center', renderer: 'avatar' },
+    { name: 'projName', fieldName: 'projName', header: { text: '프로젝트명' }, width: 160 },
+    // 2. 수치 프로그레스 바(Progress Bar) 렌더러
+    { 
+      name: 'progress', 
+      fieldName: 'progress', 
+      header: { text: '진척도' }, 
+      width: 150, 
+      renderer: { type: 'progress', min: 0, max: 100, showLabel: true } 
+    },
+    // 3. 상태 컬러 뱃지(Badge) 렌더러
+    { 
+      name: 'status', 
+      fieldName: 'status', 
+      header: { text: '상태' }, 
+      width: 100, 
+      align: 'center',
+      renderer: { 
+        type: 'badge', 
+        colorMap: { '진행중': 'primary', '완료': 'success', '지연': 'danger', '검토대기': 'warning' } 
+      }
+    },
+    // 4. 별점(Star Rating) 렌더러
+    { 
+      name: 'rating', 
+      fieldName: 'rating', 
+      header: { text: '만족도' }, 
+      width: 130, 
+      align: 'center',
+      renderer: { type: 'rating', max: 5 }
+    },
+    // 5. 미니 SVG 스파크라인(Sparkline) 라인 차트 렌더러
+    { 
+      name: 'trend', 
+      fieldName: 'trend', 
+      header: { text: '주간추이' }, 
+      width: 130, 
+      align: 'center',
+      renderer: { type: 'sparkline', color: '#38bdf8' }
+    }
+  ]
+});
+
+// 초기 데이터 주입
+dataAdapter.setRows([
+  { avatar: '김현우', projName: '차세대 코어 엔진 3.0', progress: 92, status: '진행중', rating: 5, trend: [10, 25, 45, 60, 85, 92] },
+  { avatar: '이수진', projName: '글로벌 결제 모듈 연동', progress: 100, status: '완료', rating: 4, trend: [20, 40, 60, 80, 95, 100] },
+  { avatar: '박민호', projName: '대용량 데이터 파이프라인', progress: 35, status: '지연', rating: 3, trend: [15, 20, 25, 30, 32, 35] },
+  { avatar: '최유나', projName: '보안 인증 및 감사 로깅', progress: 78, status: '진행중', rating: 5, trend: [30, 45, 55, 65, 70, 78] },
+  { avatar: '정재훈', projName: '모바일 반응형 웹 최적화', progress: 50, status: '검토대기', rating: 4, trend: [10, 20, 30, 40, 45, 50] }
+]);
+
+// 액션: 실시간 데이터 갱신 시뮬레이션
+function onRandomUpdate() {
+  dataAdapter.getRows().forEach((r, idx) => {
+    const newProg = Math.floor(Math.random() * 100);
+    const newTrend = [10, Math.floor(Math.random() * 50), Math.floor(Math.random() * 80), newProg];
+    dataAdapter.setValue(idx, 'progress', newProg);
+    dataAdapter.setValue(idx, 'trend', newTrend);
+  });
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 05. 정교한 인라인 에디터 & LookupTree
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-05',
+        num: 'Step 05',
+        group: '편집 & 검증 (Editing & Validation)',
+        title: '정교한 인라인 에디터 (Inline Editors) & 계층 Lookup',
+        shortDesc: 'DatePicker, NumberSpin, AutoComplete, Select, LookupTree',
+        desc: '더블클릭 또는 F2키로 진입하는 인라인 편집기입니다. 날짜 피커, 숫자 스핀, 자동완성, 드롭다운 셀렉트, 대분류-소분류 계층형 Lookup을 제공합니다.',
+        tags: ['editor', 'datePicker', 'numberSpin', 'autoComplete', 'select', 'lookupTree'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '인라인 데이터 편집 (더블 클릭하여 편집 시작)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            columns: [
+              { name: 'orderId', fieldName: 'orderId', header: { text: '주문번호' }, width: 90, align: 'center', editable: false },
+              { name: 'client', fieldName: 'client', header: { text: '고객사' }, width: 140, 
+                editor: { 
+                  type: 'autoComplete', 
+                  candidates: ['삼성전자', 'LG전자', '현대자동차', '네이버', '카카오', '쿠팡', '토스', 'SK텔레콤'] 
+                }
+              },
+              { name: 'category', fieldName: 'category', header: { text: '품목구분' }, width: 130, align: 'center',
+                editor: {
+                  type: 'select',
+                  options: ['서버/인프라', '소프트웨어', '클라우드라이선스', '컨설팅', '유지보수']
+                }
+              },
+              { name: 'orderDate', fieldName: 'orderDate', header: { text: '주문일' }, width: 130, align: 'center',
+                editor: { type: 'datePicker', format: 'yyyy-MM-dd' }
+              },
+              { name: 'qty', fieldName: 'qty', header: { text: '수량' }, width: 90, align: 'right', type: 'number',
+                editor: { type: 'numberSpin', min: 1, max: 999, step: 1 }
+              },
+              { name: 'unitPrice', fieldName: 'unitPrice', header: { text: '단가' }, width: 130, align: 'right', type: 'number',
+                formatter: 'currency',
+                editor: { type: 'numberSpin', min: 1000, step: 10000 }
+              }
+            ]
+          });
+
+          const rows = [
+            { orderId: 'ORD-101', client: '삼성전자', category: '서버/인프라', orderDate: '2026-08-10', qty: 5, unitPrice: 4500000 },
+            { orderId: 'ORD-102', client: '네이버', category: '클라우드라이선스', orderDate: '2026-08-12', qty: 50, unitPrice: 89000 },
+            { orderId: 'ORD-103', client: '현대자동차', category: '컨설팅', orderDate: '2026-08-14', qty: 1, unitPrice: 12000000 },
+            { orderId: 'ORD-104', client: '토스', category: '소프트웨어', orderDate: '2026-08-17', qty: 20, unitPrice: 350000 }
+          ];
+          dp.setRows(rows);
+
+          grid.onEditCommit = (idx, oldValue, newValue) => {
+            appendLog('EDIT', `편집 완료: [Row ${idx.dataRow}, ${idx.fieldName}] '${oldValue}' -> '${newValue}'`);
+          };
+
+          grid._originalColumns = grid.options.columns;
+          grid._originalRows = rows;
+          grid._restoreOriginal = function() {
+            if (!this.options.columns.find(c => c.name === 'client')) {
+              this.setColumns(this._originalColumns);
+              dp.setRows(this._originalRows);
+            }
+          };
+
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '🎯 [이미지 참조] 이름/성별/나이 편집 모드',
+            cls: 'btn-danger',
+            onClick: (grid, dp) => {
+              grid.setColumns([
+                { name: 'name', fieldName: 'name', header: { text: '이름' }, width: 120, align: 'center', editor: 'text' },
+                { name: 'gender', fieldName: 'gender', header: { text: '성별' }, width: 80, align: 'center', editor: { type: 'select', options: ['남', '여'] } },
+                { name: 'age', fieldName: 'age', header: { text: '나이' }, width: 80, align: 'center', type: 'number', editor: 'text' },
+                { name: 'phone', fieldName: 'phone', header: { text: '전화번호' }, width: 180, align: 'center', editor: 'text' }
+              ]);
+              dp.setRows([
+                { name: '박영호', gender: '남', age: 71, phone: '(025)6563-2802' },
+                { name: '조일형', gender: '남', age: '', phone: '' },
+                { name: '김미영', gender: '여', age: 29, phone: '(010)2345-6789' }
+              ]);
+              setTimeout(() => {
+                grid.setFocusCell(0, 'age');
+                grid.showEditor(0, 'age');
+              }, 50);
+              appendLog('ACTION', '참조 이미지 데이터(이름, 성별, 나이, 전화번호)를 로드하고 [나이] 셀 편집 모드를 실행했습니다.');
+            }
+          },
+          {
+            label: '✏️ 0번 행 [고객사: 자동완성] 편집',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              grid._restoreOriginal();
+              grid.setFocusCell(0, 'client');
+              grid.showEditor(0, 'client');
+              appendLog('ACTION', '0번 행 [고객사] 셀의 AutoComplete 에디터를 열었습니다.');
+            }
+          },
+          {
+            label: '📋 1번 행 [품목구분: 드롭다운] 편집',
+            cls: 'btn-secondary',
+            onClick: (grid, dp) => {
+              grid._restoreOriginal();
+              grid.setFocusCell(1, 'category');
+              grid.showEditor(1, 'category');
+              appendLog('ACTION', '1번 행 [품목구분] 셀의 Select 에디터를 열었습니다.');
+            }
+          },
+          {
+            label: '📅 2번 행 [주문일: 날짜피커] 편집',
+            cls: 'btn-warning',
+            onClick: (grid, dp) => {
+              grid._restoreOriginal();
+              grid.setFocusCell(2, 'orderDate');
+              grid.showEditor(2, 'orderDate');
+              appendLog('ACTION', '2번 행 [주문일] 셀의 DatePicker 에디터를 열었습니다.');
+            }
+          },
+          {
+            label: '🔢 3번 행 [수량: 숫자스핀] 편집',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              grid._restoreOriginal();
+              grid.setFocusCell(3, 'qty');
+              grid.showEditor(3, 'qty');
+              appendLog('ACTION', '3번 행 [수량] 셀의 NumberSpin 에디터를 열었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 05. 정교한 인라인 에디터(Inline Editors) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '인라인 데이터 편집 (더블 클릭하여 편집 시작)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  columns: [
+    { name: 'orderId', fieldName: 'orderId', header: { text: '주문번호' }, width: 90, align: 'center', editable: false },
+    // 1. 자동완성(AutoComplete) 에디터
+    { 
+      name: 'client', 
+      fieldName: 'client', 
+      header: { text: '고객사' }, 
+      width: 140, 
+      editor: { 
+        type: 'autoComplete', 
+        candidates: ['삼성전자', 'LG전자', '현대자동차', '네이버', '카카오', '쿠팡', '토스', 'SK텔레콤'] 
+      }
+    },
+    // 2. 드롭다운 선택(Select) 에디터
+    { 
+      name: 'category', 
+      fieldName: 'category', 
+      header: { text: '품목구분' }, 
+      width: 130, 
+      align: 'center',
+      editor: {
+        type: 'select',
+        options: ['서버/인프라', '소프트웨어', '클라우드라이선스', '컨설팅', '유지보수']
+      }
+    },
+    // 3. 날짜 피커(DatePicker) 에디터
+    { 
+      name: 'orderDate', 
+      fieldName: 'orderDate', 
+      header: { text: '주문일' }, 
+      width: 130, 
+      align: 'center',
+      editor: { type: 'datePicker', format: 'yyyy-MM-dd' }
+    },
+    // 4. 숫자 스핀(NumberSpin) 에디터
+    { 
+      name: 'qty', 
+      fieldName: 'qty', 
+      header: { text: '수량' }, 
+      width: 90, 
+      align: 'right', 
+      type: 'number',
+      editor: { type: 'numberSpin', min: 1, max: 999, step: 1 }
+    },
+    { 
+      name: 'unitPrice', 
+      fieldName: 'unitPrice', 
+      header: { text: '단가' }, 
+      width: 130, 
+      align: 'right', 
+      type: 'number',
+      formatter: 'currency',
+      editor: { type: 'numberSpin', min: 1000, step: 10000 }
+    }
+  ]
+});
+
+// 초기 데이터 주입 (10건)
+dataAdapter.setRows([
+  { orderId: 'ORD-101', client: '삼성전자', category: '서버/인프라', orderDate: '2026-08-10', qty: 5, unitPrice: 4500000 },
+  { orderId: 'ORD-102', client: '네이버', category: '클라우드라이선스', orderDate: '2026-08-12', qty: 50, unitPrice: 89000 },
+  { orderId: 'ORD-103', client: '현대자동차', category: '컨설팅', orderDate: '2026-08-14', qty: 1, unitPrice: 12000000 },
+  { orderId: 'ORD-104', client: '토스', category: '소프트웨어', orderDate: '2026-08-17', qty: 20, unitPrice: 350000 },
+  { orderId: 'ORD-105', client: '카카오', category: '서버/인프라', orderDate: '2026-08-18', qty: 12, unitPrice: 2800000 },
+  { orderId: 'ORD-106', client: '쿠팡', category: '유지보수', orderDate: '2026-08-18', qty: 8, unitPrice: 1500000 },
+  { orderId: 'ORD-107', client: 'LG전자', category: '소프트웨어', orderDate: '2026-08-19', qty: 15, unitPrice: 420000 },
+  { orderId: 'ORD-108', client: 'SK텔레콤', category: '클라우드라이선스', orderDate: '2026-08-19', qty: 30, unitPrice: 95000 },
+  { orderId: 'ORD-109', client: '배달의민족', category: '컨설팅', orderDate: '2026-08-20', qty: 2, unitPrice: 8000000 },
+  { orderId: 'ORD-110', client: '당근마켓', category: '서버/인프라', orderDate: '2026-08-20', qty: 6, unitPrice: 3100000 }
+]);
+
+// 셀 편집 완료 리스너
+grid.onEditCommit = (idx, oldValue, newValue) => {
+  console.log('편집 완료: Row ' + idx.dataRow + ', ' + idx.fieldName + ': ' + oldValue + ' -> ' + newValue);
+};
+
+// 액션: 0번 행 고객사 셀의 인라인 에디터 강제 오픈
+function onOpenFirstEditor() {
+  grid.setFocusCell(0, 'client');
+  grid.showEditor();
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 06. 실시간 데이터 유효성 검사 (Validation)
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-06',
+        num: 'Step 06',
+        group: '편집 & 검증 (Editing & Validation)',
+        title: '실시간 데이터 유효성 검사 (Validation & Commit)',
+        shortDesc: '필수값, 범위 검증, 정규식 검사, 에러/경고 레벨',
+        desc: '입력된 값의 적합성을 사전에 검증하고 유효하지 않은 데이터가 커밋되는 것을 방지합니다. Error 및 Warning 레벨 툴팁을 제공합니다.',
+        tags: ['validations', 'ValidationLevel', 'commit', 'rollback'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '임직원 등록 유효성 검증 (나이: 18~65세, 이메일 형식 필수)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            stateBar: { visible: true },
+            columns: [
+              { name: 'empNo', fieldName: 'empNo', header: { text: '사번' }, width: 90, align: 'center' },
+              { name: 'name', fieldName: 'name', header: { text: '성명*' }, width: 110, align: 'center',
+                validations: [
+                  { criteria: 'value != null && value.trim().length > 0', message: '성명은 필수 입력 항목입니다.', level: 'error' }
+                ]
+              },
+              { name: 'age', fieldName: 'age', header: { text: '나이*' }, width: 90, align: 'right', type: 'number',
+                validations: [
+                  { criteria: 'value >= 18 && value <= 65', message: '나이는 18세 이상 65세 이하여야 합니다.', level: 'error' }
+                ]
+              },
+              { name: 'email', fieldName: 'email', header: { text: '이메일*' }, width: 220,
+                validations: [
+                  { criteria: '/^[^@]+@[^@]+\\.[^@]+$/.test(value)', message: '올바른 이메일 형식이 아닙니다.', level: 'warning' }
+                ]
+              },
+              { name: 'score', fieldName: 'score', header: { text: '평가점수' }, width: 110, align: 'right', type: 'number',
+                validations: [
+                  { criteria: 'value >= 0 && value <= 100', message: '평가점수는 0~100점 사이여야 합니다.', level: 'error' }
+                ]
+              }
+            ]
+          });
+
+          const rows = [
+            { empNo: 'E-001', name: '홍길동', age: 32, email: 'gildong@luna.io', score: 95 },
+            { empNo: 'E-002', name: '이순신', age: 45, email: 'sunshin@luna.io', score: 88 },
+            { empNo: 'E-003', name: '강감찬', age: 15, email: 'invalid-email', score: 120 }, // 유효성 위반 데이터
+            { empNo: 'E-004', name: '유관순', age: 28, email: 'ks.yu@luna.io', score: 92 },
+            { empNo: 'E-005', name: '안중근', age: 35, email: 'jk.ahn@luna.io', score: 85 },
+            { empNo: 'E-006', name: '신사임당', age: 40, email: 'smd.shin@luna.io', score: 98 },
+            { empNo: 'E-007', name: '세종대왕', age: 50, email: 'king.sejong@luna.io', score: 100 },
+            { empNo: 'E-008', name: '정약용', age: 38, email: 'yy.jeong@luna.io', score: 94 },
+            { empNo: 'E-009', name: '장영실', age: 33, email: 'ys.jang@luna.io', score: 96 },
+            { empNo: 'E-010', name: '허준', age: 42, email: 'jun.heo@luna.io', score: 90 }
+          ];
+          dp.setRows(rows);
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '🔍 전체 데이터 유효성 검사 실행',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              const errors = grid.validateRows ? grid.validateRows() : [];
+              if (errors && errors.length > 0) {
+                appendLog('VALIDATION', `❌ 검증 실패: 총 ${errors.length}건의 오류 발생! (${errors[0].message})`);
+                showToast(`유효성 검사 실패 (${errors.length}건 오류 발견)`);
+              } else {
+                appendLog('VALIDATION', '✅ 모든 데이터가 유효성 검사를 통과했습니다.');
+                showToast('모든 데이터가 유효합니다!');
+              }
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 06. 실시간 데이터 유효성 검사(Validation) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '임직원 등록 유효성 검증 (나이: 18~65세, 이메일 형식 필수)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  stateBar: { visible: true },
+  columns: [
+    { name: 'empNo', fieldName: 'empNo', header: { text: '사번' }, width: 90, align: 'center' },
+    // 1. 필수값(Required) 검증
+    { 
+      name: 'name', 
+      fieldName: 'name', 
+      header: { text: '성명*' }, 
+      width: 110, 
+      align: 'center',
+      validations: [
+        { criteria: 'value != null && value.trim().length > 0', message: '성명은 필수 입력 항목입니다.', level: 'error' }
+      ]
+    },
+    // 2. 수치 범위(18 ~ 65세) 검증
+    { 
+      name: 'age', 
+      fieldName: 'age', 
+      header: { text: '나이*' }, 
+      width: 90, 
+      align: 'right', 
+      type: 'number',
+      validations: [
+        { criteria: 'value >= 18 && value <= 65', message: '나이는 18세 이상 65세 이하여야 합니다.', level: 'error' }
+      ]
+    },
+    // 3. 정규식(Regex) 이메일 형식 검증
+    { 
+      name: 'email', 
+      fieldName: 'email', 
+      header: { text: '이메일*' }, 
+      width: 220,
+      validations: [
+        { criteria: '/^[^@]+@[^@]+\\.[^@]+$/.test(value)', message: '올바른 이메일 형식이 아닙니다.', level: 'warning' }
+      ]
+    },
+    // 4. 평가점수 (0 ~ 100점) 검증
+    { 
+      name: 'score', 
+      fieldName: 'score', 
+      header: { text: '평가점수' }, 
+      width: 110, 
+      align: 'right', 
+      type: 'number',
+      validations: [
+        { criteria: 'value >= 0 && value <= 100', message: '평가점수는 0~100점 사이여야 합니다.', level: 'error' }
+      ]
+    }
+  ]
+});
+
+// 초기 데이터 주입 (10건)
+dataAdapter.setRows([
+  { empNo: 'E-001', name: '홍길동', age: 32, email: 'gildong@luna.io', score: 95 },
+  { empNo: 'E-002', name: '이순신', age: 45, email: 'sunshin@luna.io', score: 88 },
+  { empNo: 'E-003', name: '강감찬', age: 15, email: 'invalid-email', score: 120 }, // 유효성 위반
+  { empNo: 'E-004', name: '유관순', age: 28, email: 'ks.yu@luna.io', score: 92 },
+  { empNo: 'E-005', name: '안중근', age: 35, email: 'jk.ahn@luna.io', score: 85 },
+  { empNo: 'E-006', name: '신사임당', age: 40, email: 'smd.shin@luna.io', score: 98 },
+  { empNo: 'E-007', name: '세종대왕', age: 50, email: 'king.sejong@luna.io', score: 100 },
+  { empNo: 'E-008', name: '정약용', age: 38, email: 'yy.jeong@luna.io', score: 94 },
+  { empNo: 'E-009', name: '장영실', age: 33, email: 'ys.jang@luna.io', score: 96 },
+  { empNo: 'E-010', name: '허준', age: 42, email: 'jun.heo@luna.io', score: 90 }
+]);
+
+// 액션: 전체 데이터 유효성 검사 수행
+function onValidateAll() {
+  const errors = grid.validateRows ? grid.validateRows() : [];
+  if (errors.length > 0) {
+    alert('유효성 검사 실패: ' + errors.length + '건');
+  } else {
+    alert('모든 데이터가 유효합니다.');
+  }
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 07. 계산 필드 & 동적 표현식 (Calculated Fields)
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-07',
+        num: 'Step 07',
+        group: '엔터프라이즈 기능 (Enterprise)',
+        title: '계산 필드 (Calculated Field) & 동적 표현식',
+        shortDesc: 'valueExpression & valueCallback 실시간 동적 연산',
+        desc: '수량이나 단가, 할인율이 변경될 때 수식(valueExpression) 또는 콜백(valueCallback)을 통해 공급가액 및 총액을 실시간 자동 계산합니다.',
+        tags: ['valueExpression', 'valueCallback', 'Calculated Fields', 'Realtime Math'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '실시간 견적 산출 (수량/단가 변경 시 자동 계산)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            columns: [
+              { name: 'item', fieldName: 'item', header: { text: '품목' }, width: 140 },
+              { name: 'qty', fieldName: 'qty', header: { text: '수량' }, width: 80, align: 'right', type: 'number',
+                editor: { type: 'numberSpin', min: 1 }
+              },
+              { name: 'unitPrice', fieldName: 'unitPrice', header: { text: '단가' }, width: 110, align: 'right', type: 'number',
+                formatter: 'currency',
+                editor: { type: 'numberSpin', min: 100 }
+              },
+              { name: 'discountRate', fieldName: 'discountRate', header: { text: '할인율(%)' }, width: 90, align: 'right', type: 'number',
+                editor: { type: 'numberSpin', min: 0, max: 50 }
+              },
+              // 계산 필드 1: 공급가액 (수량 * 단가)
+              { name: 'supplyAmount', header: { text: '공급가액' }, width: 130, align: 'right', type: 'number',
+                formatter: 'currency',
+                valueExpression: 'qty * unitPrice'
+              },
+              // 계산 필드 2: 최종 결제액 (할인율 적용 콜백)
+              { name: 'totalAmount', header: { text: '최종 결제액' }, width: 140, align: 'right', type: 'number',
+                formatter: 'currency',
+                valueCallback: (row) => {
+                  const supply = (row.qty || 0) * (row.unitPrice || 0);
+                  const discount = supply * ((row.discountRate || 0) / 100);
+                  return supply - discount;
+                }
+              }
+            ]
+          });
+
+          const rows = [
+            { item: '클라우드 서버 인스턴스', qty: 4, unitPrice: 280000, discountRate: 10 },
+            { item: '보안 SSL 와일드카드', qty: 2, unitPrice: 450000, discountRate: 5 },
+            { item: 'CDN 대역폭 패키지', qty: 10, unitPrice: 95000, discountRate: 15 },
+            { item: '기술지원 SLA 골드', qty: 1, unitPrice: 1500000, discountRate: 0 },
+            { item: 'DB 클러스터 스토리지', qty: 8, unitPrice: 320000, discountRate: 10 },
+            { item: '웹 방화벽(WAF) 라이선스', qty: 3, unitPrice: 580000, discountRate: 20 },
+            { item: 'DevOps 자동화 파이프라인', qty: 2, unitPrice: 850000, discountRate: 5 },
+            { item: 'AI 어시스턴트 API 토큰', qty: 50, unitPrice: 12000, discountRate: 25 },
+            { item: '모니터링 APM 에이전트', qty: 15, unitPrice: 45000, discountRate: 10 },
+            { item: '로그 통합 분석 엔진', qty: 5, unitPrice: 210000, discountRate: 15 }
+          ];
+          dp.setRows(rows);
+
+          grid.onEditCommit = (idx) => {
+            appendLog('CALC', `행 ${idx.dataRow} 편집 후 실시간 계산 필드(공급가액, 최종액) 자동 재연산 완료`);
+          };
+
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '➕ 1번 행 수량 +2 증가 (실시간 연산 확인)',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              const oldQty = dp.getValue(0, 'qty');
+              dp.setValue(0, 'qty', oldQty + 2);
+              appendLog('CALC', `수량 변경 (${oldQty} -> ${oldQty + 2}) -> 공급가액과 결제액이 즉시 동기화됨`);
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 07. 계산 필드(Calculated Field) & 동적 표현식 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+// 1. 계산 필드 스키마 정의
+dataAdapter.setFields([
+  { fieldName: 'item', dataType: 'text' },
+  { fieldName: 'qty', dataType: 'number' },
+  { fieldName: 'unitPrice', dataType: 'number' },
+  { fieldName: 'discountRate', dataType: 'number' },
+  // 계산 필드 1: 수식 표현식 (valueExpression) -> 수량 * 단가
+  { fieldName: 'supplyAmount', dataType: 'number', valueExpression: 'qty * unitPrice' },
+  // 계산 필드 2: 동적 함수 콜백 (valueCallback) -> 공급가액 - 할인액
+  { 
+    fieldName: 'totalAmount', 
+    dataType: 'number',
+    valueCallback: (provider, rowIdx, fn, names, vals, row) => {
+      const supply = (row.qty || 0) * (row.unitPrice || 0);
+      const discount = supply * ((row.discountRate || 0) / 100);
+      return supply - discount;
+    }
+  }
+]);
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '실시간 견적 산출 (수량/단가 변경 시 자동 계산)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  columns: [
+    { name: 'item', fieldName: 'item', header: { text: '품목' }, width: 140 },
+    { name: 'qty', fieldName: 'qty', header: { text: '수량' }, width: 80, align: 'right', type: 'number', editor: { type: 'numberSpin', min: 1 } },
+    { name: 'unitPrice', fieldName: 'unitPrice', header: { text: '단가' }, width: 110, align: 'right', type: 'number', formatter: 'currency', editor: { type: 'numberSpin', min: 100 } },
+    { name: 'discountRate', fieldName: 'discountRate', header: { text: '할인율(%)' }, width: 90, align: 'right', type: 'number', editor: { type: 'numberSpin', min: 0, max: 50 } },
+    { name: 'supplyAmount', fieldName: 'supplyAmount', header: { text: '공급가액' }, width: 130, align: 'right', type: 'number', formatter: 'currency' },
+    { name: 'totalAmount', fieldName: 'totalAmount', header: { text: '최종 결제액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+  ]
+});
+
+// 초기 데이터 주입 (10건)
+dataAdapter.setRows([
+  { item: '클라우드 서버 인스턴스', qty: 4, unitPrice: 280000, discountRate: 10 },
+  { item: '보안 SSL 와일드카드', qty: 2, unitPrice: 450000, discountRate: 5 },
+  { item: 'CDN 대역폭 패키지', qty: 10, unitPrice: 95000, discountRate: 15 },
+  { item: '기술지원 SLA 골드', qty: 1, unitPrice: 1500000, discountRate: 0 },
+  { item: 'DB 클러스터 스토리지', qty: 8, unitPrice: 320000, discountRate: 10 },
+  { item: '웹 방화벽(WAF) 라이선스', qty: 3, unitPrice: 580000, discountRate: 20 },
+  { item: 'DevOps 자동화 파이프라인', qty: 2, unitPrice: 850000, discountRate: 5 },
+  { item: 'AI 어시스턴트 API 토큰', qty: 50, unitPrice: 12000, discountRate: 25 },
+  { item: '모니터링 APM 에이전트', qty: 15, unitPrice: 45000, discountRate: 10 },
+  { item: '로그 통합 분석 엔진', qty: 5, unitPrice: 210000, discountRate: 15 }
+]);
+
+// 액션: 0번 행 수량 증가 -> 공급가액과 최종 결제액 실시간 자동 재연산
+function onIncreaseQty() {
+  const curQty = dataAdapter.getValue(0, 'qty');
+  dataAdapter.setValue(0, 'qty', curQty + 2);
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 08. 드래그 앤 드롭 행 그룹핑 & 소계/합계
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-08',
+        num: 'Step 08',
+        group: '엔터프라이즈 기능 (Enterprise)',
+        title: '드래그 앤 드롭 행 그룹핑 (Row Grouping & Subtotals)',
+        shortDesc: '상단 패널로 컬럼 헤더 드래그, 다단계 아코디언, 그룹별 소계',
+        desc: '컬럼 헤더를 상단 패널로 끌어다 놓아 부서별/직급별 다단계 그룹핑을 수행하고 그룹별 합계와 소계를 동적으로 집계합니다.',
+        tags: ['rowGrouping', 'groupPanel', 'subtotals', 'accordion'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '부서/직급별 급여 집계 (헤더를 위 패널로 끌어다 놓으세요)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            rowGrouping: {
+              enabled: true,
+              showGroupPanel: true,
+              groupSummary: true
+            },
+            columns: [
+              { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140, align: 'center' },
+              { name: 'team', fieldName: 'team', header: { text: '팀' }, width: 130, align: 'center' },
+              { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 110, align: 'center' },
+              { name: 'salary', fieldName: 'salary', header: { text: '급여' }, width: 130, align: 'right', type: 'number', formatter: 'currency' },
+              { name: 'bonus', fieldName: 'bonus', header: { text: '성과급' }, width: 120, align: 'right', type: 'number', formatter: 'currency' }
+            ]
+          });
+
+          const rows = [
+            { dept: '연구개발본부', team: '프론트엔드팀', name: '김철수', salary: 65000000, bonus: 8000000 },
+            { dept: '연구개발본부', team: '프론트엔드팀', name: '이영희', salary: 58000000, bonus: 6500000 },
+            { dept: '연구개발본부', team: '백엔드팀', name: '박민수', salary: 72000000, bonus: 12000000 },
+            { dept: '연구개발본부', team: '백엔드팀', name: '정지원', salary: 60000000, bonus: 7000000 },
+            { dept: '연구개발본부', team: 'AI인프라팀', name: '강태우', salary: 78000000, bonus: 15000000 },
+            { dept: '경영기획본부', team: '인사총무팀', name: '한예슬', salary: 52000000, bonus: 4000000 },
+            { dept: '경영기획본부', team: '인사총무팀', name: '조승우', salary: 48000000, bonus: 3500000 },
+            { dept: '경영기획본부', team: '재무회계팀', name: '최동욱', salary: 68000000, bonus: 9000000 },
+            { dept: '경영기획본부', team: '재무회계팀', name: '윤하은', salary: 55000000, bonus: 5000000 },
+            { dept: '글로벌사업본부', team: '해외영업팀', name: '임성진', salary: 63000000, bonus: 11000000 },
+            { dept: '글로벌사업본부', team: '해외영업팀', name: '배수지', salary: 59000000, bonus: 9500000 },
+            { dept: '글로벌사업본부', team: '글로벌마케팅팀', name: '송중기', salary: 71000000, bonus: 13000000 }
+          ];
+          dp.setRows(rows);
+
+          // 기본적으로 'dept' 컬럼으로 그룹핑 설정
+          if (grid.groupBy) {
+            grid.groupBy(['dept']);
+          }
+          appendLog('GROUP', '기본 그룹핑: [부서(dept)] 적용됨');
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '📊 [부서] -> [팀] 다단계 2중 그룹핑',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              if (grid.groupBy) grid.groupBy(['dept', 'team']);
+              appendLog('GROUP', '다단계 그룹핑 적용: [부서, 팀]');
+            }
+          },
+          {
+            label: '📂 전체 그룹 펼치기 / 접기',
+            cls: '',
+            onClick: (grid, dp) => {
+              if (grid.toggleAllGroups) grid.toggleAllGroups();
+              appendLog('GROUP', '그룹 아코디언 토글 완료');
+            }
+          },
+          {
+            label: '❌ 그룹핑 해제',
+            cls: '',
+            onClick: (grid, dp) => {
+              if (grid.groupBy) grid.groupBy([]);
+              appendLog('GROUP', '그룹핑이 해제되어 일반 테이블로 복귀했습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 08. 드래그 앤 드롭 행 그룹핑 & 소계 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '부서/직급별 급여 집계 (헤더를 위 패널로 끌어다 놓으세요)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  // 행 그룹핑 엔진 활성화
+  rowGrouping: {
+    enabled: true,        // 드래그 앤 드롭 행 그룹핑 활성화
+    showGroupPanel: true, // 상단 드롭 패널 노출
+    groupSummary: true    // 그룹별 합계/소계 행 자동 산출
+  },
+  columns: [
+    { name: 'dept', fieldName: 'dept', header: { text: '부서' }, width: 140, align: 'center' },
+    { name: 'team', fieldName: 'team', header: { text: '팀' }, width: 130, align: 'center' },
+    { name: 'name', fieldName: 'name', header: { text: '성명' }, width: 110, align: 'center' },
+    { name: 'salary', fieldName: 'salary', header: { text: '급여' }, width: 130, align: 'right', type: 'number', formatter: 'currency' },
+    { name: 'bonus', fieldName: 'bonus', header: { text: '성과급' }, width: 120, align: 'right', type: 'number', formatter: 'currency' }
+  ]
+});
+
+// 초기 데이터 주입 (12건)
+dataAdapter.setRows([
+  { dept: '연구개발본부', team: '프론트엔드팀', name: '김철수', salary: 65000000, bonus: 8000000 },
+  { dept: '연구개발본부', team: '프론트엔드팀', name: '이영희', salary: 58000000, bonus: 6500000 },
+  { dept: '연구개발본부', team: '백엔드팀', name: '박민수', salary: 72000000, bonus: 12000000 },
+  { dept: '연구개발본부', team: '백엔드팀', name: '정지원', salary: 60000000, bonus: 7000000 },
+  { dept: '연구개발본부', team: 'AI인프라팀', name: '강태우', salary: 78000000, bonus: 15000000 },
+  { dept: '경영기획본부', team: '인사총무팀', name: '한예슬', salary: 52000000, bonus: 4000000 },
+  { dept: '경영기획본부', team: '인사총무팀', name: '조승우', salary: 48000000, bonus: 3500000 },
+  { dept: '경영기획본부', team: '재무회계팀', name: '최동욱', salary: 68000000, bonus: 9000000 },
+  { dept: '경영기획본부', team: '재무회계팀', name: '윤하은', salary: 55000000, bonus: 5000000 },
+  { dept: '글로벌사업본부', team: '해외영업팀', name: '임성진', salary: 63000000, bonus: 11000000 },
+  { dept: '글로벌사업본부', team: '해외영업팀', name: '배수지', salary: 59000000, bonus: 9500000 },
+  { dept: '글로벌사업본부', team: '글로벌마케팅팀', name: '송중기', salary: 71000000, bonus: 13000000 }
+]);
+
+// 기본 그룹핑 적용 (부서 기준)
+grid.groupBy(['dept']);
+
+// 액션 1: [부서] -> [팀] 다단계 2중 그룹핑 적용
+function onMultiGroup() {
+  grid.groupBy(['dept', 'team']);
+}
+
+// 액션 2: 전체 그룹 아코디언 토글
+function onToggleGroups() {
+  grid.toggleAllGroups();
+}
+
+// 액션 3: 그룹핑 해제
+function onClearGrouping() {
+  grid.groupBy([]);
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 09. 다중 정렬 & 엑셀 스타일 필터
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-09',
+        num: 'Step 09',
+        group: '엔터프라이즈 기능 (Enterprise)',
+        title: '다중 정렬 & 엑셀 스타일 체크박스 필터',
+        shortDesc: 'Shift+클릭 다중 정렬, 엑셀 팝오버 고유값 다중 선택 필터',
+        desc: '헤더 클릭으로 1차/2차 다중 정렬(Shift+클릭)을 수행하고, 엑셀과 동일한 고유값 다중 선택 체크박스 팝오버 필터를 제공합니다.',
+        tags: ['multiSort', 'excelFilter', 'popover', 'searchFilter'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '고객 주문 다중 정렬 및 필터링 (컬럼 헤더 필터/정렬 아이콘 클릭)',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            sorting: { enabled: true, multiSort: true },
+            filtering: { enabled: true, excelStyle: true },
+            columns: [
+              { name: 'region', fieldName: 'region', header: { text: '지역' }, width: 100, align: 'center' },
+              { name: 'category', fieldName: 'category', header: { text: '카테고리' }, width: 130, align: 'center' },
+              { name: 'product', fieldName: 'product', header: { text: '상품명' }, width: 160 },
+              { name: 'sales', fieldName: 'sales', header: { text: '판매수량' }, width: 100, align: 'right', type: 'number' },
+              { name: 'revenue', fieldName: 'revenue', header: { text: '매출액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+            ]
+          });
+
+          const rows = [
+            { region: '서울', category: '전자기기', product: 'OLED 모니터', sales: 45, revenue: 38250000 },
+            { region: '서울', category: '가전', product: '공기청정기', sales: 80, revenue: 24000000 },
+            { region: '서울', category: '사무용품', product: '인체공학 의자', sales: 150, revenue: 45000000 },
+            { region: '경기', category: '전자기기', product: '블루투스 헤드셋', sales: 120, revenue: 18000000 },
+            { region: '경기', category: '가전', product: '로봇청소기', sales: 65, revenue: 39000000 },
+            { region: '경기', category: '사무용품', product: '전동 높이조절 데스크', sales: 40, revenue: 28000000 },
+            { region: '부산', category: '전자기기', product: '기계식 키보드', sales: 90, revenue: 13500000 },
+            { region: '부산', category: '가전', product: '스마트 TV 65"', sales: 30, revenue: 45000000 },
+            { region: '부산', category: '사무용품', product: '프리미엄 듀얼 모니터암', sales: 110, revenue: 16500000 },
+            { region: '대구', category: '전자기기', product: '4K 웹캠 & 스탠드', sales: 75, revenue: 11250000 },
+            { region: '인천', category: '가전', product: '스마트 제습기', sales: 55, revenue: 19250000 },
+            { region: '광주', category: '전자기기', product: '휴대용 외장 SSD 2TB', sales: 85, revenue: 21250000 }
+          ];
+          dp.setRows(rows);
+
+          grid.onSortChanged = (sortInfos) => {
+            appendLog('SORT', `정렬 상태 변경: ${JSON.stringify(sortInfos)}`);
+          };
+
+          grid.onFilterChanged = (filters) => {
+            appendLog('FILTER', `필터 조건 적용: ${JSON.stringify(filters)}`);
+          };
+
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '🔢 [지역 ASC -> 매출액 DESC] 다중 정렬 적용',
+            cls: 'btn-primary',
+            onClick: (grid, dp) => {
+              if (grid.setSort) {
+                grid.setSort([
+                  { fieldName: 'region', direction: 'asc' },
+                  { fieldName: 'revenue', direction: 'desc' }
+                ]);
+              }
+              appendLog('SORT', '다중 정렬 적용: 지역(오름차순) -> 매출액(내림차순)');
+            }
+          },
+          {
+            label: '🔍 [지역: 서울] 필터 적용',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              if (grid.setFilter) {
+                grid.setFilter('region', ['서울']);
+              }
+              appendLog('FILTER', '필터 적용: 지역 = 서울');
+            }
+          },
+          {
+            label: '🔄 정렬 & 필터 전체 초기화',
+            cls: '',
+            onClick: (grid, dp) => {
+              if (grid.clearSort) grid.clearSort();
+              if (grid.clearFilters) grid.clearFilters();
+              appendLog('RESET', '모든 정렬 및 필터가 초기화되었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 09. 다중 정렬 & 엑셀 스타일 스마트 필터 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '고객 주문 다중 정렬 및 필터링 (컬럼 헤더 필터/정렬 아이콘 클릭)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  sorting: { 
+    enabled: true, 
+    multiSort: true   // Shift + 헤더 클릭으로 다중 정렬 지원
+  },
+  filtering: { 
+    enabled: true, 
+    excelStyle: true  // 엑셀 스타일 고유값 다중 선택 체크박스 UI
+  },
+  columns: [
+    { name: 'region', fieldName: 'region', header: { text: '지역' }, width: 100, align: 'center' },
+    { name: 'category', fieldName: 'category', header: { text: '카테고리' }, width: 130, align: 'center' },
+    { name: 'product', fieldName: 'product', header: { text: '상품명' }, width: 160 },
+    { name: 'sales', fieldName: 'sales', header: { text: '판매수량' }, width: 100, align: 'right', type: 'number' },
+    { name: 'revenue', fieldName: 'revenue', header: { text: '매출액' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+  ]
+});
+
+// 12건 데이터 주입
+dataAdapter.setRows([
+  { region: '서울', category: '전자기기', product: 'OLED 모니터', sales: 45, revenue: 38250000 },
+  { region: '서울', category: '가전', product: '공기청정기', sales: 80, revenue: 24000000 },
+  { region: '서울', category: '사무용품', product: '인체공학 의자', sales: 150, revenue: 45000000 },
+  { region: '경기', category: '전자기기', product: '블루투스 헤드셋', sales: 120, revenue: 18000000 },
+  { region: '경기', category: '가전', product: '로봇청소기', sales: 65, revenue: 39000000 },
+  { region: '경기', category: '사무용품', product: '전동 높이조절 데스크', sales: 40, revenue: 28000000 },
+  { region: '부산', category: '전자기기', product: '기계식 키보드', sales: 90, revenue: 13500000 },
+  { region: '부산', category: '가전', product: '스마트 TV 65"', sales: 30, revenue: 45000000 },
+  { region: '부산', category: '사무용품', product: '프리미엄 듀얼 모니터암', sales: 110, revenue: 16500000 },
+  { region: '대구', category: '전자기기', product: '4K 웹캠 & 스탠드', sales: 75, revenue: 11250000 },
+  { region: '인천', category: '가전', product: '스마트 제습기', sales: 55, revenue: 19250000 },
+  { region: '광주', category: '전자기기', product: '휴대용 외장 SSD 2TB', sales: 85, revenue: 21250000 }
+]);
+
+// 액션 1: 프로그래밍 방식 다중 정렬 (지역 ASC -> 매출액 DESC)
+function onApplyMultiSort() {
+  grid.setSort([
+    { fieldName: 'region', direction: 'asc' },
+    { fieldName: 'revenue', direction: 'desc' }
+  ]);
+}
+
+// 액션 2: 특정 컬럼 필터 적용
+function onFilterSeoul() {
+  grid.setFilter('region', ['서울']);
+}
+
+// 액션 3: 정렬 및 필터 초기화
+function onResetSortFilter() {
+  grid.clearSort();
+  grid.clearFilters();
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 10. 좌우 컬럼 틀고정 (Sticky Fixed Columns)
+// -----------------------------------------------------------------------
+{
+  id: 'step-10',
+  num: 'Step 10',
+  group: '엔터프라이즈 기능 (Enterprise)',
+  title: '좌우 컬럼 틀고정 (Fixed Columns)',
+  shortDesc: '좌측 고정(fixedColCount), 우측 고정(fixedRightColCount)',
+  desc: '열이 많은 광폭 그리드에서 주요 식별 열(좌측) 및 동작 버튼/합계 열(우측)을 스크롤 시에도 화면에 고정(Sticky)합니다.',
+  tags: ['fixedColCount', 'fixedRightColCount', 'sticky', 'horizontalScroll'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '광폭 월별 실적 그리드 (좌측 2열, 우측 1열 틀고정)',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      fixedColCount: 2,      // 좌측 2열 고정 (사번, 성명)
+      fixedRightColCount: 1, // 우측 1열 고정 (연간 총합계)
+      columns: [
+        { name: 'empId', fieldName: 'empId', header: { text: '사번 (고정)' }, width: 100, align: 'center' },
+        { name: 'empName', fieldName: 'empName', header: { text: '성명 (고정)' }, width: 110, align: 'center' },
+        { name: 'm01', fieldName: 'm01', header: { text: '1월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm02', fieldName: 'm02', header: { text: '2월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm03', fieldName: 'm03', header: { text: '3월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm04', fieldName: 'm04', header: { text: '4월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm05', fieldName: 'm05', header: { text: '5월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm06', fieldName: 'm06', header: { text: '6월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm07', fieldName: 'm07', header: { text: '7월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'm08', fieldName: 'm08', header: { text: '8월' }, width: 90, align: 'right', type: 'number' },
+        { name: 'total', fieldName: 'total', header: { text: '연간 총합계 (우측고정)' }, width: 150, align: 'right', type: 'number', formatter: 'currency' }
+      ]
+    });
+
+    const rows = [
+      { empId: 'E-101', empName: '강백호', m01: 320, m02: 410, m03: 380, m04: 450, m05: 500, m06: 520, m07: 480, m08: 530, total: 3590000 },
+      { empId: 'E-102', empName: '서태웅', m01: 500, m02: 520, m03: 600, m04: 580, m05: 620, m06: 700, m07: 680, m08: 720, total: 4920000 },
+      { empId: 'E-103', empName: '채치수', m01: 450, m02: 460, m03: 470, m04: 480, m05: 490, m06: 500, m07: 510, m08: 520, total: 3880000 },
+      { empId: 'E-104', empName: '정대만', m01: 280, m02: 350, m03: 420, m04: 490, m05: 560, m06: 630, m07: 700, m08: 750, total: 4180000 },
+      { empId: 'E-105', empName: '송태섭', m01: 400, m02: 420, m03: 410, m04: 430, m05: 440, m06: 450, m07: 460, m08: 470, total: 3480000 },
+      { empId: 'E-106', empName: '권준호', m01: 250, m02: 270, m03: 290, m04: 310, m05: 330, m06: 350, m07: 370, m08: 390, total: 2560000 },
+      { empId: 'E-107', empName: '윤대협', m01: 480, m02: 510, m03: 530, m04: 560, m05: 600, m06: 640, m07: 670, m08: 710, total: 4700000 },
+      { empId: 'E-108', empName: '변덕규', m01: 390, m02: 410, m03: 430, m04: 450, m05: 470, m06: 480, m07: 500, m08: 510, total: 3640000 },
+      { empId: 'E-109', empName: '황태산', m01: 340, m02: 370, m03: 410, m04: 460, m05: 510, m06: 550, m07: 590, m08: 630, total: 3860000 },
+      { empId: 'E-110', empName: '이정환', m01: 520, m02: 550, m03: 590, m04: 620, m05: 660, m06: 710, m07: 750, m08: 800, total: 5200000 }
+    ];
+    dp.setRows(rows);
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '📌 좌측 고정 열 수 변경 (1열 ↔ 2열)',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        const current = grid.options.fixedColCount || 2;
+        const next = current === 2 ? 1 : 2;
+        grid.setFixedColumnCount(next);
+        appendLog('FIXED', `좌측 틀고정 컬럼 수: ${next}개로 변경`);
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 10. 좌우 컬럼 틀고정 (Sticky Fixed Columns) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '광폭 월별 실적 그리드 (좌측 2열, 우측 1열 틀고정)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  fixedColCount: 2,      // 좌측 2개 컬럼(사번, 성명) 고정
+  fixedRightColCount: 1, // 우측 1개 컬럼(연간 총합계) 고정
+  columns: [
+    { name: 'empId', fieldName: 'empId', header: { text: '사번 (고정)' }, width: 100, align: 'center' },
+    { name: 'empName', fieldName: 'empName', header: { text: '성명 (고정)' }, width: 110, align: 'center' },
+    { name: 'm01', fieldName: 'm01', header: { text: '1월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm02', fieldName: 'm02', header: { text: '2월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm03', fieldName: 'm03', header: { text: '3월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm04', fieldName: 'm04', header: { text: '4월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm05', fieldName: 'm05', header: { text: '5월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm06', fieldName: 'm06', header: { text: '6월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm07', fieldName: 'm07', header: { text: '7월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'm08', fieldName: 'm08', header: { text: '8월' }, width: 90, align: 'right', type: 'number' },
+    { name: 'total', fieldName: 'total', header: { text: '연간 총합계 (우측고정)' }, width: 150, align: 'right', type: 'number', formatter: 'currency' }
+  ]
+});
+
+dataAdapter.setRows([
+  { empId: 'E-101', empName: '강백호', m01: 320, m02: 410, m03: 380, m04: 450, m05: 500, m06: 520, m07: 480, m08: 530, total: 3590000 },
+  { empId: 'E-102', empName: '서태웅', m01: 500, m02: 520, m03: 600, m04: 580, m05: 620, m06: 700, m07: 680, m08: 720, total: 4920000 },
+  { empId: 'E-103', empName: '채치수', m01: 450, m02: 460, m03: 470, m04: 480, m05: 490, m06: 500, m07: 510, m08: 520, total: 3880000 },
+  { empId: 'E-104', empName: '정대만', m01: 280, m02: 350, m03: 420, m04: 490, m05: 560, m06: 630, m07: 700, m08: 750, total: 4180000 },
+  { empId: 'E-105', empName: '송태섭', m01: 400, m02: 420, m03: 410, m04: 430, m05: 440, m06: 450, m07: 460, m08: 470, total: 3480000 }
+]);
+
+// 액션: 좌측 틀고정 컬럼 수 실시간 변경 (1열 ↔ 2열)
+function onToggleFixedCount() {
+  const current = grid.options.fixedColCount || 2;
+  const next = current === 2 ? 1 : 2;
+  grid.setFixedColumnCount(next);
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 11. 셀 블록 범위 드래그 선택 & 엑셀 복사/붙여넣기
+// -----------------------------------------------------------------------
+{
+  id: 'step-11',
+  num: 'Step 11',
+  group: '상호연동 & 편의기능 (Interop)',
+  title: '셀 블록 선택 & 엑셀 복사/붙여넣기 (Clipboard)',
+  shortDesc: '마우스 드래그 범위 선택, Ctrl+C 복사, Ctrl+V 일괄 붙여넣기',
+  desc: '엑셀과 동일한 셀 블록 범위 드래그 선택, Ctrl+C 클립보드 복사 및 실제 엑셀 시트에서 복사한 다중 행/열 데이터의 Ctrl+V 실시간 일괄 반영을 지원합니다.',
+  tags: ['rangeSelection', 'clipboard', 'ctrl+c', 'ctrl+v', 'excelInterop'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '엑셀 클립보드 상호 연동 (Ctrl+C 복사 & Ctrl+V 붙여넣기)',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      selectionMode: 'range', // 셀 블록 범위 선택 모드
+      clipboard: {
+        enabled: true,
+        copyHeaders: false,
+        pasteMode: 'overwrite'
+      },
+      columns: [
+        { name: 'code', fieldName: 'code', header: { text: '코드' }, width: 90, align: 'center' },
+        { name: 'item', fieldName: 'item', header: { text: '품목명' }, width: 160 },
+        { name: 'q1', fieldName: 'q1', header: { text: '1분기' }, width: 100, align: 'right', type: 'number' },
+        { name: 'q2', fieldName: 'q2', header: { text: '2분기' }, width: 100, align: 'right', type: 'number' },
+        { name: 'q3', fieldName: 'q3', header: { text: '3분기' }, width: 100, align: 'right', type: 'number' },
+        { name: 'q4', fieldName: 'q4', header: { text: '4분기' }, width: 100, align: 'right', type: 'number' }
+      ]
+    });
+
+    const rows = [
+      { code: 'A01', item: '스마트폰 센서', q1: 1500, q2: 1800, q3: 2100, q4: 2400 },
+      { code: 'A02', item: '차량용 카메라 모듈', q1: 850, q2: 920, q3: 1100, q4: 1300 },
+      { code: 'A03', item: '웨어러블 배터리', q1: 3200, q2: 3400, q3: 3100, q4: 3900 },
+      { code: 'A04', item: '스마트 글래스 칩셋', q1: 420, q2: 580, q3: 790, q4: 950 }
+    ];
+    dp.setRows(rows);
+
+    grid.onSelectionChanged = (range) => {
+      appendLog('SELECT', `셀 범위 선택: Row ${range.startRow}~${range.endRow}, Col ${range.startCol}~${range.endCol}`);
+    };
+
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '📋 선택 영역 엑셀 복사 (Ctrl+C)',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        if (grid.copyToClipboard) {
+          grid.copyToClipboard();
+          showToast('클립보드에 복사되었습니다. (엑셀에 Ctrl+V 가능)');
+          appendLog('CLIPBOARD', '선택된 영역의 데이터가 클립보드에 복사되었습니다.');
+        }
+      }
+    },
+    {
+      label: '📥 샘플 TSV 텍스트 붙여넣기 시뮬레이션',
+      cls: 'btn-success',
+      onClick: (grid, dp) => {
+        const sampleTsv = "9999\t8888\t7777\t6666";
+        if (grid.pasteText) {
+          grid.pasteText(sampleTsv);
+          appendLog('CLIPBOARD', `붙여넣기 완료: [${sampleTsv}]`);
+        }
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 11. 셀 블록 선택 & 엑셀 클립보드 복사/붙여넣기 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '엑셀 클립보드 상호 연동 (Ctrl+C 복사 & Ctrl+V 붙여넣기)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  selectionMode: 'range', // 마우스 드래그 사각형 범위 선택 모드
+  clipboard: {
+    enabled: true,
+    copyHeaders: false,
+    pasteMode: 'overwrite' // Ctrl+V 시 대상 셀 덮어쓰기
+  },
+  columns: [
+    { name: 'code', fieldName: 'code', header: { text: '코드' }, width: 90, align: 'center' },
+    { name: 'item', fieldName: 'item', header: { text: '품목명' }, width: 160 },
+    { name: 'q1', fieldName: 'q1', header: { text: '1분기' }, width: 100, align: 'right', type: 'number' },
+    { name: 'q2', fieldName: 'q2', header: { text: '2분기' }, width: 100, align: 'right', type: 'number' },
+    { name: 'q3', fieldName: 'q3', header: { text: '3분기' }, width: 100, align: 'right', type: 'number' },
+    { name: 'q4', fieldName: 'q4', header: { text: '4분기' }, width: 100, align: 'right', type: 'number' }
+  ]
+});
+
+// 10건 데이터 주입
+dataAdapter.setRows([
+  { code: 'A01', item: '스마트폰 센서', q1: 1500, q2: 1800, q3: 2100, q4: 2400 },
+  { code: 'A02', item: '차량용 카메라 모듈', q1: 850, q2: 920, q3: 1100, q4: 1300 },
+  { code: 'A03', item: '웨어러블 배터리', q1: 3200, q2: 3400, q3: 3100, q4: 3900 },
+  { code: 'A04', item: '스마트 글래스 칩셋', q1: 420, q2: 580, q3: 790, q4: 950 },
+  { code: 'A05', item: '고성능 무선 송수신기', q1: 1100, q2: 1350, q3: 1600, q4: 1900 },
+  { code: 'A06', item: '지능형 전력 반도체', q1: 2800, q2: 3100, q3: 3300, q4: 3600 },
+  { code: 'A07', item: '초정밀 자이로 센서', q1: 950, q2: 1050, q3: 1200, q4: 1400 },
+  { code: 'A08', item: 'OLED 패널 컨트롤러', q1: 1750, q2: 1900, q3: 2200, q4: 2500 },
+  { code: 'A09', item: '생체인식 지문 모듈', q1: 2100, q2: 2300, q3: 2450, q4: 2800 },
+  { code: 'A10', item: '초저전력 블루투스 SoC', q1: 4100, q2: 4500, q3: 4800, q4: 5200 }
+]);
+
+// 범위 선택 변경 리스너
+grid.onSelectionChanged = (range) => {
+  console.log('선택 범위: Row ' + range.startRow + '~' + range.endRow);
+};
+
+// 액션 1: 선택 영역 클립보드 복사 (엑셀에 바로 붙여넣기 가능)
+function onCopyRange() {
+  grid.copyToClipboard();
+}
+
+// 액션 2: 탭 구분자(TSV) 텍스트 일괄 붙여넣기
+function onPasteSample() {
+  const sampleTsv = "9999\\t8888\\t7777\\t6666";
+  grid.pasteText(sampleTsv);
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 12. 행 순서 드래그 앤 드롭 이동
+// -----------------------------------------------------------------------
+{
+  id: 'step-12',
+  num: 'Step 12',
+  group: '상호연동 & 편의기능 (Interop)',
+  title: '행 순서 드래그 앤 드롭 이동 (Row Drag & Drop)',
+  shortDesc: '마우스 드래그로 행 순서 실시간 재배치 및 순번 재정렬',
+  desc: '작업 우선순위나 메뉴 순서를 변경할 때 행을 마우스로 끌어다 놓아 순서를 직관적으로 재배치합니다.',
+  tags: ['rowDragDrop', 'reorder', 'priority', 'sortOrder'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '업무 우선순위 관리 (행을 위/아래로 드래그하여 순서 변경)',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      indicator: { visible: true, label: '순위' },
+      rowDragDrop: { enabled: true },
+      columns: [
+        { name: 'task', fieldName: 'task', header: { text: '작업명' }, width: 220 },
+        { name: 'assignee', fieldName: 'assignee', header: { text: '담당자' }, width: 110, align: 'center' },
+        { name: 'dueDate', fieldName: 'dueDate', header: { text: '마감일' }, width: 120, align: 'center' },
+        { name: 'priority', fieldName: 'priority', header: { text: '중요도' }, width: 100, align: 'center',
+          renderer: {
+            type: 'badge',
+            colorMap: { '긴급': 'danger', '높음': 'warning', '보통': 'primary' }
+          }
+        }
+      ]
+    });
+
+    const rows = [
+      { task: '1. 보안 패치 긴급 배포', assignee: '김보안', dueDate: '2026-08-19', priority: '긴급' },
+      { task: '2. 결제 게이트웨이 정기 점검', assignee: '이결제', dueDate: '2026-08-20', priority: '높음' },
+      { task: '3. 회원가입 폼 UX 개선', assignee: '박디자인', dueDate: '2026-08-25', priority: '보통' },
+      { task: '4. 주간 통계 배치 쿼리 튜닝', assignee: '최DBA', dueDate: '2026-08-28', priority: '보통' },
+      { task: '5. 클라우드 스토리지 백업 점검', assignee: '정인프라', dueDate: '2026-08-29', priority: '높음' },
+      { task: '6. API 게이트웨이 인증 토큰 갱신', assignee: '강백엔드', dueDate: '2026-08-30', priority: '긴급' },
+      { task: '7. 사내 ERP 연동 인터페이스 개발', assignee: '윤풀스택', dueDate: '2026-09-02', priority: '보통' },
+      { task: '8. 모바일 푸시 알림 서버 확장', assignee: '송서버', dueDate: '2026-09-05', priority: '보통' },
+      { task: '9. 다국어 i18n 번역 리소스 배포', assignee: '임글로벌', dueDate: '2026-09-10', priority: '보통' },
+      { task: '10. 분기별 재난 복구(DR) 모의훈련', assignee: '한운영', dueDate: '2026-09-15', priority: '높음' }
+    ];
+    dp.setRows(rows);
+
+    grid.onRowMoved = (fromIdx, toIdx) => {
+      appendLog('DRAG', `행 순서 변경 완료: ${fromIdx}번 행 -> ${toIdx}번 위치로 이동`);
+    };
+
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '↕️ 행 드래그 기능 ON/OFF 토글',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        const current = grid.options.rowDragDrop?.enabled ?? true;
+        grid.setRowDragDrop(!current);
+        appendLog('DRAG', `행 드래그 앤 드롭: ${!current ? '활성화(ON)' : '비활성화(OFF)'}`);
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 12. 행 순서 드래그 앤 드롭 이동(Row Drag & Drop) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '업무 우선순위 관리 (행을 위/아래로 드래그하여 순서 변경)',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  indicator: { visible: true, label: '순위' },
+  // 행 드래그 앤 드롭 이동 활성화
+  rowDragDrop: { enabled: true },
+  columns: [
+    { name: 'task', fieldName: 'task', header: { text: '작업명' }, width: 220 },
+    { name: 'assignee', fieldName: 'assignee', header: { text: '담당자' }, width: 110, align: 'center' },
+    { name: 'dueDate', fieldName: 'dueDate', header: { text: '마감일' }, width: 120, align: 'center' },
+    { 
+      name: 'priority', 
+      fieldName: 'priority', 
+      header: { text: '중요도' }, 
+      width: 100, 
+      align: 'center',
+      renderer: {
+        type: 'badge',
+        colorMap: { '긴급': 'danger', '높음': 'warning', '보통': 'primary' }
+      }
+    }
+  ]
+});
+
+// 10건 데이터 주입
+dataAdapter.setRows([
+  { task: '1. 보안 패치 긴급 배포', assignee: '김보안', dueDate: '2026-08-19', priority: '긴급' },
+  { task: '2. 결제 게이트웨이 정기 점검', assignee: '이결제', dueDate: '2026-08-20', priority: '높음' },
+  { task: '3. 회원가입 폼 UX 개선', assignee: '박디자인', dueDate: '2026-08-25', priority: '보통' },
+  { task: '4. 주간 통계 배치 쿼리 튜닝', assignee: '최DBA', dueDate: '2026-08-28', priority: '보통' },
+  { task: '5. 클라우드 스토리지 백업 점검', assignee: '정인프라', dueDate: '2026-08-29', priority: '높음' },
+  { task: '6. API 게이트웨이 인증 토큰 갱신', assignee: '강백엔드', dueDate: '2026-08-30', priority: '긴급' },
+  { task: '7. 사내 ERP 연동 인터페이스 개발', assignee: '윤풀스택', dueDate: '2026-09-02', priority: '보통' },
+  { task: '8. 모바일 푸시 알림 서버 확장', assignee: '송서버', dueDate: '2026-09-05', priority: '보통' },
+  { task: '9. 다국어 i18n 번역 리소스 배포', assignee: '임글로벌', dueDate: '2026-09-10', priority: '보통' },
+  { task: '10. 분기별 재난 복구(DR) 모의훈련', assignee: '한운영', dueDate: '2026-09-15', priority: '높음' }
+]);
+
+// 행 이동 완료 이벤트 리스너
+grid.onRowMoved = (fromIdx, toIdx) => {
+  console.log('행 순서 변경 완료: ' + fromIdx + ' -> ' + toIdx);
+};
+
+// 액션: 행 드래그 기능 ON/OFF 토글
+function onToggleRowDrag() {
+  const current = grid.options.rowDragDrop?.enabled ?? true;
+  grid.setRowDragDrop(!current);
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 13. 엔터프라이즈 페이징 (Paging)
+// -----------------------------------------------------------------------
+{
+  id: 'step-13',
+  num: 'Step 13',
+  group: '상호연동 & 편의기능 (Interop)',
+  title: '엔터프라이즈 페이징 (Paging & Navigation)',
+  shortDesc: '페이지 크기, 네비게이션 버튼, 위치 정렬(좌/중/우)',
+  desc: '수만 건의 데이터를 효과적으로 탐색할 수 있는 엔터프라이즈 페이지네이션 엔진입니다. 페이지 크기 셀렉트 및 정렬 위치를 자유롭게 제어합니다.',
+  tags: ['paging', 'pageSize', 'pageIndex', 'navigation'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '대량 주문 로그 페이징 조회',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      paging: {
+        enabled: true,
+        pageSize: 5,
+        pageSizes: [5, 10, 20, 50],
+        align: 'right'
+      },
+      columns: [
+        { name: 'no', fieldName: 'no', header: { text: '로그No' }, width: 80, align: 'center' },
+        { name: 'user', fieldName: 'user', header: { text: '사용자' }, width: 120, align: 'center' },
+        { name: 'ip', fieldName: 'ip', header: { text: '접속 IP' }, width: 140, align: 'center' },
+        { name: 'action', fieldName: 'action', header: { text: '수행동작' }, width: 180 },
+        { name: 'time', fieldName: 'time', header: { text: '발생시각' }, width: 160, align: 'center' }
+      ]
+    });
+
+    // 25건 샘플 데이터 생성
+    const rows = [];
+    for (let i = 1; i <= 25; i++) {
+      rows.push({
+        no: 'LOG-' + String(i).padStart(4, '0'),
+        user: 'User_' + i,
+        ip: '192.168.1.' + (10 + i),
+        action: i % 3 === 0 ? '보안 인증 토큰 갱신' : (i % 2 === 0 ? '대시보드 데이터 조회' : '회원 정보 수정'),
+        time: '2026-08-18 14:' + String(i).padStart(2, '0') + ':22'
+      });
+    }
+    dp.setRows(rows);
+
+    grid.onPageChanged = (pageIndex, pageSize) => {
+      appendLog('PAGE', `페이지 이동: ${pageIndex + 1} 페이지 (페이지당 ${pageSize}건 표시)`);
+    };
+
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '📄 10개씩 보기로 변경',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        if (grid.setPageSize) grid.setPageSize(10);
+        appendLog('PAGE', '페이지당 건수가 10건으로 변경되었습니다.');
+      }
+    },
+    {
+      label: '⏭️ 2페이지로 직접 이동',
+      cls: '',
+      onClick: (grid, dp) => {
+        if (grid.setPage) grid.setPage(1); // 0-based
+        appendLog('PAGE', '2번째 페이지로 이동했습니다.');
+      }
+    },
+    {
+      label: '⏺️ 페이징 위치 가운데 정렬',
+      cls: '',
+      onClick: (grid, dp) => {
+        if (grid.setPagingAlign) grid.setPagingAlign('center');
+        appendLog('PAGE', '페이징 툴바 위치가 [가운데]로 변경되었습니다.');
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 13. 엔터프라이즈 페이징(Paging) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '대량 주문 로그 페이징 조회',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  paging: {
+    enabled: true,
+    pageSize: 5,                // 기본 페이지당 건수
+    pageSizes: [5, 10, 20, 50], // 선택 가능한 페이지 크기 목록
+    align: 'right'              // 툴바 위치: 'left' | 'center' | 'right'
+  },
+  columns: [
+    { name: 'no', fieldName: 'no', header: { text: '로그No' }, width: 80, align: 'center' },
+    { name: 'user', fieldName: 'user', header: { text: '사용자' }, width: 120, align: 'center' },
+    { name: 'ip', fieldName: 'ip', header: { text: '접속 IP' }, width: 140, align: 'center' },
+    { name: 'action', fieldName: 'action', header: { text: '수행동작' }, width: 180 },
+    { name: 'time', fieldName: 'time', header: { text: '발생시각' }, width: 160, align: 'center' }
+  ]
+});
+
+// 25건 샘플 데이터 생성 및 주입
+const rows = [];
+for (let i = 1; i <= 25; i++) {
+  rows.push({
+    no: 'LOG-' + String(i).padStart(4, '0'),
+    user: 'User_' + i,
+    ip: '192.168.1.' + (10 + i),
+    action: i % 3 === 0 ? '보안 인증 토큰 갱신' : (i % 2 === 0 ? '대시보드 데이터 조회' : '회원 정보 수정'),
+    time: '2026-08-18 14:' + String(i).padStart(2, '0') + ':22'
+  });
+}
+dataAdapter.setRows(rows);
+
+// 페이지 변경 리스너
+grid.onPageChanged = (pageIndex, pageSize) => {
+  console.log('페이지 변경: ' + (pageIndex + 1));
+};
+
+// 액션 1: 페이지 크기 10건으로 변경
+function onChangePageSize() {
+  grid.setPageSize(10);
+}
+
+// 액션 2: 특정 페이지(2페이지)로 바로 이동
+function onGotoPage2() {
+  grid.setPage(1); // 0-based
+}
+
+// 액션 3: 페이징 위치 가운데 정렬
+function onCenterPaging() {
+  grid.setPagingAlign('center');
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 14. 통계 요약행 (Summary Footer) & 7종 Export
+// -----------------------------------------------------------------------
+{
+  id: 'step-14',
+  num: 'Step 14',
+  group: '상호연동 & 편의기능 (Interop)',
+  title: '통계 요약행 (Footer) & 7종 포맷 Export',
+  shortDesc: 'SUM, AVG, COUNT 요약행 및 Excel, CSV, JSON, HTML, PDF 등 내보내기',
+  desc: '하단 푸터에 SUM, AVG, COUNT, MIN, MAX 통계 요약행을 실시간 표시하고, 그리드 데이터를 7개 포맷으로 즉시 다운로드/내보냅니다.',
+  tags: ['summaryFooter', 'SUM', 'AVG', 'export', 'excel', 'csv', 'pdf', 'json'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '영업 실적 통계 및 데이터 익스포트',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      footer: {
+        visible: true
+      },
+      columns: [
+        { name: 'dept', fieldName: 'dept', header: { text: '사업부' }, width: 120, align: 'center',
+          footer: { text: '전체 합계/평균' }
+        },
+        { name: 'rep', fieldName: 'rep', header: { text: '영업대표' }, width: 110, align: 'center',
+          footer: { expression: 'count', format: '총 0명' }
+        },
+        { name: 'deals', fieldName: 'deals', header: { text: '수주건수' }, width: 100, align: 'right', type: 'number',
+          footer: { expression: 'sum', format: '#,##0 건' }
+        },
+        { name: 'contract', fieldName: 'contract', header: { text: '계약금액' }, width: 140, align: 'right', type: 'number', formatter: 'currency',
+          footer: { expression: 'sum', formatter: 'currency' }
+        },
+        { name: 'achieve', fieldName: 'achieve', header: { text: '달성률' }, width: 110, align: 'right', type: 'number',
+          formatter: (v) => v + '%',
+          footer: { expression: 'avg', format: '평균 0.0%' }
+        }
+      ]
+    });
+
+    const rows = [
+      { dept: '엔터프라이즈사업부', rep: '이진우', deals: 12, contract: 1450000000, achieve: 112 },
+      { dept: '엔터프라이즈사업부', rep: '김태리', deals: 8, contract: 980000000, achieve: 98 },
+      { dept: '금융공공사업부', rep: '박보검', deals: 15, contract: 2300000000, achieve: 125 },
+      { dept: '금융공공사업부', rep: '김유정', deals: 10, contract: 1650000000, achieve: 108 },
+      { dept: '글로벌사업부', rep: '송중기', deals: 6, contract: 850000000, achieve: 85 },
+      { dept: '글로벌사업부', rep: '전여빈', deals: 11, contract: 1420000000, achieve: 115 },
+      { dept: '중소벤처사업부', rep: '한소희', deals: 22, contract: 670000000, achieve: 105 },
+      { dept: '중소벤처사업부', rep: '박서준', deals: 18, contract: 590000000, achieve: 102 },
+      { dept: '전략신사업부', rep: '아이유', deals: 14, contract: 1880000000, achieve: 130 },
+      { dept: '전략신사업부', rep: '차은우', deals: 9, contract: 1120000000, achieve: 95 }
+    ];
+    dp.setRows(rows);
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '📊 Excel (.xlsx) 다운로드',
+      cls: 'btn-success',
+      onClick: (grid, dp) => {
+        if (grid.exportData) grid.exportData('excel', 'sales_report.xlsx');
+        appendLog('EXPORT', 'Excel(.xlsx) 포맷으로 데이터 내보내기 실행');
+        showToast('Excel 내보내기 완료!');
+      }
+    },
+    {
+      label: '📑 CSV (.csv) 다운로드',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        if (grid.exportData) grid.exportData('csv', 'sales_report.csv');
+        appendLog('EXPORT', 'CSV(.csv) 포맷으로 데이터 내보내기 실행');
+        showToast('CSV 내보내기 완료!');
+      }
+    },
+    {
+      label: '📦 JSON 내보내기',
+      cls: '',
+      onClick: (grid, dp) => {
+        if (grid.exportData) grid.exportData('json', 'sales_report.json');
+        appendLog('EXPORT', 'JSON 포맷으로 데이터 내보내기 실행');
+        showToast('JSON 내보내기 완료!');
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 14. 통계 요약행(Footer) & 7종 포맷 Export 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '영업 실적 통계 및 데이터 익스포트',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  footer: { visible: true },
+  columns: [
+    { 
+      name: 'dept', 
+      fieldName: 'dept', 
+      header: { text: '사업부' }, 
+      width: 120, 
+      align: 'center',
+      footer: { text: '전체 합계/평균' }
+    },
+    { 
+      name: 'rep', 
+      fieldName: 'rep', 
+      header: { text: '영업대표' }, 
+      width: 110, 
+      align: 'center',
+      footer: { expression: 'count', format: '총 0명' }
+    },
+    { 
+      name: 'deals', 
+      fieldName: 'deals', 
+      header: { text: '수주건수' }, 
+      width: 100, 
+      align: 'right', 
+      type: 'number', 
+      footer: { expression: 'sum', format: '#,##0 건' }
+    },
+    { 
+      name: 'contract', 
+      fieldName: 'contract', 
+      header: { text: '계약금액' }, 
+      width: 140, 
+      align: 'right', 
+      type: 'number', 
+      formatter: 'currency',
+      footer: { expression: 'sum', formatter: 'currency' }
+    },
+    { 
+      name: 'achieve', 
+      fieldName: 'achieve', 
+      header: { text: '달성률' }, 
+      width: 110, 
+      align: 'right', 
+      type: 'number', 
+      formatter: (v) => v + '%',
+      footer: { expression: 'avg', format: '평균 0.0%' }
+    }
+  ]
+});
+
+// 10건 데이터 주입
+dataAdapter.setRows([
+  { dept: '엔터프라이즈사업부', rep: '이진우', deals: 12, contract: 1450000000, achieve: 112 },
+  { dept: '엔터프라이즈사업부', rep: '김태리', deals: 8, contract: 980000000, achieve: 98 },
+  { dept: '금융공공사업부', rep: '박보검', deals: 15, contract: 2300000000, achieve: 125 },
+  { dept: '금융공공사업부', rep: '김유정', deals: 10, contract: 1650000000, achieve: 108 },
+  { dept: '글로벌사업부', rep: '송중기', deals: 6, contract: 850000000, achieve: 85 },
+  { dept: '글로벌사업부', rep: '전여빈', deals: 11, contract: 1420000000, achieve: 115 },
+  { dept: '중소벤처사업부', rep: '한소희', deals: 22, contract: 670000000, achieve: 105 },
+  { dept: '중소벤처사업부', rep: '박서준', deals: 18, contract: 590000000, achieve: 102 },
+  { dept: '전략신사업부', rep: '아이유', deals: 14, contract: 1880000000, achieve: 130 },
+  { dept: '전략신사업부', rep: '차은우', deals: 9, contract: 1120000000, achieve: 95 }
+]);
+
+// 액션 1: Excel (.xlsx) 다운로드
+function onExportExcel() {
+  grid.exportData('excel', 'sales_report.xlsx');
+}
+
+// 액션 2: CSV (.csv) 다운로드
+function onExportCsv() {
+  grid.exportData('csv', 'sales_report.csv');
+}
+
+// 액션 3: JSON (.json) 다운로드
+function onExportJson() {
+  grid.exportData('json', 'sales_report.json');
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 15. 계층형 트리 그리드 (TreeView & TreeDataAdapter)
+// -----------------------------------------------------------------------
+{
+  id: 'step-15',
+  num: 'Step 15',
+  group: '고급 확장 (Advanced)',
+  title: '계층형 트리 그리드 (TreeView & TreeDataAdapter)',
+  shortDesc: '조직도/BOM 부모-자식 계층 트리, 접기/펼치기 노드',
+  desc: '부모-자식 관계의 계층형 데이터를 트리 형태로 렌더링하고 동적으로 노드를 펼치거나 접는 TreeView 컴포넌트 예제입니다.',
+  tags: ['TreeView', 'TreeDataAdapter', 'Hierarchical', 'TreeGrid'],
+  init: function(container) {
+    const dp = new TreeLunaDataAdapter();
+    const treeView = new TreeView(container, {
+      title: '전사 조직도 계층 트리 (Tree Grid)',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      treeColumn: 'deptName', // 트리 노드가 표시될 컬럼명
+      columns: [
+        { name: 'deptName', fieldName: 'deptName', header: { text: '부서/조직명' }, width: 220 },
+        { name: 'leader', fieldName: 'leader', header: { text: '조직장' }, width: 120, align: 'center' },
+        { name: 'headcount', fieldName: 'headcount', header: { text: '인원수' }, width: 90, align: 'right', type: 'number' },
+        { name: 'budget', fieldName: 'budget', header: { text: '배정예산' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+      ]
+    });
+
+    const treeRows = [
+      {
+        id: 1, deptName: 'CEO & 이사회', leader: '김대표', headcount: 5, budget: 500000000,
+        children: [
+          {
+            id: 11, deptName: '기술연구소 (CTO)', leader: '이연구', headcount: 45, budget: 2500000000,
+            children: [
+              { id: 111, deptName: '코어플랫폼팀', leader: '박수석', headcount: 18, budget: 1100000000 },
+              { id: 112, deptName: 'AI알고리즘팀', leader: '최수석', headcount: 15, budget: 900000000 },
+              { id: 113, deptName: '클라우드인프라팀', leader: '정책임', headcount: 12, budget: 500000000 }
+            ]
+          },
+          {
+            id: 12, deptName: '사업총괄본부 (COO)', leader: '한전무', headcount: 30, budget: 1800000000,
+            children: [
+              { id: 121, deptName: '국내영업팀', leader: '강팀장', headcount: 16, budget: 1000000000 },
+              { id: 122, deptName: '글로벌마케팅팀', leader: '윤팀장', headcount: 14, budget: 800000000 }
+            ]
+          }
+        ]
+      }
+    ];
+    dp.setTreeRows(treeRows);
+    appendLog('TREE', '계층형 트리 데이터 바인딩 완료');
+    return { grid: treeView, dp, rows: treeRows };
+  },
+  actions: [
+    {
+      label: '🌲 전체 트리 펼치기 (Expand All)',
+      cls: 'btn-primary',
+      onClick: (grid, dp) => {
+        if (grid.expandAll) grid.expandAll();
+        appendLog('TREE', '모든 계층 트리가 펼쳐졌습니다.');
+      }
+    },
+    {
+      label: '📁 전체 트리 접기 (Collapse All)',
+      cls: '',
+      onClick: (grid, dp) => {
+        if (grid.collapseAll) grid.collapseAll();
+        appendLog('TREE', '모든 계층 트리가 접혔습니다.');
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 15. 계층형 트리 그리드 (TreeView & TreeLunaDataAdapter) 전체 소스
+// =========================================================================
+
+// 1. 트리 전용 데이터 어댑터 생성
+const treeAdapter = new TreeLunaDataAdapter();
+
+// 2. 계층형 트리 뷰(TreeView) 생성
+const treeView = new TreeView('#grid-sandbox', {
+  title: '전사 조직도 계층 트리 (Tree Grid)',
+  dataAdapter: treeAdapter,
+  theme: 'dark',
+  treeColumn: 'deptName', // 노드 펼침/접힘 아이콘이 렌더링될 컬럼
+  columns: [
+    { name: 'deptName', fieldName: 'deptName', header: { text: '부서/조직명' }, width: 220 },
+    { name: 'leader', fieldName: 'leader', header: { text: '조직장' }, width: 120, align: 'center' },
+    { name: 'headcount', fieldName: 'headcount', header: { text: '인원수' }, width: 90, align: 'right', type: 'number' },
+    { name: 'budget', fieldName: 'budget', header: { text: '배정예산' }, width: 140, align: 'right', type: 'number', formatter: 'currency' }
+  ]
+});
+
+// 3. 계층형 중첩 객체(children) 데이터 주입
+const treeRows = [
+  {
+    id: 1, deptName: 'CEO & 이사회', leader: '김대표', headcount: 5, budget: 500000000,
+    children: [
+      {
+        id: 11, deptName: '기술연구소 (CTO)', leader: '이연구', headcount: 45, budget: 2500000000,
+        children: [
+          { id: 111, deptName: '코어플랫폼팀', leader: '박수석', headcount: 18, budget: 1100000000 },
+          { id: 112, deptName: 'AI알고리즘팀', leader: '최수석', headcount: 15, budget: 900000000 },
+          { id: 113, deptName: '클라우드인프라팀', leader: '정책임', headcount: 12, budget: 500000000 }
+        ]
+      },
+      {
+        id: 12, deptName: '사업총괄본부 (COO)', leader: '한전무', headcount: 30, budget: 1800000000,
+        children: [
+          { id: 121, deptName: '국내영업팀', leader: '강팀장', headcount: 16, budget: 1000000000 },
+          { id: 122, deptName: '글로벌마케팅팀', leader: '윤팀장', headcount: 14, budget: 800000000 }
+        ]
+      }
+    ]
+  }
+];
+treeAdapter.setTreeRows(treeRows);
+
+// 4. 액션 1: 전체 트리 노드 펼치기
+function onExpandAll() {
+  treeView.expandAll();
+}
+
+// 5. 액션 2: 전체 트리 노드 접기
+function onCollapseAll() {
+  treeView.collapseAll();
+}`
+},
+
+// -----------------------------------------------------------------------
+// Step 16. 테마 & 글로벌 다국어 (i18n)
+// -----------------------------------------------------------------------
+{
+  id: 'step-16',
+  num: 'Step 16',
+  group: '고급 확장 (Advanced)',
+  title: '테마 & 글로벌 다국어 (i18n & Themes)',
+  shortDesc: '8종 엔터프라이즈 테마 실시간 전환, 4개국어(ko/en/ja/zh) 로케일',
+  desc: 'Dark, Classic, Material, Ocean Blue 등 8종 테마와 한국어, 영어, 일본어, 중국어 다국어 메시지/통화 기호를 즉각 전환합니다.',
+  tags: ['theme', 'i18n', 'locale', 'LunaGridLocaleManager'],
+  init: function(container) {
+    const dp = new LunaDataAdapter();
+    const grid = new LunaGrid(container, {
+      title: '글로벌 엔터프라이즈 다국어 & 테마 프리뷰',
+      dataAdapter: dp,
+      theme: getCurrentTheme(),
+      indicator: { visible: true },
+      stateBar: { visible: true },
+      columns: [
+        { name: 'prod', fieldName: 'prod', header: { text: '제품명' }, width: 160, labels: { en: 'Product', ko: '제품명', ja: '製品名', zh: '产品' } },
+        { name: 'origin', fieldName: 'origin', header: { text: '원산지' }, width: 120, align: 'center', labels: { en: 'Origin', ko: '원산지', ja: '原産地', zh: '原产地' } },
+        { name: 'price', fieldName: 'price', header: { text: '가격' }, width: 130, align: 'right', type: 'number', formatter: 'currency', labels: { en: 'Price', ko: '가격', ja: '価格', zh: '价格' } },
+        { name: 'delivery', fieldName: 'delivery', header: { text: '배송기간' }, width: 120, align: 'center', labels: { en: 'Delivery Time', ko: '배송기간', ja: '配送期間', zh: '交货期' } }
+      ]
+    });
+
+    const rows = [
+      { prod: '프리미엄 랩톱 X1', origin: '한국 (KR)', price: 2150000, delivery: '익일 특급' },
+      { prod: '노이즈캔슬링 헤드폰', origin: '일본 (JP)', price: 380000, delivery: '3일 소요' },
+      { prod: '스마트 워치 Pro', origin: '미국 (US)', price: 540000, delivery: '당일 배송' },
+      { prod: '4K 웹캠 & 마이크', origin: '독일 (DE)', price: 185000, delivery: '2일 소요' },
+      { prod: '인체공학 기계식 키보드', origin: '한국 (KR)', price: 210000, delivery: '익일 배송' },
+      { prod: '초고속 NVMe 4TB', origin: '대만 (TW)', price: 420000, delivery: '4일 소요' },
+      { prod: '스마트 IoT 허브', origin: '미국 (US)', price: 125000, delivery: '3일 소요' },
+      { prod: '무선 트랙볼 마우스', origin: '일본 (JP)', price: 98000, delivery: '2일 소요' },
+      { prod: '썬더볼트4 독 스테이션', origin: '독일 (DE)', price: 310000, delivery: '3일 소요' },
+      { prod: '휴대용 보조 모니터 16"', origin: '한국 (KR)', price: 280000, delivery: '당일 배송' }
+    ];
+    dp.setRows(rows);
+    return { grid, dp, rows };
+  },
+  actions: [
+    {
+      label: '🌙 Dark 테마 적용',
+      cls: 'btn-primary',
+      onClick: (grid) => {
+        grid.setTheme('dark');
+        document.getElementById('select-theme-ctrl').value = 'dark';
+        appendLog('THEME', '테마 변경: Dark');
+      }
+    },
+    {
+      label: '☀️ Light 테마 적용',
+      cls: '',
+      onClick: (grid) => {
+        grid.setTheme('light');
+        document.getElementById('select-theme-ctrl').value = 'light';
+        appendLog('THEME', '테마 변경: Light');
+      }
+    },
+    {
+      label: '⚡ Energy Blue 테마 적용',
+      cls: '',
+      onClick: (grid) => {
+        grid.setTheme('energyblue');
+        document.getElementById('select-theme-ctrl').value = 'energyblue';
+        appendLog('THEME', '테마 변경: Energy Blue');
+      }
+    },
+    {
+      label: '🌐 영어(English) 로케일 전환',
+      cls: 'btn-success',
+      onClick: (grid) => {
+        grid.setLocale('en');
+        LunaGridLocaleManager.setLocale('en');
+        document.getElementById('select-locale-ctrl').value = 'en';
+        appendLog('I18N', '로케일 변경: en-US (달러 통화 및 영문 메시지)');
+      }
+    }
+  ],
+  codeJs: `// =========================================================================
+// Step 16. 테마 & 글로벌 다국어(i18n) 전체 소스
+// =========================================================================
+
+const dataAdapter = new LunaDataAdapter();
+
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '글로벌 엔터프라이즈 다국어 & 테마 프리뷰',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  indicator: { visible: true },
+  stateBar: { visible: true },
+  columns: [
+    { name: 'prod', fieldName: 'prod', header: { text: '제품명' }, width: 160, labels: { en: 'Product', ko: '제품명', ja: '製品名', zh: '产品' } },
+    { name: 'origin', fieldName: 'origin', header: { text: '원산지' }, width: 120, align: 'center', labels: { en: 'Origin', ko: '원산지', ja: '原産地', zh: '原产地' } },
+    { name: 'price', fieldName: 'price', header: { text: '가격' }, width: 130, align: 'right', type: 'number', formatter: 'currency', labels: { en: 'Price', ko: '가격', ja: '価格', zh: '价格' } },
+    { name: 'delivery', fieldName: 'delivery', header: { text: '배송기간' }, width: 120, align: 'center', labels: { en: 'Delivery Time', ko: '배송기간', ja: '配送期間', zh: '交货期' } }
+  ]
+});
+
+// 10건 데이터 주입
+dataAdapter.setRows([
+  { prod: '프리미엄 랩톱 X1', origin: '한국 (KR)', price: 2150000, delivery: '익일 특급' },
+  { prod: '노이즈캔슬링 헤드폰', origin: '일본 (JP)', price: 380000, delivery: '3일 소요' },
+  { prod: '스마트 워치 Pro', origin: '미국 (US)', price: 540000, delivery: '당일 배송' },
+  { prod: '4K 웹캠 & 마이크', origin: '독일 (DE)', price: 185000, delivery: '2일 소요' },
+  { prod: '인체공학 기계식 키보드', origin: '한국 (KR)', price: 210000, delivery: '익일 배송' },
+  { prod: '초고속 NVMe 4TB', origin: '대만 (TW)', price: 420000, delivery: '4일 소요' },
+  { prod: '스마트 IoT 허브', origin: '미국 (US)', price: 125000, delivery: '3일 소요' },
+  { prod: '무선 트랙볼 마우스', origin: '일본 (JP)', price: 98000, delivery: '2일 소요' },
+  { prod: '썬더볼트4 독 스테이션', origin: '독일 (DE)', price: 310000, delivery: '3일 소요' },
+  { prod: '휴대용 보조 모니터 16"', origin: '한국 (KR)', price: 280000, delivery: '당일 배송' }
+]);
+
+// 액션 1: Dark 테마 적용
+function onSetDarkTheme() {
+  grid.setTheme('dark');
+}
+
+// 액션 2: Light 테마 적용
+function onSetLightTheme() {
+  grid.setTheme('light');
+}
+
+// 액션 3: Energy Blue 테마 적용
+function onSetEnergyBlueTheme() {
+  grid.setTheme('energyblue');
+}
+
+// 액션 4: 영문(English) 로케일 전환
+function onSetEnglishLocale() {
+  LunaGridLocaleManager.setLocale('en');
+  grid.refresh();
+}`
+      },
+
+      // -----------------------------------------------------------------------
+      // Step 17. 종합 올인원 엔터프라이즈 대시보드
+      // -----------------------------------------------------------------------
+      {
+        id: 'step-17',
+        num: 'Step 17',
+        group: '종합 완성형 (Master Showcase)',
+        title: '종합 엔터프라이즈 올인원 ERP 대시보드',
+        shortDesc: '모든 핵심 기능(컨트롤바, 렌더러, 에디터, 그룹핑, 엑셀, 통계) 집약',
+        desc: '그루핑, 렌더러, 인라인 에디터, 엑셀 복사/붙여넣기, 틀고정, 다중 정렬/필터, 요약행이 모두 유기적으로 결합된 완성형 실무 대시보드입니다.',
+        tags: ['Enterprise All-in-One', 'Full-Stack Grid', 'Master Showcase'],
+        init: function(container) {
+          const dp = new LunaDataAdapter();
+          const grid = new LunaGrid(container, {
+            title: '2026 글로벌 엔터프라이즈 통합 경영 대시보드',
+            dataAdapter: dp,
+            theme: getCurrentTheme(),
+            height: 580,
+            indicator: { visible: true, label: 'No.' },
+            stateBar: { visible: true, label: '상태' },
+            checkBar: { visible: true, multiSelect: true },
+            fixedColCount: 1,
+            rowGrouping: { enabled: true, showGroupPanel: true, groupSummary: true },
+            sorting: { enabled: true, multiSort: true },
+            filtering: { enabled: true, excelStyle: true },
+            rowDragDrop: { enabled: true },
+            selectionMode: 'range',
+            clipboard: { enabled: true },
+            footer: { visible: true },
+            columns: [
+              { name: 'bizUnit', fieldName: 'bizUnit', header: { text: '사업부 (고정)' }, width: 140, align: 'center', footer: { text: '총계 / 평균' } },
+              { name: 'avatar', fieldName: 'avatar', header: { text: '담당자' }, width: 110, align: 'center', renderer: 'avatar' },
+              { name: 'projectName', fieldName: 'projectName', header: { text: '프로젝트명' }, width: 170, editor: 'text' },
+              { name: 'status', fieldName: 'status', header: { text: '진행상태' }, width: 110, align: 'center',
+                renderer: { type: 'badge', colorMap: { '정상': 'success', '지연': 'danger', '검토': 'warning' } },
+                editor: { type: 'select', options: ['정상', '지연', '검토'] }
+              },
+              { name: 'progress', fieldName: 'progress', header: { text: '진척률' }, width: 130,
+                renderer: { type: 'progress', min: 0, max: 100, showLabel: true },
+                editor: { type: 'numberSpin', min: 0, max: 100, step: 5 }
+              },
+              { name: 'rating', fieldName: 'rating', header: { text: '고객평점' }, width: 120, align: 'center', renderer: 'rating' },
+              { name: 'contractAmount', fieldName: 'contractAmount', header: { text: '계약금액' }, width: 140, align: 'right', type: 'number',
+                formatter: 'currency',
+                footer: { expression: 'sum', formatter: 'currency' }
+              },
+              { name: 'sparkline', fieldName: 'sparkline', header: { text: '월별추이' }, width: 120, align: 'center',
+                renderer: { type: 'sparkline', color: '#60a5fa' }
+              }
+            ]
+          });
+
+          const rows = [
+            { bizUnit: '클라우드사업부', avatar: '김현우', projectName: '하이브리드 멀티클라우드 2.0', status: '정상', progress: 95, rating: 5, contractAmount: 1850000000, sparkline: [20, 45, 65, 80, 95] },
+            { bizUnit: '클라우드사업부', avatar: '이서연', projectName: '쿠버네티스 통합 오케스트레이션', status: '정상', progress: 88, rating: 4, contractAmount: 1200000000, sparkline: [15, 35, 55, 75, 88] },
+            { bizUnit: '클라우드사업부', avatar: '강태양', projectName: '글로벌 CDN 엣지 가속망', status: '검토', progress: 70, rating: 5, contractAmount: 1450000000, sparkline: [25, 40, 55, 65, 70] },
+            { bizUnit: 'AI솔루션사업부', avatar: '박도현', projectName: '생성형 LLM 엔터프라이즈 RAG', status: '검토', progress: 62, rating: 4, contractAmount: 2400000000, sparkline: [10, 20, 35, 50, 62] },
+            { bizUnit: 'AI솔루션사업부', avatar: '최지우', projectName: '음성인식 실시간 콜봇 연동', status: '지연', progress: 40, rating: 3, contractAmount: 950000000, sparkline: [10, 15, 25, 35, 40] },
+            { bizUnit: 'AI솔루션사업부', avatar: '오세훈', projectName: '컴퓨터 비전 결함 검출 시스템', status: '정상', progress: 85, rating: 5, contractAmount: 1750000000, sparkline: [30, 50, 65, 78, 85] },
+            { bizUnit: '보안아키텍처부', avatar: '정하은', projectName: '제로트러스트 인증 인프라', status: '정상', progress: 91, rating: 5, contractAmount: 1600000000, sparkline: [30, 50, 70, 85, 91] },
+            { bizUnit: '보안아키텍처부', avatar: '윤재원', projectName: '실시간 보안 침해 FDS 방화벽', status: '정상', progress: 82, rating: 4, contractAmount: 1300000000, sparkline: [20, 40, 60, 75, 82] },
+            { bizUnit: '플랫폼서비스부', avatar: '임수빈', projectName: '초저지연 WebSocket 메시징', status: '검토', progress: 55, rating: 4, contractAmount: 890000000, sparkline: [15, 25, 35, 48, 55] },
+            { bizUnit: '플랫폼서비스부', avatar: '백지영', projectName: '실시간 데이터 레이크하우스', status: '정상', progress: 90, rating: 5, contractAmount: 2100000000, sparkline: [40, 60, 75, 85, 90] },
+            { bizUnit: '플랫폼서비스부', avatar: '송민호', projectName: '마이크로서비스 API 게이트웨이', status: '지연', progress: 35, rating: 3, contractAmount: 780000000, sparkline: [10, 18, 25, 30, 35] },
+            { bizUnit: '보안아키텍처부', avatar: '한소미', projectName: '양자암호 통신 VPN 게이트', status: '정상', progress: 78, rating: 5, contractAmount: 1950000000, sparkline: [20, 35, 50, 68, 78] }
+          ];
+          dp.setRows(rows);
+
+          if (grid.groupBy) grid.groupBy(['bizUnit']);
+          appendLog('ALL_IN_ONE', '🚀 종합 엔터프라이즈 올인원 대시보드가 초기화되었습니다.');
+
+          return { grid, dp, rows };
+        },
+        actions: [
+          {
+            label: '➕ 신규 프로젝트 등록',
+            cls: 'btn-success',
+            onClick: (grid, dp) => {
+              dp.addRow({
+                bizUnit: '클라우드사업부',
+                avatar: '신규담당',
+                projectName: '신규 엣지 컴퓨팅 구축',
+                status: '정상',
+                progress: 10,
+                rating: 5,
+                contractAmount: 850000000,
+                sparkline: [0, 5, 10]
+              });
+              appendLog('DATA', '신규 프로젝트 행이 추가되었습니다.');
+            }
+          },
+          {
+            label: '📊 전체 Excel 내보내기',
+            cls: 'btn-primary',
+            onClick: (grid) => {
+              if (grid.exportData) grid.exportData('excel', 'all_in_one_enterprise.xlsx');
+              appendLog('EXPORT', '종합 대시보드 Excel 다운로드 실행');
+              showToast('Excel 내보내기 완료!');
+            }
+          },
+          {
+            label: '🔄 상태 초기화 (Commit)',
+            cls: '',
+            onClick: (grid, dp) => {
+              dp.commit();
+              if (grid.refresh) grid.refresh();
+              appendLog('STATE', 'C/U/D 변경 상태가 영구 확정(Commit)되었습니다.');
+            }
+          }
+        ],
+        codeJs: `// =========================================================================
+// Step 17. 종합 엔터프라이즈 올인원 ERP 대시보드 전체 소스
+// =========================================================================
+
+// 1. DataAdapter 생성
+const dataAdapter = new LunaDataAdapter();
+
+// 2. 풀스택 엔터프라이즈 옵션 구성
+const grid = new LunaGrid('#grid-sandbox', {
+  title: '2026 글로벌 엔터프라이즈 통합 경영 대시보드',
+  dataAdapter: dataAdapter,
+  theme: 'dark',
+  height: 580,
+  // 좌측 3대 컨트롤 바
+  indicator: { visible: true, label: 'No.' },
+  stateBar:  { visible: true, label: '상태' },
+  checkBar:  { visible: true, multiSelect: true },
+  // 틀고정 & 그룹핑 & 정렬 & 필터 & 드래그앤드롭 & 클립보드 & 요약행
+  fixedColCount: 1,
+  rowGrouping: { enabled: true, showGroupPanel: true, groupSummary: true },
+  sorting: { enabled: true, multiSort: true },
+  filtering: { enabled: true, excelStyle: true },
+  rowDragDrop: { enabled: true },
+  selectionMode: 'range',
+  clipboard: { enabled: true },
+  footer: { visible: true },
+  columns: [
+    { name: 'bizUnit', fieldName: 'bizUnit', header: { text: '사업부 (고정)' }, width: 140, align: 'center', footer: { text: '총계 / 평균' } },
+    { name: 'avatar', fieldName: 'avatar', header: { text: '담당자' }, width: 110, align: 'center', renderer: 'avatar' },
+    { name: 'projectName', fieldName: 'projectName', header: { text: '프로젝트명' }, width: 170, editor: 'text' },
+    { 
+      name: 'status', 
+      fieldName: 'status', 
+      header: { text: '진행상태' }, 
+      width: 110, 
+      align: 'center',
+      renderer: { type: 'badge', colorMap: { '정상': 'success', '지연': 'danger', '검토': 'warning' } },
+      editor: { type: 'select', options: ['정상', '지연', '검토'] }
+    },
+    { 
+      name: 'progress', 
+      fieldName: 'progress', 
+      header: { text: '진척률' }, 
+      width: 130,
+      renderer: { type: 'progress', min: 0, max: 100, showLabel: true },
+      editor: { type: 'numberSpin', min: 0, max: 100, step: 5 }
+    },
+    { name: 'rating', fieldName: 'rating', header: { text: '고객평점' }, width: 120, align: 'center', renderer: 'rating' },
+    { 
+      name: 'contractAmount', 
+      fieldName: 'contractAmount', 
+      header: { text: '계약금액' }, 
+      width: 140, 
+      align: 'right', 
+      type: 'number',
+      formatter: 'currency',
+      footer: { expression: 'sum', formatter: 'currency' }
+    },
+    { 
+      name: 'sparkline', 
+      fieldName: 'sparkline', 
+      header: { text: '월별추이' }, 
+      width: 120, 
+      align: 'center',
+      renderer: { type: 'sparkline', color: '#60a5fa' }
+    }
+  ]
+});
+
+// 3. 종합 실무 데이터 주입 (12건)
+const rows = [
+  { bizUnit: '클라우드사업부', avatar: '김현우', projectName: '하이브리드 멀티클라우드 2.0', status: '정상', progress: 95, rating: 5, contractAmount: 1850000000, sparkline: [20, 45, 65, 80, 95] },
+  { bizUnit: '클라우드사업부', avatar: '이서연', projectName: '쿠버네티스 통합 오케스트레이션', status: '정상', progress: 88, rating: 4, contractAmount: 1200000000, sparkline: [15, 35, 55, 75, 88] },
+  { bizUnit: '클라우드사업부', avatar: '강태양', projectName: '글로벌 CDN 엣지 가속망', status: '검토', progress: 70, rating: 5, contractAmount: 1450000000, sparkline: [25, 40, 55, 65, 70] },
+  { bizUnit: 'AI솔루션사업부', avatar: '박도현', projectName: '생성형 LLM 엔터프라이즈 RAG', status: '검토', progress: 62, rating: 4, contractAmount: 2400000000, sparkline: [10, 20, 35, 50, 62] },
+  { bizUnit: 'AI솔루션사업부', avatar: '최지우', projectName: '음성인식 실시간 콜봇 연동', status: '지연', progress: 40, rating: 3, contractAmount: 950000000, sparkline: [10, 15, 25, 35, 40] },
+  { bizUnit: 'AI솔루션사업부', avatar: '오세훈', projectName: '컴퓨터 비전 결함 검출 시스템', status: '정상', progress: 85, rating: 5, contractAmount: 1750000000, sparkline: [30, 50, 65, 78, 85] },
+  { bizUnit: '보안아키텍처부', avatar: '정하은', projectName: '제로트러스트 인증 인프라', status: '정상', progress: 91, rating: 5, contractAmount: 1600000000, sparkline: [30, 50, 70, 85, 91] },
+  { bizUnit: '보안아키텍처부', avatar: '윤재원', projectName: '실시간 보안 침해 FDS 방화벽', status: '정상', progress: 82, rating: 4, contractAmount: 1300000000, sparkline: [20, 40, 60, 75, 82] },
+  { bizUnit: '플랫폼서비스부', avatar: '임수빈', projectName: '초저지연 WebSocket 메시징', status: '검토', progress: 55, rating: 4, contractAmount: 890000000, sparkline: [15, 25, 35, 48, 55] },
+  { bizUnit: '플랫폼서비스부', avatar: '백지영', projectName: '실시간 데이터 레이크하우스', status: '정상', progress: 90, rating: 5, contractAmount: 2100000000, sparkline: [40, 60, 75, 85, 90] },
+  { bizUnit: '플랫폼서비스부', avatar: '송민호', projectName: '마이크로서비스 API 게이트웨이', status: '지연', progress: 35, rating: 3, contractAmount: 780000000, sparkline: [10, 18, 25, 30, 35] },
+  { bizUnit: '보안아키텍처부', avatar: '한소미', projectName: '양자암호 통신 VPN 게이트', status: '정상', progress: 78, rating: 5, contractAmount: 1950000000, sparkline: [20, 35, 50, 68, 78] }
+];
+dataAdapter.setRows(rows);
+
+// 기본 사업부 기준 그룹핑 적용
+grid.groupBy(['bizUnit']);
+
+// 액션 1: 신규 프로젝트 행 추가
+function onAddProject() {
+  dataAdapter.addRow({
+    bizUnit: '클라우드사업부',
+    avatar: '신규담당',
+    projectName: '신규 엣지 컴퓨팅 구축',
+    status: '정상',
+    progress: 10,
+    rating: 5,
+    contractAmount: 850000000,
+    sparkline: [0, 5, 10]
+  });
+}
+
+// 액션 2: Excel 다운로드
+function onExportAllExcel() {
+  grid.exportData('excel', 'all_in_one_enterprise.xlsx');
+}
+
+// 액션 3: 상태 영구 커밋
+function onCommitChanges() {
+  dataAdapter.commit();
+}`
+      }
+    ];
+
+    // =========================================================================
+    // 헬퍼 함수 및 UI 바인딩
+    // =========================================================================
+    function getCurrentTheme() {
+      return document.getElementById('select-theme-ctrl').value || 'dark';
+    }
+
+    function renderSidebarSteps(filterText = '') {
+      const container = document.getElementById('step-list-container');
+      container.innerHTML = '';
+
+      let lastGroup = '';
+      STEPS.forEach((step, idx) => {
+        if (filterText) {
+          const q = filterText.toLowerCase();
+          const match = step.title.toLowerCase().includes(q) || 
+                        step.shortDesc.toLowerCase().includes(q) || 
+                        step.tags.some(t => t.toLowerCase().includes(q));
+          if (!match) return;
+        }
+
+        if (step.group !== lastGroup) {
+          lastGroup = step.group;
+          const groupEl = document.createElement('li');
+          groupEl.className = 'step-group-title';
+          groupEl.textContent = step.group;
+          container.appendChild(groupEl);
+        }
+
+        const li = document.createElement('li');
+        li.className = `step-item ${idx === currentStepIndex ? 'active' : ''}`;
+        li.innerHTML = `
+          <span class="step-num">${step.num}</span>
+          <div class="step-info">
+            <span class="step-title">${step.title}</span>
+            <span class="step-desc-short">${step.shortDesc}</span>
+          </div>
+        `;
+        li.onclick = () => selectStep(idx);
+        container.appendChild(li);
+      });
+    }
+
+    function selectStep(index) {
+      if (index < 0 || index >= STEPS.length) return;
+      currentStepIndex = index;
+      const step = STEPS[index];
+
+      // 사이드바 활성 스타일 갱신
+      renderSidebarSteps(document.getElementById('search-step-input').value);
+
+      // 상단 헤더 갱신
+      document.getElementById('view-step-num').textContent = step.num;
+      document.getElementById('view-step-title').textContent = step.title;
+      document.getElementById('view-step-desc').textContent = step.desc;
+
+      // 태그 갱신
+      const tagsContainer = document.getElementById('view-step-tags');
+      tagsContainer.innerHTML = step.tags.map(t => `<span class="tag-item">#${t}</span>`).join('');
+
+      // 이전 그리드 정리 및 컨테이너 비우기
+      const sandbox = document.getElementById('grid-sandbox');
+      const stageCard = sandbox.closest('.grid-stage-card');
+      sandbox.innerHTML = '';
+      if (currentGrid && currentGrid.destroy) {
+        try { currentGrid.destroy(); } catch (e) {}
+      }
+
+      // 스텝별 대시보드 스케일에 맞춘 컨테이너 높이 설정
+      if (step.id === 'step-17') {
+        sandbox.style.height = '580px';
+        if (stageCard) stageCard.style.minHeight = '580px';
+      } else {
+        sandbox.style.height = '560px';
+        if (stageCard) stageCard.style.minHeight = '560px';
+      }
+
+      // 새 그리드 초기화 실행
+      const result = step.init(sandbox);
+      currentGrid = result.grid;
+      currentDataAdapter = result.dp;
+
+      // 액션 버튼들 렌더링
+      const btnContainer = document.getElementById('action-buttons-container');
+      btnContainer.innerHTML = '';
+      if (step.actions && step.actions.length > 0) {
+        step.actions.forEach(act => {
+          const btn = document.createElement('button');
+          btn.className = `btn-ctrl ${act.cls || ''}`;
+          btn.innerHTML = `<span>${act.label}</span>`;
+          btn.onclick = () => act.onClick(currentGrid, currentDataAdapter);
+          btnContainer.appendChild(btn);
+        });
+      }
+
+      // 코드/데이터 뷰어 갱신
+      renderTabContent();
+    }
+
+    function renderTabContent() {
+      const viewer = document.getElementById('tab-content-viewer');
+      const step = STEPS[currentStepIndex];
+      const clearBtn = document.getElementById('btn-clear-logs');
+
+      if (activeTab === 'js') {
+        clearBtn.style.display = 'none';
+        viewer.textContent = step.codeJs || '// 코드가 없습니다.';
+      } else if (activeTab === 'data') {
+        clearBtn.style.display = 'none';
+        const rows = currentDataAdapter ? (currentDataAdapter.getRows ? currentDataAdapter.getRows() : (currentDataAdapter.getTreeRows ? currentDataAdapter.getTreeRows() : [])) : [];
+        viewer.textContent = JSON.stringify(rows, null, 2);
+      } else if (activeTab === 'logs') {
+        clearBtn.style.display = 'inline-flex';
+        renderLogs();
+      }
+    }
+
+    // =========================================================================
+    // 이벤트 바인딩 초기화
+    // =========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 사이드바 검색 이벤트
+      document.getElementById('search-step-input').addEventListener('input', (e) => {
+        renderSidebarSteps(e.target.value);
+      });
+
+      // 2. 탭 전환 이벤트
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeTab = btn.getAttribute('data-tab');
+          renderTabContent();
+        });
+      });
+
+      // 3. 코드 복사 버튼
+      document.getElementById('btn-copy-code').addEventListener('click', () => {
+        const text = document.getElementById('tab-content-viewer').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('클립보드에 코드가 복사되었습니다!');
+        });
+      });
+
+      // 4. 로그 비우기 버튼
+      document.getElementById('btn-clear-logs').addEventListener('click', () => {
+        logBuffer.length = 0;
+        renderLogs();
+        showToast('이벤트 로그가 초기화되었습니다.');
+      });
+
+      // 5. 전역 테마 컨트롤 변경
+      document.getElementById('select-theme-ctrl').addEventListener('change', (e) => {
+        if (currentGrid && currentGrid.setTheme) {
+          currentGrid.setTheme(e.target.value);
+          appendLog('THEME', `테마가 [${e.target.value}] 로 변경되었습니다.`);
+        }
+      });
+
+      // 6. 전역 언어 컨트롤 변경
+      document.getElementById('select-locale-ctrl').addEventListener('change', (e) => {
+        const newLocale = e.target.value;
+        LunaGridLocaleManager.setLocale(newLocale);
+        if (currentGrid && currentGrid.setLocale) {
+          currentGrid.setLocale(newLocale);
+          appendLog('I18N', `로케일이 [${newLocale}] 로 변경되었습니다.`);
+        }
+      });
+
+      // 7. 첫 번째 단계 초기 실행
+      renderSidebarSteps();
+      selectStep(0);
+    });
+  </script>
+</body>
+</html>

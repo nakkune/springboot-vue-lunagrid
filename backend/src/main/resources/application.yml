@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    # Oracle FREEPDB1 연결 정보 (SID 방식일 경우 :FREEPDB1 사용)
+    url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+    username: myoracle
+    password: ${DB_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    # Oracle 드라이버는 null 파라미터의 기본 JdbcType.OTHER 를 거부하므로(NULL 컬럼 바인딩 시 ORA-17004) NULL 로 지정
+    jdbc-type-for-null: 'NULL'
+
+logging:
+  level:
+    com.example.portal: DEBUG
+    com.example.portal.mapper: DEBUG
+
+jwt:
+  # 샘플 시크릿 (최소 48자 이상의 Base64 인코딩된 문자열 권장) - 운영 시 반드시 교체
+  secret: dGhpcy1pcy1hLXNhbXBsZS1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tZ2VuZXJhdGlvbi1pbi1zcHJpbmctYm9vdC0zLWVudGVycHJpc2UtcG9ydGFs
+  expiration-ms: 86400000 # 24시간
+
+app:
+  upload:
+    # 첨부파일 저장 루트 (연도/월 하위 디렉터리에 저장됨)
+    path: ${user.home}/portal-upload

@@ -1,0 +1,15 @@
+<template>
+  <div>
+    <div class="page-header">
+      <h2>게시판</h2>
+      <p>공지 및 자유 게시판입니다. (준비 중)</p>
+    </div>
+
+    <el-card shadow="never">
+      <el-empty description="준비 중인 화면입니다." />
+    </el-card>
+  </div>
+</template>
+
+<script setup>
+</script>

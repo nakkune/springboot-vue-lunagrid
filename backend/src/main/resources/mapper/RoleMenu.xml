@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.RoleMenuMapper">
+
+    <select id="selectByRoleIds" resultType="com.example.portal.entity.RoleMenu">
+        SELECT ROLE_ID, MENU_ID, AUTH_INQ_YN, AUTH_REG_YN, AUTH_MOD_YN,
+               AUTH_DEL_YN, AUTH_EXC_YN, AUTH_PRT_YN, REG_USER_ID, REG_DT
+        FROM TB_COM_ROLE_MENU
+        WHERE ROLE_ID IN
+        <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </select>
+
+    <select id="countByRoleIdAndMenuId" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_ROLE_MENU
+        WHERE ROLE_ID = #{roleId}
+          AND MENU_ID = #{menuId}
+    </select>
+
+    <insert id="insertRoleMenu" parameterType="com.example.portal.entity.RoleMenu">
+        INSERT INTO TB_COM_ROLE_MENU (
+            ROLE_ID, MENU_ID, AUTH_INQ_YN, AUTH_REG_YN, AUTH_MOD_YN, AUTH_DEL_YN,
+            AUTH_EXC_YN, AUTH_PRT_YN, REG_USER_ID, REG_DT
+        ) VALUES (
+            #{roleId}, #{menuId}, #{authInqYn}, #{authRegYn}, #{authModYn}, #{authDelYn},
+            #{authExcYn}, #{authPrtYn}, #{regUserId}, SYSDATE
+        )
+    </insert>
+
+    <delete id="deleteByMenuId">
+        DELETE FROM TB_COM_ROLE_MENU
+        WHERE MENU_ID = #{menuId}
+    </delete>
+    <select id="selectByRoleId" resultType="com.example.portal.entity.RoleMenu">
+        SELECT ROLE_ID, MENU_ID
+        FROM TB_COM_ROLE_MENU
+        WHERE ROLE_ID = #{roleId}
+    </select>
+
+    <delete id="deleteByRoleId">
+        DELETE FROM TB_COM_ROLE_MENU
+        WHERE ROLE_ID = #{roleId}
+    </delete>
+
+</mapper>

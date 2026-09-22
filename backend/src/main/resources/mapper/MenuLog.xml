@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.portal.mapper.MenuLogMapper">
+
+    <insert id="insertMenuLog" parameterType="com.example.portal.entity.MenuLog">
+        INSERT INTO TB_COM_MENU_LOG (
+            LOG_SEQ, USER_ID, USER_NM, MENU_ID, MENU_NM, MENU_URL, CLICK_DT, USER_IP
+        ) VALUES (
+            SEQ_TB_COM_MENU_LOG.NEXTVAL, #{userId}, #{userNm}, #{menuId},
+            #{menuNm}, #{menuUrl}, #{clickDt}, #{userIp}
+        )
+    </insert>
+
+    <select id="selectMenuLogs" resultType="com.example.portal.entity.MenuLog">
+        SELECT * FROM (
+            SELECT t.*, ROWNUM rn FROM (
+                SELECT LOG_SEQ, USER_ID, USER_NM, MENU_ID, MENU_NM, MENU_URL, CLICK_DT, USER_IP
+                FROM TB_COM_MENU_LOG
+                <where>
+                    <if test="userId != null and userId != ''">
+                        AND (USER_ID LIKE '%' || #{userId} || '%' OR USER_NM LIKE '%' || #{userId} || '%')
+                    </if>
+                    <if test="menuId != null and menuId != ''">
+                        AND (MENU_ID LIKE '%' || #{menuId} || '%' OR MENU_NM LIKE '%' || #{menuId} || '%')
+                    </if>
+                    <if test="userIp != null and userIp != ''">
+                        AND USER_IP LIKE '%' || #{userIp} || '%'
+                    </if>
+                    <if test="startDt != null and startDt != ''">
+                        AND CLICK_DT &gt;= TO_DATE(#{startDt}, 'YYYY-MM-DD')
+                    </if>
+                    <if test="endDt != null and endDt != ''">
+                        AND CLICK_DT &lt; TO_DATE(#{endDt}, 'YYYY-MM-DD') + 1
+                    </if>
+                </where>
+                ORDER BY CLICK_DT DESC
+            ) t WHERE ROWNUM &lt;= #{offset} + #{pageSize}
+        ) WHERE rn &gt; #{offset}
+    </select>
+
+    <select id="countMenuLogs" resultType="int">
+        SELECT COUNT(*)
+        FROM TB_COM_MENU_LOG
+        <where>
+            <if test="userId != null and userId != ''">
+                AND (USER_ID LIKE '%' || #{userId} || '%' OR USER_NM LIKE '%' || #{userId} || '%')
+            </if>
+            <if test="menuId != null and menuId != ''">
+                AND (MENU_ID LIKE '%' || #{menuId} || '%' OR MENU_NM LIKE '%' || #{menuId} || '%')
+            </if>
+            <if test="userIp != null and userIp != ''">
+                AND USER_IP LIKE '%' || #{userIp} || '%'
+            </if>
+            <if test="startDt != null and startDt != ''">
+                AND CLICK_DT &gt;= TO_DATE(#{startDt}, 'YYYY-MM-DD')
+            </if>
+            <if test="endDt != null and endDt != ''">
+                AND CLICK_DT &lt; TO_DATE(#{endDt}, 'YYYY-MM-DD') + 1
+            </if>
+        </where>
+    </select>
+
+</mapper>

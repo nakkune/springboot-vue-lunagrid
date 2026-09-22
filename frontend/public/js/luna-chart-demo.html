@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LunaChart Demo Gallery - LunaChart Engine</title>
+  
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- LunaChart & LunaGrid CSS -->
+  <link rel="stylesheet" href="/css/luna-lib-grid.css">
+  <link rel="stylesheet" href="./css/luna-chart.css">
+
+  <style>
+    :root {
+      --bg-body: #f4f6fa;
+      --bg-card: #ffffff;
+      --border-card: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --primary: #3b82f6;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-card);
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #00c9a7 0%, #845ec2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #1e293b;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 700;
+      background: #e0f2fe;
+      color: #0284c7;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-action {
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--border-card);
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-action:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .btn-primary-blue {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+    }
+
+    .gallery-container {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 32px 36px 80px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 36px 0 18px;
+    }
+
+    .section-header:first-child {
+      margin-top: 0;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.4px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 1400px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-card:hover {
+      border-color: #93c5fd;
+      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.12), 0 8px 10px -6px rgba(59, 130, 246, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .chart-card.selected {
+      border: 2px solid #3b82f6 !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .card-preview {
+      width: 100%;
+      height: 190px;
+      background: #ffffff;
+      padding: 8px;
+      border-bottom: 1px solid #f1f5f9;
+      position: relative;
+    }
+
+    .card-footer {
+      padding: 12px 14px 14px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+    }
+
+    .card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .tag-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Chart Modal Styles */
+    .chart-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+    }
+    .chart-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-modal-content {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 1200px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .chart-modal-close {
+      position: absolute;
+      top: 16px; right: 24px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #64748b;
+      line-height: 1;
+    }
+    .chart-modal-close:hover { color: #0f172a; }
+    .chart-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+    .chart-modal-body {
+      width: 100%;
+      height: 60vh;
+      min-height: 400px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 탑 네비게이션 -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="brand-icon">👁️</div>
+      <div class="brand-title">LunaChart Demo Gallery</div>
+      <span class="brand-tag">LunaChart Engine</span>
+    </div>
+    <div class="nav-right">
+      <button class="btn-action" id="btn-randomize">🎲 실시간 데이터 갱신</button>
+      <button class="btn-action btn-primary-blue" onclick="location.href='luna-grid-demo.html'">⚡ LunaGrid 데모 보기</button>
+    </div>
+  </header>
+
+  <!-- 메인 갤러리 컨텐츠 -->
+  <main class="gallery-container">
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: Trees and networks -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Trees and networks</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="tree_dendrogram"></div><div class="card-footer"><div class="card-title">Dendrogram</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="tree_org_hanging"></div><div class="card-footer"><div class="card-title">Organization chart with hanging nodes.</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="tree_org"></div><div class="card-footer"><div class="card-title">Organization chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="tree_network"></div><div class="card-footer"><div class="card-title">Network graph (force directed graph)</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="tree_sankey"></div><div class="card-footer"><div class="card-title">Sankey diagram</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: Gauges -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Gauges</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="g_speedometer"></div><div class="card-footer"><div class="card-title">Gauge series</div><div class="card-tags"><span class="tag-item">🎬 Dynamic</span></div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_multiple_kpi"></div><div class="card-footer"><div class="card-title">Multiple KPI gauge</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_clock"></div><div class="card-footer"><div class="card-title">Clock</div><div class="card-tags"><span class="tag-item">🎬 Dynamic</span></div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_vu_meter"></div><div class="card-footer"><div class="card-title">VU meter</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_bullet"></div><div class="card-footer"><div class="card-title">Bullet graph</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_solid"></div><div class="card-footer"><div class="card-title">Solid gauge</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="g_dual_axes"></div><div class="card-footer"><div class="card-title">Gauge with dual axes</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 3: 3D charts -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">3D charts</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="c3d_stack_group"></div><div class="card-footer"><div class="card-title">3D column with stacking</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_donut"></div><div class="card-footer"><div class="card-title">3D donut</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_funnel"></div><div class="card-footer"><div class="card-title">3D funnel</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_area"></div><div class="card-footer"><div class="card-title">3D area chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_pyramid"></div><div class="card-footer"><div class="card-title">3D pyramid</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_scatter"></div><div class="card-footer"><div class="card-title">3D scatter chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="c3d_cylinder"></div><div class="card-footer"><div class="card-title">3D cylinder</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 4: Combinations -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Combinations</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="comb_timeline"></div><div class="card-footer"><div class="card-title">Advanced timeline</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="comb_multi_axes"></div><div class="card-footer"><div class="card-title">Multiple axes</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="comb_dual_axes"></div><div class="card-footer"><div class="card-title">Dual axes, line and column</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="comb_col_line_pie"></div><div class="card-footer"><div class="card-title">Column, line and pie</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="comb_regression"></div><div class="card-footer"><div class="card-title">Scatter with regression lines</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 5: Styled mode & Accessibility -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Styled mode & Accessibility</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="styled_col"></div><div class="card-footer"><div class="card-title">Styled mode column</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="styled_pie"></div><div class="card-footer"><div class="card-title">Styled mode pie</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="acc_advanced"></div><div class="card-footer"><div class="card-title">Advanced accessible chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="acc_line_styles"></div><div class="card-footer"><div class="card-title">Line styles</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="acc_pie_patterns"></div><div class="card-footer"><div class="card-title">Pie with patterns</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 6: Scatter and bubble charts -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Scatter and bubble charts</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="sb_bubble_sugar"></div><div class="card-footer"><div class="card-title">Bubble chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="sb_scatter_athletes"></div><div class="card-footer"><div class="card-title">Scatter plot</div></div></div>
+      <div class="chart-card selected"><div class="card-preview" id="sb_scatter_jitter"></div><div class="card-footer"><div class="card-title">Scatter plot with jitter</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="sb_packed_bubble"></div><div class="card-footer"><div class="card-title">Packed bubble chart</div></div></div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- SECTION 7: Overview Basics -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Overview Basics</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="ob_line"></div><div class="card-footer"><div class="card-title">Line chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_column"></div><div class="card-footer"><div class="card-title">Column chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_bar"></div><div class="card-footer"><div class="card-title">Bar chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_pie"></div><div class="card-footer"><div class="card-title">Pie chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_donut"></div><div class="card-footer"><div class="card-title">Donut chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_gauge"></div><div class="card-footer"><div class="card-title">Gauge</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_bubble"></div><div class="card-footer"><div class="card-title">Bubble chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_scatter"></div><div class="card-footer"><div class="card-title">Scatter plot</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ob_heatmap"></div><div class="card-footer"><div class="card-title">Heatmap</div></div></div>
+      <div class="chart-card" style="grid-column: 1 / -1; min-height: 450px;">
+        <div class="card-preview" id="ob_candlestick" style="height: 300px; padding: 20px;"></div>
+        <div class="card-preview" id="ob_candlestick_brush" style="height: 80px; padding: 0 20px;"></div>
+        <div class="card-footer"><div class="card-title">Candlestick (Interactive with Range Selector)</div></div>
+      </div>
+      <div class="chart-card"><div class="card-preview" id="ob_gantt"></div><div class="card-footer"><div class="card-title">Gantt chart</div></div></div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 8: Line, Spline & Area -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Line, Spline & Area</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="lsa_spline"></div><div class="card-footer"><div class="card-title">Spline chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_stepline"></div><div class="card-footer"><div class="card-title">Step line</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_forecast"></div><div class="card-footer"><div class="card-title">Forecast line</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_area"></div><div class="card-footer"><div class="card-title">Area chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_areaspline"></div><div class="card-footer"><div class="card-title">Area spline</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_stacked_area"></div><div class="card-footer"><div class="card-title">Stacked area</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_arearange"></div><div class="card-footer"><div class="card-title">Area range</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="lsa_fanchart"></div><div class="card-footer"><div class="card-title">Fan chart</div></div></div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 9: Column & Bar Variants -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Column & Bar Variants</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="cbv_stackedcol"></div><div class="card-footer"><div class="card-title">Stacked column</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="cbv_variwide"></div><div class="card-footer"><div class="card-title">Variwide chart</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="cbv_stackedbar"></div><div class="card-footer"><div class="card-title">Stacked bar</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="cbv_barrace"></div><div class="card-footer"><div class="card-title">Bar race</div></div></div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 10: Specialized Pies & Donuts -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Specialized Pies & Donuts</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="spd_variablepie"></div><div class="card-footer"><div class="card-title">Variable radius pie</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="spd_semicircle"></div><div class="card-footer"><div class="card-title">Semi-circle donut</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="spd_insetpie"></div><div class="card-footer"><div class="card-title">Inset pie</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="spd_sunburst"></div><div class="card-footer"><div class="card-title">Sunburst chart</div></div></div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 11: Advanced & Polar -->
+    <!-- ================================================================= -->
+    <div class="section-header">
+      <span class="section-badge">CORE</span>
+      <h2 class="section-title">Advanced & Polar</h2>
+    </div>
+
+    <div class="cards-grid">
+      <div class="chart-card"><div class="card-preview" id="ap_meteogram"></div><div class="card-footer"><div class="card-title">Meteogram</div></div></div>
+      <div class="chart-card"><div class="card-preview" id="ap_polar"></div><div class="card-footer"><div class="card-title">Advanced polar</div></div></div>
+    </div>
+
+
+  </main>
+
+  <!-- LunaChart Engine -->
+  <script src="./js/luna-chart-lib.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // 1. Trees and networks
+      // Detailed Evolution Dendrogram
+      const buildDendrogramData = () => {
+         const leaves = [
+            { name: 'Brown Bear', emoji: '🐻' },
+            { name: 'Polar Bear', emoji: '🐻‍❄️' },
+            { name: 'Black Bear', emoji: '🐻' },
+            { name: 'Spectacled Bear', emoji: '🐻' },
+            { name: 'Giant Panda', emoji: '🐼' },
+            { name: 'Raccoon', emoji: '🦝' },
+            { name: 'Red Panda', emoji: '🦝' }
+         ];
+         
+         const plotBox = { x: 80, y: 30, width: 700, height: 400 };
+         const maxMya = 50;
+         const getY = (mya) => plotBox.y + plotBox.height - (mya / maxMya) * plotBox.height;
+         const getX = (idx) => plotBox.x + (idx + 0.5) * (plotBox.width / leaves.length);
+         
+         const nodes = leaves.map((lf, i) => ({
+            name: lf.name,
+            emoji: lf.emoji,
+            x: getX(i),
+            y: getY(0) + 15
+         }));
+         
+         const paths = [];
+         const labels = [];
+         
+         // Helper to draw orthogonal connecting line
+         const connect = (x1, x2, mya, labelText) => {
+            const joinY = getY(mya);
+            const d = `M ${x1} ${getY(0)} L ${x1} ${joinY} L ${x2} ${joinY} L ${x2} ${getY(0)}`;
+            paths.push({ d, color: '#555555', width: 1.5 });
+            
+            if (labelText) {
+               labels.push({ text: labelText, x: (x1 + x2)/2 + 5, y: joinY - 5 });
+            }
+            return { x: (x1 + x2)/2, y: joinY }; // Return the joined node info
+         };
+         
+         // Helper to connect a previous cluster with a leaf or another cluster
+         const connectCluster = (cx1, y1, cx2, y2, mya, labelText) => {
+            const joinY = getY(mya);
+            const d = `M ${cx1} ${y1} L ${cx1} ${joinY} L ${cx2} ${joinY} L ${cx2} ${y2}`;
+            paths.push({ d, color: '#555555', width: 1.5 });
+            if (labelText) {
+               labels.push({ text: labelText, x: (cx1 + cx2)/2 + 5, y: joinY - 5 });
+            }
+            return { x: (cx1 + cx2)/2, y: joinY };
+         };
+
+         // Building the tree bottom-up based on the image
+         // 1. Brown Bear (0) + Polar Bear (1) @ 0.3 Mya
+         const c1 = connect(getX(0), getX(1), 0.3, '~0.3 Mya');
+         
+         // 2. c1 + Black Bear (2) @ 4 Mya
+         const c2 = connectCluster(c1.x, c1.y, getX(2), getY(0), 4, '~4 Mya');
+         
+         // 3. c2 + Spectacled Bear (3) @ 10 Mya
+         const c3 = connectCluster(c2.x, c2.y, getX(3), getY(0), 10, '~10 Mya');
+         
+         // 4. c3 + Giant Panda (4) @ 20 Mya
+         const c4 = connectCluster(c3.x, c3.y, getX(4), getY(0), 20, '~20 Mya');
+         
+         // 5. Raccoon (5) + Red Panda (6) @ 30 Mya
+         const c5 = connect(getX(5), getX(6), 30, '~30 Mya');
+         
+         // 6. c4 (Bear cluster) + c5 (Raccoon cluster) @ 45 Mya
+         const c6 = connectCluster(c4.x, c4.y, c5.x, c5.y, 45, '~45 Mya');
+         
+         return { nodes, paths, labels };
+      };
+
+      const dendroData = buildDendrogramData();
+      
+      // Expand card for Dendrogram
+      const dendroCard = document.getElementById('tree_dendrogram').parentElement;
+      dendroCard.style.gridColumn = '1 / -1';
+      document.getElementById('tree_dendrogram').style.height = '500px';
+
+      LunaChart.chart('#tree_dendrogram', { 
+         chart: { type: 'dendrogram' }, 
+         title: { text: 'Evolution dendrogram' },
+         yAxis: { min: 0, max: 50, tickSteps: 5, title: { text: 'Million years ago' } },
+         xAxis: { visible: false },
+         series: [{ paths: dendroData.paths, labels: dendroData.labels, nodes: dendroData.nodes }] 
+      });
+      LunaChart.chart('#tree_org_hanging', { chart: { type: 'organization' }, title: { text: 'Germanic Language Tree' }, series: [{ data: [] }] });
+      LunaChart.chart('#tree_org', { chart: { type: 'organization' }, title: { text: 'Organization chart' }, series: [{ data: [] }] });
+      // Detailed Network Graph for Indo-European Language Tree
+      const buildIndoEuropeanTree = () => {
+         const center = { x: 400, y: 350 };
+         const nodes = [];
+         const links = [];
+         
+         const addNode = (id, name, level, angle, radiusOffset, color, align) => {
+            const rad = angle * Math.PI / 180;
+            const dist = level * 120 + radiusOffset;
+            const x = center.x + Math.cos(rad) * dist;
+            const y = center.y + Math.sin(rad) * dist;
+            let r = 5;
+            if (level === 0) r = 18;
+            else if (level === 1) r = 12;
+            else if (level === 2) r = 8;
+            
+            let labelOffsetX = 0; let labelOffsetY = -12;
+            if (align === 'right') { labelOffsetX = 12; labelOffsetY = 4; align = 'start'; }
+            if (align === 'left') { labelOffsetX = -12; labelOffsetY = 4; align = 'end'; }
+            
+            nodes.push({ id, name, x, y, r, color, textAnchor: align || 'middle', labelOffsetX, labelOffsetY });
+         };
+         
+         const addLink = (from, to) => links.push({ from, to });
+
+         // Level 0: Center
+         addNode('PIE', 'Proto Indo-European', 0, 0, 0, '#38bdf8');
+         
+         // Level 1 Branches & Colors
+         const branches = [
+            { id: 'Italic', color: '#f97316', angle: 210 },
+            { id: 'Celtic', color: '#22c55e', angle: 175 },
+            { id: 'Germanic', color: '#6366f1', angle: 120 },
+            { id: 'Armenian', color: '#67e8f9', angle: 90 },
+            { id: 'Balto-Slavic', color: '#3b82f6', angle: 45 },
+            { id: 'Indo-Iranian', color: '#14b8a6', angle: 340 },
+            { id: 'Hellenic', color: '#4f46e5', angle: 290 },
+            { id: 'Anatolian', color: '#a855f7', angle: 260 },
+            { id: 'Tocharian', color: '#ef4444', angle: 15 } // Tocharian A, B
+         ];
+         
+         branches.forEach(b => {
+            addNode(b.id, b.id, 1, b.angle, 0, b.color);
+            addLink('PIE', b.id);
+         });
+
+         // Sub-branches (Simulated for visual effect)
+         // Italic
+         addNode('Latino-Faliscan', 'Latino-Faliscan', 2, 215, 0, '#f97316', 'right'); addLink('Italic', 'Latino-Faliscan');
+         addNode('Latin', 'Latin', 3, 215, 0, '#f97316'); addLink('Latino-Faliscan', 'Latin');
+         addNode('French', 'French', 4, 205, -20, '#f97316', 'right'); addLink('Latin', 'French');
+         addNode('Spanish', 'Spanish', 4, 215, 0, '#f97316', 'right'); addLink('Latin', 'Spanish');
+         addNode('Portuguese', 'Portuguese', 4, 225, 20, '#f97316', 'right'); addLink('Latin', 'Portuguese');
+         
+         // Celtic
+         addNode('Brythonic', 'Brythonic', 2, 165, 0, '#22c55e', 'left'); addLink('Celtic', 'Brythonic');
+         addNode('Welsh', 'Welsh', 3, 160, -10, '#22c55e', 'left'); addLink('Brythonic', 'Welsh');
+         addNode('Breton', 'Breton', 3, 170, 10, '#22c55e', 'left'); addLink('Brythonic', 'Breton');
+         
+         // Germanic
+         addNode('West Germanic', 'West Germanic', 2, 135, 0, '#6366f1', 'right'); addLink('Germanic', 'West Germanic');
+         addNode('North Germanic', 'North Germanic', 2, 105, 0, '#6366f1', 'right'); addLink('Germanic', 'North Germanic');
+         addNode('English', 'English', 3, 140, 30, '#6366f1', 'right'); addLink('West Germanic', 'English');
+         addNode('Dutch', 'Dutch', 3, 130, 0, '#6366f1', 'right'); addLink('West Germanic', 'Dutch');
+         addNode('Swedish', 'Swedish', 3, 100, 20, '#6366f1', 'right'); addLink('North Germanic', 'Swedish');
+         addNode('Danish', 'Danish', 3, 110, 20, '#6366f1', 'right'); addLink('North Germanic', 'Danish');
+         
+         // Balto-Slavic
+         addNode('Slavic', 'Slavic', 2, 35, 0, '#3b82f6', 'left'); addLink('Balto-Slavic', 'Slavic');
+         addNode('Baltic', 'Baltic', 2, 55, 0, '#3b82f6', 'left'); addLink('Balto-Slavic', 'Baltic');
+         addNode('Russian', 'Russian', 3, 25, 30, '#3b82f6', 'left'); addLink('Slavic', 'Russian');
+         addNode('Polish', 'Polish', 3, 40, 20, '#3b82f6', 'left'); addLink('Slavic', 'Polish');
+         addNode('Lithuanian', 'Lithuanian', 3, 60, 20, '#3b82f6', 'left'); addLink('Baltic', 'Lithuanian');
+
+         // Indo-Iranian
+         addNode('Iranian', 'Iranian', 2, 335, 0, '#14b8a6', 'left'); addLink('Indo-Iranian', 'Iranian');
+         addNode('Indic', 'Indic', 2, 350, 0, '#14b8a6', 'left'); addLink('Indo-Iranian', 'Indic');
+         addNode('Persian', 'Persian', 3, 330, 40, '#14b8a6', 'left'); addLink('Iranian', 'Persian');
+         addNode('Kurdish', 'Kurdish', 3, 340, 10, '#14b8a6', 'left'); addLink('Iranian', 'Kurdish');
+         addNode('Hindi', 'Hindi', 3, 355, 30, '#14b8a6', 'left'); addLink('Indic', 'Hindi');
+         
+         // Hellenic & Anatolian
+         addNode('Greek', 'Greek', 2, 290, 0, '#4f46e5', 'right'); addLink('Hellenic', 'Greek');
+         addNode('Hittite', 'Hittite', 2, 260, 0, '#a855f7', 'right'); addLink('Anatolian', 'Hittite');
+         
+         return { nodes, links };
+      };
+      
+      const networkData = buildIndoEuropeanTree();
+      
+      // Update DOM for larger canvas height
+      const networkCard = document.getElementById('tree_network').parentElement;
+      networkCard.style.gridColumn = '1 / -1';
+      document.getElementById('tree_network').style.height = '700px';
+
+      LunaChart.chart('#tree_network', { 
+         chart: { type: 'network_graph' }, 
+         title: { text: 'The Indo-European Language Tree' }, 
+         subtitle: { text: 'A Force-Directed Network Graph in LunaChart' },
+         series: [{ nodes: networkData.nodes, links: networkData.links }] 
+      });
+      LunaChart.chart('#tree_sankey', { chart: { type: 'sankey' }, title: { text: 'Estimated US Energy 2022' }, series: [{ data: [] }] });
+
+      // 2. Gauges
+      LunaChart.chart('#g_speedometer', { chart: { type: 'speedometer' }, title: { text: 'Speedometer' }, series: [{ data: [80] }] });
+      LunaChart.chart('#g_multiple_kpi', { chart: { type: 'multiple_kpi_gauge' }, title: { text: 'Multiple KPI gauge' }, series: [{ data: [] }] });
+      LunaChart.chart('#g_clock', { chart: { type: 'clock' }, title: { text: 'The LunaChart Clock' }, series: [{ data: [] }] });
+      LunaChart.chart('#g_vu_meter', { chart: { type: 'vu_meter' }, title: { text: 'VU meter' }, series: [{ data: [] }] });
+      LunaChart.chart('#g_bullet', { chart: { type: 'bullet_graph' }, title: { text: '2024 YTD' }, series: [{ data: [] }] });
+      LunaChart.chart('#g_solid', { chart: { type: 'solid_gauge' }, title: { text: '' }, series: [{ data: [] }] });
+      LunaChart.chart('#g_dual_axes', { chart: { type: 'speedometer' }, title: { text: 'Speedometer dual axes' }, series: [{ data: [79] }] });
+
+      // 3. 3D charts
+      LunaChart.chart('#c3d_stack_group', { title: { text: 'Electricity production' }, series: [{ type: '3d_column', data: [85, 90, 110], color: '#6366f1' }] });
+      LunaChart.chart('#c3d_donut', { chart: { type: '3d_donut' }, title: { text: 'Beijing 2022 medals' }, series: [{ data: [{ name: 'NOR', y: 16, color: '#38bdf8' },{ name: 'GER', y: 12, color: '#6366f1' }] }] });
+      LunaChart.chart('#c3d_funnel', { chart: { type: '3d_funnel' }, title: { text: '3D Funnel' }, series: [{ data: [] }] });
+      LunaChart.chart('#c3d_area', { chart: { type: '3d_area' }, title: { text: 'Mountains Panorama' }, series: [{ data: [] }] });
+      LunaChart.chart('#c3d_pyramid', { chart: { type: '3d_pyramid' }, title: { text: '3D Pyramid' }, series: [{ data: [] }] });
+      LunaChart.chart('#c3d_scatter', { chart: { type: '3d_scatter' }, title: { text: 'Draggable 3D box' }, series: [{ data: [] }] });
+      LunaChart.chart('#c3d_cylinder', { title: { text: 'Confirmed COVID-19' }, series: [{ type: '3d_cylinder', data: [95, 165, 115, 135], color: '#38bdf8' }] });
+
+      // 4. Combinations
+      LunaChart.chart('#comb_timeline', { chart: { type: 'areaspline' }, title: { text: 'LunaChart timeline' }, xAxis: { categories: ['2009','2014','2019','2024'] }, series: [{ name: 'Revenue', data: [5, 65, 120, 190], color: '#2caffe' }] });
+      LunaChart.chart('#comb_multi_axes', { title: { text: 'Tokyo Weather' }, xAxis: { categories: ['Jan','May','Sep'] }, series: [{ type: 'column', name: 'Rain', data: [45, 140, 210], color: '#2caffe' },{ type: 'spline', name: 'Temp', data: [5.2, 19.5, 23.1], color: '#00e272' }] });
+      LunaChart.chart('#comb_dual_axes', { title: { text: 'Karasjok 2023' }, xAxis: { categories: ['Jan','May','Sep'] }, series: [{ type: 'column', name: 'Rain', data: [18, 28, 45], color: '#2caffe' },{ type: 'spline', name: 'Temp', data: [-15, 8, 9], color: '#544fc5' }] });
+      LunaChart.chart('#comb_col_line_pie', { title: { text: 'Petroleum sales' }, xAxis: { categories: ['Jet fuel','Gasoline','Diesel'] }, series: [{ type: 'column', name: '2020', data: [45, 115, 235], color: '#2caffe' },{ type: 'stepline', name: 'Avg', data: [55, 120, 245], color: '#fe6a35' }] });
+      LunaChart.chart('#comb_regression', { title: { text: 'Regression Lines' }, series: [{ type: 'scatter', data: [[0, 2.5],[1, 4.2],[2, 3.8],[3, 5.5],[4, 4.9]], color: '#2caffe' },{ type: 'regression_line', data: [2.5, 3.3, 4.1, 4.9, 5.7], color: '#fe6a35' }] });
+
+      // 5. Styled mode & Accessibility
+      LunaChart.chart('#styled_col', { title: { text: 'Weight and BMI' }, xAxis: { categories: ['Tokelau','Ireland','Italy'] }, series: [{ type: 'column', data: [92, 72, 64], color: '#38bdf8' },{ type: 'column', data: [85, 68, 62], color: '#4ade80' }] });
+      LunaChart.chart('#styled_pie', { chart: { type: 'pie' }, title: { text: 'Mobile vendors' }, series: [{ data: [{ name: 'Apple', y: 32, color: '#38bdf8' },{ name: 'Samsung', y: 24, color: '#6366f1' }] }] });
+      LunaChart.chart('#acc_advanced', { title: { text: 'Monthly earnings' }, xAxis: { categories: ['2017','2020','2023'] }, series: [{ type: 'line', data: [65, 70, 85], color: '#38bdf8' },{ type: 'errorbar', data: [[55,75],[60,82],[70,95]], color: '#64748b' }] });
+      LunaChart.chart('#acc_line_styles', { title: { text: 'Screen readers' }, xAxis: { categories: ['2010','2018','2024'] }, series: [{ type: 'spline', name: 'NVDA', data: [25, 68, 74], color: '#22c55e' },{ type: 'line', name: 'JAWS', data: [70, 48, 40], color: '#38bdf8', dashStyle: 'dash' }] });
+      LunaChart.chart('#acc_pie_patterns', { chart: { type: 'pie_pattern' }, title: { text: 'Screen readers pattern' }, series: [{ data: [{ name: 'NVDA', y: 43.6, color: '#84cc16' },{ name: 'JAWS', y: 40.1, color: '#38bdf8' }] }] });
+
+      // 6. Scatter and bubble
+      LunaChart.chart('#sb_bubble_sugar', { chart: { type: 'bubble' }, title: { text: 'Sugar & fat intake' }, series: [{ data: [{ x: 0, y: 65, z: 24, color: '#2caffe' },{ x: 1, y: 72, z: 18, color: '#00e272' }] }] });
+      LunaChart.chart('#sb_scatter_athletes', { chart: { type: 'scatter' }, title: { text: 'Athletes' }, series: [{ name: 'Triathlon', data: [[0, 55],[1, 62]], color: '#00e272' }] });
+      LunaChart.chart('#sb_scatter_jitter', { chart: { type: 'scatter_jitter' }, title: { text: 'Scatter jitter' }, series: [{ data: [[0.32, 0.45],[0.48, 0.55],[0.35, 0.42],[0.22, 0.38]] }] });
+      LunaChart.chart('#sb_packed_bubble', { chart: { type: 'packedbubble' }, title: { text: 'Carbon 2021' }, series: [{ data: [] }] });
+
+      // 7. Overview Basics (Detailed)
+      LunaChart.chart('#ob_line', { 
+        chart: { type: 'line' }, 
+        title: { text: 'Application users last 24 hours' }, 
+        subtitle: { text: 'All traffic sources combined' }, 
+        legend: { enabled: false },
+        xAxis: { 
+          categories: ['00:00', '01:00', '02:00', '03:00 AM', '04:00', '05:00', '06:00 AM', '07:00', '08:00', '09:00 AM', '10:00', '11:00', '12:00 PM', '13:00', '14:00', '03:00 PM', '16:00', '17:00', '06:00 PM', '19:00', '20:00', '09:00 PM', '22:00', '23:00'],
+          tickSteps: 3
+        },
+        yAxis: {
+          title: { text: 'Unique users' },
+          min: 0, max: 12.5, tickSteps: 5,
+          labels: { format: '{value}k' }
+        },
+        series: [
+          { 
+            name: 'Users', 
+            type: 'line',
+            color: '#0ea5e9',
+            lineWidth: 2.5,
+            marker: { enabled: false },
+            data: [
+              1, 0.7, 1, 1.1, 1, 1, 2.1, 4, 4.2, 4.3, 5.3, 6.1, 7.8, 8.2, 
+              { y: 10.1, dataLabels: { text: 'Users', yOffset: -12, style: { color: '#0ea5e9', fontSize: '13px', fontWeight: '800' } } }, 
+              7.8, 4.1, 3.8, 4.2, 3.8, 2.5, 1.8, 1.4, 1.3
+            ]
+          },
+          { 
+            name: 'Average', 
+            type: 'line',
+            dashStyle: 'dot',
+            color: '#8b5cf6', 
+            lineWidth: 2,
+            marker: { enabled: false },
+            data: [
+              0.9, 0.8, 0.8, 0.8, 0.8, 0.9, 1, 1.1, 1.6, 2.1, 2.3, 2.3, 2.4, 2.6, 3.1, 2.8, 2.4, 2.1, 2.4, 2.3, 1.8, 1.1, 
+              { y: 1, dataLabels: { text: 'Average', yOffset: 16, style: { color: '#8b5cf6', fontSize: '13px', fontWeight: '800' } } }, 
+              0.9
+            ]
+          }
+        ] 
+      });
+      LunaChart.chart('#ob_column', { 
+        chart: { type: 'column' }, 
+        title: { text: 'Corn vs wheat estimated production for 2023' }, 
+        subtitle: { text: 'Source: indexmundi' }, 
+        legend: { enabled: true },
+        xAxis: { categories: ['USA', 'China', 'Brazil', 'EU', 'Argentina', 'India'] }, 
+        yAxis: {
+          title: { text: '1000 metric tons (MT)' },
+          min: 0,
+          max: 500,
+          tickSteps: 5,
+          labels: { format: '{value}k' }
+        },
+        series: [
+          { name: 'Corn', data: [380, 270, 125, 65, 55, 30], color: '#38bdf8' }, 
+          { name: 'Wheat', data: [45, 135, 10, 140, 20, 110], color: '#544fc5' }
+        ] 
+      });
+      LunaChart.chart('#ob_bar', { 
+        chart: { type: 'bar' }, 
+        title: { text: 'Historic World Population by Region' }, 
+        subtitle: { text: 'Source: Wikipedia.org' }, 
+        legend: { enabled: true },
+        xAxis: { 
+          categories: ['Africa', 'America', 'Asia', 'Europe']
+        }, 
+        yAxis: {
+          title: { text: 'Population (millions)' },
+          min: 0,
+          max: 5000
+        },
+        series: [
+          { name: 'Year 1990', dataLabels: { enabled: true }, data: [632, 727, 3202, 721], color: '#38bdf8' }, 
+          { name: 'Year 2000', dataLabels: { enabled: true }, data: [814, 841, 3714, 726], color: '#544fc5' }, 
+          { name: 'Year 2021', dataLabels: { enabled: true }, data: [1393, 1031, 4695, 745], color: '#00e272' }
+        ] 
+      });
+      LunaChart.chart('#ob_pie', { chart: { type: 'pie' }, title: { text: 'Support requests' }, series: [{ data: [{name: 'Call', y: 20, color: '#94a3b8'}, {name: 'Email', y: 9, color: '#f59e0b'}, {name: 'Webchat', y: 5, color: '#ef4444'}, {name: 'Other', y: 3, color: '#22c55e'}, {name: 'Webform', y: 63, color: '#2563eb'}] }] });
+      LunaChart.chart('#ob_donut', { 
+        chart: { type: 'donut', innerSize: '65%' }, 
+        title: { text: 'Charity allocations' }, 
+        series: [{ 
+          data: [
+            {name: 'Health care', y: 34, color: '#2caffe'}, 
+            {name: 'Education', y: 27, color: '#544fc5'}, 
+            {name: 'Youth programmes', y: 22, color: '#00e272'}, 
+            {name: 'Poverty measures', y: 8, color: '#fe6a35'}, 
+            {name: 'Elderly care', y: 6, color: '#6b8abc'},
+            {name: 'Other', y: 3, color: '#d568fb'}
+          ] 
+        }] 
+      });
+      LunaChart.chart('#ob_gauge', { 
+        chart: { type: 'solid_gauge' }, 
+        title: { text: 'Revenue this month' }, 
+        yAxis: {
+          min: 0, max: 200,
+          plotBands: [
+             { from: 0, to: 120, color: '#f1f5f9' },
+             { from: 120, to: 160, color: '#fbbf24' },
+             { from: 160, to: 200, color: '#10b981' }
+          ]
+        },
+        series: [{ data: [80] }] 
+      });
+      LunaChart.chart('#ob_bubble', { 
+        chart: { type: 'bubble' }, 
+        title: { text: 'Sugar and fat intake per country' }, 
+        subtitle: { text: 'Source: Euromonitor and OECD' }, 
+        xAxis: {
+          title: { text: 'Daily fat intake' },
+          min: 60, max: 96,
+          labels: { format: '{value} gr' },
+          plotBands: [{ from: 60, to: 65, color: 'rgba(74, 222, 128, 0.2)', label: { text: 'Safe zone', style: { color: '#059669' } } }],
+          plotLines: [{ value: 65, color: '#059669', dashStyle: 'dash', width: 1 }]
+        },
+        yAxis: {
+          title: { text: 'Daily sugar intake' },
+          min: 0, max: 150, tickSteps: 3,
+          labels: { format: '{value} gr' },
+          plotBands: [{ from: 0, to: 50, color: 'rgba(74, 222, 128, 0.2)', label: { text: 'Safe zone', style: { color: '#059669' } } }],
+          plotLines: [{ value: 50, color: '#059669', dashStyle: 'dash', width: 1 }]
+        },
+        series: [{ 
+          data: [
+            {name: 'PT', x: 64, y: 50, z: 30, color: '#fca5a5'},
+            {name: 'NZ', x: 64, y: 88, z: 40, color: '#93c5fd'},
+            {name: 'HU', x: 65, y: 50, z: 60, color: '#4ade80'},
+            {name: 'US', x: 66, y: 128, z: 70, color: '#a78bfa'},
+            {name: 'RU', x: 69, y: 22, z: 35, color: '#7dd3fc'},
+            {name: 'IT', x: 70, y: 58, z: 25, color: '#cffafe'},
+            {name: 'UK', x: 71, y: 92, z: 50, color: '#fcd34d'},
+            {name: 'NO', x: 74, y: 85, z: 25, color: '#f87171'},
+            {name: 'FR', x: 75, y: 68, z: 35, color: '#5eead4'},
+            {name: 'ES', x: 79, y: 68, z: 35, color: '#f0abfc'},
+            {name: 'NL', x: 80, y: 100, z: 25, color: '#fb923c'},
+            {name: 'FI', x: 80, y: 90, z: 45, color: '#6ee7b7'},
+            {name: 'DE', x: 86, y: 102, z: 35, color: '#818cf8'},
+            {name: 'BE', x: 95, y: 98, z: 40, color: '#38bdf8'}
+          ] 
+        }] 
+      });
+      LunaChart.chart('#ob_scatter', { 
+        chart: { type: 'scatter' }, 
+        title: { text: 'European olympic athletes by height and weight' }, 
+        subtitle: { text: 'Source: The Guardian' }, 
+        legend: { enabled: true },
+        xAxis: { 
+          title: { text: 'Weight' },
+          min: 40, max: 120,
+          labels: { format: '{value} kg' }
+        },
+        yAxis: {
+          title: { text: 'Height' },
+          min: 1.5, max: 2.3,
+          labels: { format: '{value} m' }
+        },
+        series: [
+          { name: 'Triathlon', marker: { symbol: 'triangle' }, color: '#38bdf8', data: [
+            [46, 1.57], [48, 1.63], [49, 1.63], [51, 1.64], [52.5, 1.68], [54.5, 1.70], 
+            [54, 1.69], [53.5, 1.66], [54, 1.68], [55, 1.66], [57, 1.63], [58, 1.71], 
+            [59, 1.72], [61, 1.71], [62, 1.70], [62, 1.72], [60, 1.71], [58, 1.78], 
+            [58, 1.80], [60, 1.75], [63, 1.78], [63.5, 1.82], [65, 1.88], [66, 1.80], 
+            [68, 1.82], [69, 1.81], [70, 1.85], [72, 1.89], [74, 1.90]
+          ] }, 
+          { name: 'Volleyball', marker: { symbol: 'square' }, color: '#544fc5', data: [
+            [62.5, 1.64], [64, 1.73], [66, 1.78], [68, 1.79], [69, 1.71], [71, 1.75], 
+            [72, 1.77], [74, 1.91], [74, 1.86], [73.5, 1.95], [75, 1.92], [76, 1.85], 
+            [76, 1.95], [77.5, 1.87], [78, 2.01], [79, 1.92], [79, 1.90], [80, 1.91], 
+            [81.5, 1.92], [82, 1.96], [83, 1.84], [83, 1.88], [84, 1.84], [84, 2.01], 
+            [85, 2.02], [86, 2.06], [87, 1.98], [88, 2.05], [89, 1.97], [90, 1.94], 
+            [90, 2.00], [92, 1.99], [93, 1.85], [94, 2.06], [95, 2.10], [96, 1.95], 
+            [97, 1.98], [99, 2.00]
+          ] },
+          { name: 'Basketball', marker: { symbol: 'circle' }, color: '#00e272', data: [
+            [57, 1.68], [57, 1.70], [57, 1.82], [60, 1.75], [62, 1.70], [64, 1.72], 
+            [66, 1.81], [67, 1.72], [68, 1.79], [69, 1.75], [70, 1.71], [71, 1.81], 
+            [72, 1.86], [73, 1.82], [73, 1.88], [75, 1.89], [77, 1.85], [77.5, 1.91], 
+            [80, 1.82], [81, 1.90], [82, 1.91], [83.5, 1.86], [84, 1.93], [85.5, 1.96], 
+            [86, 1.90], [88, 1.93], [89, 1.96], [90, 1.98], [92, 2.01], [93, 1.93], 
+            [94, 2.00], [95, 2.17], [97, 2.14], [99, 2.06], [102, 2.01], [105, 2.09], 
+            [106, 2.08], [107, 2.03], [108, 1.97], [109, 2.04], [110, 2.08], [117, 2.13], 
+            [120, 2.18]
+          ] }
+        ] 
+      });
+      LunaChart.chart('#ob_heatmap', { 
+        chart: { type: 'heatmap' }, 
+        title: { text: 'Simple heatmap' }, 
+        subtitle: { text: 'Sales per employee per weekday' },
+        xAxis: {
+          categories: ['Alexander', 'Marie', 'Maximilian', 'Sophia', 'Lukas', 'Maria', 'Leon', 'Anna', 'Tim', 'Laura'],
+          opposite: true
+        },
+        yAxis: {
+          categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          reversed: true
+        },
+        colorAxis: {
+          min: 0,
+          max: 150,
+          minColor: '#e0ecff',
+          maxColor: '#2563eb'
+        },
+        series: [{ 
+          data: [
+            [0, 0, 10], [1, 0, 92], [2, 0, 35], [3, 0, 72], [4, 0, 38], [5, 0, 88], [6, 0, 13], [7, 0, 31], [8, 0, 85], [9, 0, 47],
+            [0, 1, 19], [1, 1, 58], [2, 1, 15], [3, 1, 132], [4, 1, 5], [5, 1, 32], [6, 1, 44], [7, 1, 1], [8, 1, 97], [9, 1, 114],
+            [0, 2, 8], [1, 2, 78], [2, 2, 123], [3, 2, 114], [4, 2, 8], [5, 2, 12], [6, 2, 88], [7, 2, 82], [8, 2, 123], [9, 2, 31],
+            [0, 3, 24], [1, 3, 117], [2, 3, 64], [3, 3, 19], [4, 3, 117], [5, 3, 6], [6, 3, 98], [7, 3, 32], [8, 3, 64], [9, 3, 48],
+            [0, 4, 67], [1, 4, 48], [2, 4, 52], [3, 4, 16], [4, 4, 115], [5, 4, 120], [6, 4, 96], [7, 4, 30], [8, 4, 84], [9, 4, 91]
+          ] 
+        }] 
+      });
+      // ==========================================
+      // Candlestick with Range Selector (Custom)
+      // ==========================================
+      const candlestickData = [
+        { d: "Feb '21", o: 30, h: 42, l: 30, c: 42, up: true }, { d: "Mar '21", o: 28, h: 38, l: 28, c: 38, up: true },
+        { d: "Apr '21", o: 32, h: 40, l: 32, c: 40, up: true }, { d: "May '21", o: 40, h: 45, l: 40, c: 45, up: true },
+        { d: "Jun '21", o: 52, h: 52, l: 40, c: 40, up: false }, { d: "Jul '21", o: 42, h: 50, l: 42, c: 50, up: true },
+        { d: "Aug '21", o: 54, h: 54, l: 48, c: 48, up: false }, { d: "Sep '21", o: 53, h: 53, l: 47, c: 47, up: false },
+        { d: "Oct '21", o: 52, h: 52, l: 47, c: 47, up: false }, { d: "Nov '21", o: 56, h: 56, l: 52, c: 52, up: false },
+        { d: "Dec '21", o: 62, h: 62, l: 54, c: 54, up: false }, { d: "Jan '22", o: 63, h: 63, l: 57, c: 57, up: false },
+        { d: "Feb '22", o: 73, h: 73, l: 62, c: 62, up: false }, { d: "Mar '22", o: 75, h: 75, l: 70, c: 70, up: false },
+        { d: "Apr '22", o: 74, h: 74, l: 60, c: 60, up: false }, { d: "May '22", o: 68, h: 68, l: 59, c: 59, up: false },
+        { d: "Jun '22", o: 69, h: 69, l: 60, c: 60, up: false }, { d: "Jul '22", o: 69, h: 69, l: 60, c: 60, up: false },
+        { d: "Aug '22", o: 66, h: 66, l: 61, c: 61, up: false }, { d: "Sep '22", o: 71, h: 71, l: 65, c: 65, up: false },
+        { d: "Oct '22", o: 70, h: 70, l: 62, c: 62, up: false }, { d: "Nov '22", o: 66, h: 66, l: 63, c: 63, up: false },
+        { d: "Dec '22", o: 72, h: 72, l: 66, c: 66, up: false }, { d: "Jan '23", o: 73, h: 73, l: 70, c: 70, up: false },
+        { d: "Feb '23", o: 73, h: 73, l: 67, c: 67, up: false }, { d: "Mar '23", o: 79, h: 79, l: 71, c: 71, up: false },
+        { d: "Apr '23", o: 79, h: 79, l: 75, c: 75, up: false }, { d: "May '23", o: 76, h: 76, l: 74, c: 74, up: false },
+        { d: "Jun '23", o: 75, h: 75, l: 69, c: 69, up: false }, { d: "Jul '23", o: 70, h: 70, l: 55, c: 55, up: false },
+        { d: "Aug '23", o: 66, h: 66, l: 57, c: 57, up: false }, { d: "Sep '23", o: 68, h: 68, l: 56, c: 56, up: false }
+      ];
+
+      // Format data for LunaChart Candlestick [xIdx, o, h, l, c]
+      const mainChartData = candlestickData.map((d, i) => {
+         return [i, d.up ? d.h : d.c, d.h, d.l, d.up ? d.h : d.c]; // In image, the horizontal bar acts as High when up, Close when down
+      });
+      const categories = candlestickData.map(d => d.d);
+
+      LunaChart.chart('#ob_candlestick', { 
+        chart: { type: 'candlestick' }, 
+        title: { text: 'Company Stocks' }, 
+        xAxis: { categories: categories, labels: { format: '{value}' } }, // In LunaChart core we might need rotation, let's keep it simple
+        yAxis: { min: 0, max: 90, tickSteps: 9, labels: { format: '${value}.00' } },
+        series: [{ 
+          type: 'candlestick', 
+          data: mainChartData,
+          upColor: '#8bb4cb', // Light blue
+          downColor: '#1e4b70', // Dark blue
+          strokeWidth: 2
+        }] 
+      });
+
+      // Brush Area Chart Data (Trend)
+      const areaTrendData = [
+         15,18,17,20,18,15,14,13,13,12,14,15,
+         14,15,16,16,17,19,20,24,28,30,28,26,
+         25,23,22,25,28,30,33,35,34,31,29,26,
+         24,20,18,17,20,24,26,27,29,31,34,35,
+         35,36,37,39,39,40,40,38,36,35,34,35
+      ];
+      
+      LunaChart.chart('#ob_candlestick_brush', {
+        chart: { type: 'area' },
+        title: { text: '' },
+        xAxis: { categories: ['2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'] },
+        yAxis: { visible: false, min: 0, max: 50 },
+        series: [{ data: areaTrendData, color: '#8b5cf6', fillOpacity: 0.1, lineWidth: 1 }]
+      });
+
+      // Simple Brush Overlay for demo purposes
+      setTimeout(() => {
+        const brushContainer = document.getElementById('ob_candlestick_brush');
+        const svg = brushContainer.querySelector('svg');
+        if (svg) {
+           const plotBox = { x: 50, y: 10, width: svg.clientWidth - 70, height: svg.clientHeight - 40 }; // Approximate plot area
+           const brushGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+           brushGroup.setAttribute('class', 'custom-brush');
+           
+           // Background unselected
+           const unselLeft = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+           unselLeft.setAttribute('x', plotBox.x); unselLeft.setAttribute('y', plotBox.y);
+           unselLeft.setAttribute('width', plotBox.width * 0.7); unselLeft.setAttribute('height', plotBox.height);
+           unselLeft.setAttribute('fill', 'rgba(230, 230, 250, 0.5)');
+           
+           // The Selection Window
+           const selWidth = plotBox.width * 0.3;
+           const selX = plotBox.x + plotBox.width * 0.7;
+           const selRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+           selRect.setAttribute('x', selX); selRect.setAttribute('y', plotBox.y);
+           selRect.setAttribute('width', selWidth); selRect.setAttribute('height', plotBox.height);
+           selRect.setAttribute('fill', 'rgba(139, 92, 246, 0.4)');
+           selRect.setAttribute('stroke', '#8b5cf6'); selRect.setAttribute('stroke-width', '2');
+           
+           // Handles
+           const handleL = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+           handleL.setAttribute('cx', selX); handleL.setAttribute('cy', plotBox.y + plotBox.height/2);
+           handleL.setAttribute('r', '6'); handleL.setAttribute('fill', '#fff'); handleL.setAttribute('stroke', '#e2e8f0');
+           
+           const handleR = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+           handleR.setAttribute('cx', selX + selWidth); handleR.setAttribute('cy', plotBox.y + plotBox.height/2);
+           handleR.setAttribute('r', '6'); handleR.setAttribute('fill', '#fff'); handleR.setAttribute('stroke', '#e2e8f0');
+
+           brushGroup.appendChild(unselLeft);
+           brushGroup.appendChild(selRect);
+           brushGroup.appendChild(handleL);
+           brushGroup.appendChild(handleR);
+           svg.appendChild(brushGroup);
+        }
+      }, 100);
+      LunaChart.chart('#ob_gantt', { chart: { type: 'gantt' }, title: { text: '' }, series: [{ data: [
+        { id: '1', name: 'New offices', duration: '17.5 days', start: 0, end: 17.5, parent: true },
+        { id: '1_1', name: 'Prepare office building', duration: '14 days', start: 0, end: 14, completed: 50, depth: 1, color: '#544fc5' },
+        { id: '1_2', name: 'Inspect building', duration: '2 days', start: 14, end: 16, dependency: '1_1', depth: 1, color: '#00e272' },
+        { id: '1_3', name: 'Passed inspection', start: 16, end: 16, milestone: true, dependency: '1_2', depth: 1, color: '#fe6a35' },
+        { id: '2', name: 'Relocate', duration: '4 days', start: 16, end: 20, parent: true },
+        { id: '2_1', name: 'Relocate staff', duration: '1 days', start: 16, end: 17, depth: 1, color: '#d568fb' },
+        { id: '2_2', name: 'Relocate test facility', duration: '2 days', start: 17, end: 19, dependency: '2_1', depth: 1, color: '#2ee0ca' },
+        { id: '2_3', name: 'Relocate cantina', duration: '3 days', start: 17, end: 20, dependency: '2_1', depth: 1, color: '#fa4b42' },
+        { id: '3', name: 'New product launch', duration: '18.5 days', start: 2, end: 20.5, parent: true },
+        { id: '3_1', name: 'Development', duration: '12 days', start: 2, end: 14, completed: 60, depth: 1, color: '#6b8abc' },
+        { id: '3_2', name: 'Beta', start: 14, end: 14, milestone: true, dependency: '3_1', depth: 1, color: '#2caffe' },
+        { id: '3_3', name: 'Final development', duration: '4 days', start: 14, end: 18, dependency: '3_2', depth: 1, color: '#544fc5' },
+        { id: '3_4', name: 'Launch', start: 18, end: 18, milestone: true, dependency: '3_3', depth: 1, color: '#00e272' }
+      ] }] });
+
+      // 8. Line, Spline & Area
+      LunaChart.chart('#lsa_spline', { chart: { type: 'spline' }, title: { text: 'Spline Chart' }, series: [{ data: [1.2, 3.5, 2.1, 4.8, 3.2], color: '#38bdf8' }] });
+      LunaChart.chart('#lsa_stepline', { chart: { type: 'stepline' }, title: { text: 'Step Line' }, series: [{ data: [1, 1, 3, 3, 2, 2], color: '#6366f1' }] });
+      LunaChart.chart('#lsa_forecast', { chart: { type: 'forecast' }, title: { text: 'Forecast' }, series: [{ data: [5, 6, 8, 7, 10], color: '#f59e0b' }] });
+      LunaChart.chart('#lsa_area', { chart: { type: 'area' }, title: { text: 'Area Chart' }, series: [{ data: [5, 8, 3, 7, 9], color: '#22c55e' }] });
+      LunaChart.chart('#lsa_areaspline', { chart: { type: 'areaspline' }, title: { text: 'Area Spline' }, series: [{ data: [2, 6, 4, 8, 5], color: '#ec4899' }] });
+      LunaChart.chart('#lsa_stacked_area', { chart: { type: 'stacked_area' }, title: { text: 'Stacked Area' }, series: [{ data: [1, 2, 3], color: '#38bdf8' }, { data: [2, 3, 1], color: '#6366f1' }] });
+      LunaChart.chart('#lsa_arearange', { chart: { type: 'arearange' }, title: { text: 'Area Range' }, series: [{ data: [[1, 5], [2, 6], [3, 8], [2, 5]], color: '#8b5cf6' }] });
+      LunaChart.chart('#lsa_fanchart', { chart: { type: 'fan_chart' }, title: { text: 'Fan Chart' }, series: [{ data: [[10, 20], [12, 25], [15, 30]], color: '#f59e0b' }] });
+
+      // 9. Column & Bar Variants
+      LunaChart.chart('#cbv_stackedcol', { chart: { type: 'stackedcolumn' }, title: { text: 'Stacked Column' }, series: [{ data: [10, 20, 30], color: '#38bdf8' }, { data: [15, 25, 35], color: '#6366f1' }] });
+      LunaChart.chart('#cbv_variwide', { chart: { type: 'variwide' }, title: { text: 'Variwide' }, series: [{ data: [10, 20, 30], color: '#22c55e' }] });
+      LunaChart.chart('#cbv_stackedbar', { chart: { type: 'stackedbar' }, title: { text: 'Stacked Bar' }, series: [{ data: [15, 25], color: '#ec4899' }, { data: [10, 20], color: '#8b5cf6' }] });
+      LunaChart.chart('#cbv_barrace', { chart: { type: 'bar_race' }, title: { text: 'Bar Race' }, series: [{ data: [45, 80, 20], color: '#f59e0b' }] });
+
+      // 10. Specialized Pies & Donuts
+      LunaChart.chart('#spd_variablepie', { chart: { type: 'variablepie' }, title: { text: 'Variable Pie' }, series: [{ data: [{y: 10, z: 20}, {y: 20, z: 40}, {y: 30, z: 10}] }] });
+      LunaChart.chart('#spd_semicircle', { chart: { type: 'semicircledonut' }, title: { text: 'Semi Donut' }, series: [{ data: [30, 40, 30] }] });
+      LunaChart.chart('#spd_insetpie', { chart: { type: 'inset_pie' }, title: { text: 'Inset Pie' }, series: [{ data: [10, 20] }, { data: [30, 40], center: [50, 50], size: 10 }] });
+      LunaChart.chart('#spd_sunburst', { chart: { type: 'sunburst' }, title: { text: 'Sunburst' }, series: [{ data: [] }] });
+
+      // 11. Advanced & Polar
+      LunaChart.chart('#ap_meteogram', { chart: { type: 'meteogram' }, title: { text: 'Meteogram' }, series: [{ data: [] }] });
+      LunaChart.chart('#ap_polar', { chart: { type: 'advanced_polar' }, title: { text: 'Advanced Polar' }, series: [{ data: [] }] });
+
+
+
+      // 실시간 갱신 인터랙션
+      document.getElementById('btn-randomize').addEventListener('click', () => {
+        document.querySelectorAll('.card-preview').forEach(el => {
+          el.style.opacity = '0.4';
+          setTimeout(() => { el.style.opacity = '1'; }, 150);
+        });
+      });
+
+
+      // 차트 모달 기능 (클릭 시 확대 보기)
+      const modal = document.getElementById('chart-modal');
+      const modalClose = document.querySelector('.chart-modal-close');
+      const modalBody = document.getElementById('chart-modal-body');
+      const modalTitle = document.getElementById('chart-modal-title');
+      
+      document.querySelectorAll('.chart-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+          const preview = card.querySelector('.card-preview');
+          const title = card.querySelector('.card-title').textContent;
+          
+          modalTitle.textContent = title;
+          modal.classList.add('show');
+          modalBody.innerHTML = '';
+          
+          const instance = preview.__lunaChartInstance;
+          if (instance && instance.userOptions) {
+             const options = JSON.parse(JSON.stringify(instance.userOptions));
+             // 강제로 큰 크기에 맞게 높이 조정
+             if (!options.chart) options.chart = {};
+             options.chart.height = null; // 상속받도록 처리
+             
+             // 간트 등에서 축 숨기기 명시
+             if (options.chart.type === 'gantt') {
+                if(!options.xAxis) options.xAxis = {};
+                options.xAxis.visible = false;
+                options.xAxis.labels = { enabled: false };
+                options.xAxis.gridLineWidth = 0;
+                
+                if(!options.yAxis) options.yAxis = {};
+                options.yAxis.visible = false;
+                options.yAxis.labels = { enabled: false };
+                options.yAxis.gridLineWidth = 0;
+             }
+             
+             LunaChart.chart('#chart-modal-body', options);
+          }
+        });
+      });
+      
+      const closeModal = () => {
+        modal.classList.remove('show');
+        modalBody.innerHTML = '';
+      };
+      
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+    });
+  </script>
+
+  <!-- Chart Modal -->
+  <div id="chart-modal" class="chart-modal">
+    <div class="chart-modal-content">
+      <span class="chart-modal-close">&times;</span>
+      <h2 id="chart-modal-title" class="chart-modal-title">Chart View</h2>
+      <div id="chart-modal-body" class="chart-modal-body"></div>
+    </div>
+  </div>
+
+</body>
+</html>

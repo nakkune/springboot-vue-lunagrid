@@ -1,0 +1,131 @@
+-- ============================================================================
+-- [참고용] 수동 시딩 스크립트 (Oracle FREEPDB1 / myoracle 스키마 기준)
+-- ----------------------------------------------------------------------------
+-- ※ 원칙: 애플리케이션 기동 시 DataSeeder가 아래 데이터를 자동 등록하므로
+--          이 스크립트는 "수동 실행이 필요한 경우"에만 사용합니다.
+-- ※ 실행 조건: TB_COM_MENU 가 비어 있을 때만 실행하세요. (PK 중복 주의)
+-- ※ 사용자 계정(admin/admin123, user/user123)은 BCrypt 해시 생성 때문에
+--    앱 기동 시 자동 등록됩니다. (PWD_HASH는 앱에서 생성)
+-- ============================================================================
+
+CREATE TABLE TB_COM_BATCH_JOB (
+    JOB_ID          VARCHAR2(30)    PRIMARY KEY,
+    JOB_NM          VARCHAR2(100)   NOT NULL,
+    JOB_DESC        VARCHAR2(500),
+    CRON_EXPR       VARCHAR2(100),
+    JOB_TYPE        VARCHAR2(20)    DEFAULT 'CRON',
+    JOB_PARAMS      VARCHAR2(2000),
+    STATUS          VARCHAR2(20)    DEFAULT 'IDLE',
+    USE_YN          CHAR(1)         DEFAULT 'Y',
+    LAST_RUN_DT     TIMESTAMP,
+    LAST_RUN_RESULT VARCHAR2(10),
+    REG_USER_ID     VARCHAR2(50),
+    REG_DT          TIMESTAMP       DEFAULT SYSDATE,
+    MOD_USER_ID     VARCHAR2(50),
+    MOD_DT          TIMESTAMP
+);
+
+CREATE SEQUENCE SEQ_TB_COM_MENU_LOG START WITH 1 INCREMENT BY 1 NOCACHE;
+
+CREATE TABLE TB_COM_MENU_LOG (
+    LOG_SEQ     NUMBER          PRIMARY KEY,
+    USER_ID     VARCHAR2(50)    NOT NULL,
+    USER_NM     VARCHAR2(100),
+    MENU_ID     VARCHAR2(30),
+    MENU_NM     VARCHAR2(100),
+    MENU_URL    VARCHAR2(200),
+    CLICK_DT    TIMESTAMP       DEFAULT SYSDATE,
+    USER_IP     VARCHAR2(50)
+);
+
+CREATE TABLE TB_COM_GRP_CD (
+    GRP_CD          VARCHAR2(30)    PRIMARY KEY,
+    GRP_CD_NM       VARCHAR2(100)   NOT NULL,
+    GRP_CD_DESC     VARCHAR2(500),
+    SYS_DIV_CD      VARCHAR2(20)    DEFAULT 'COM',
+    USE_YN          CHAR(1)         DEFAULT 'Y' NOT NULL,
+    REG_USER_ID     VARCHAR2(50),
+    REG_DT          TIMESTAMP       DEFAULT SYSDATE,
+    MOD_USER_ID     VARCHAR2(50),
+    MOD_DT          TIMESTAMP
+);
+
+CREATE TABLE TB_COM_DTL_CD (
+    GRP_CD          VARCHAR2(30)    NOT NULL,
+    DTL_CD          VARCHAR2(30)    NOT NULL,
+    DTL_NM          VARCHAR2(100)   NOT NULL,
+    DTL_DESC        VARCHAR2(500),
+    SORT_ORD        NUMBER          DEFAULT 1,
+    USE_YN          CHAR(1)         DEFAULT 'Y' NOT NULL,
+    ATTR1           VARCHAR2(100),
+    ATTR2           VARCHAR2(100),
+    ATTR3           VARCHAR2(100),
+    REG_USER_ID     VARCHAR2(50),
+    REG_DT          TIMESTAMP       DEFAULT SYSDATE,
+    MOD_USER_ID     VARCHAR2(50),
+    MOD_DT          TIMESTAMP,
+    CONSTRAINT PK_TB_COM_DTL_CD PRIMARY KEY (GRP_CD, DTL_CD)
+);
+
+CREATE INDEX IDX_MENU_LOG_USER ON TB_COM_MENU_LOG(USER_ID);
+CREATE INDEX IDX_MENU_LOG_DT ON TB_COM_MENU_LOG(CLICK_DT);
+
+-- 1. 역할
+INSERT INTO TB_COM_ROLE (ROLE_ID, ROLE_NM, ROLE_DESC, SORT_ORD, USE_YN, REG_USER_ID)
+VALUES ('ROLE_ADMIN', '시스템관리자', '전체 권한 보유', 1, 'Y', 'SYSTEM');
+
+INSERT INTO TB_COM_ROLE (ROLE_ID, ROLE_NM, ROLE_DESC, SORT_ORD, USE_YN, REG_USER_ID)
+VALUES ('ROLE_USER', '일반사용자', '조회 권한', 2, 'Y', 'SYSTEM');
+
+-- 2. 메뉴 (계층형)
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_HOME_001', NULL, '대시보드', '/dashboard', 1, 1, 'Dashboard', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ORG_000', NULL, '조직관리', NULL, 1, 2, 'Folder', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ORG_001', 'MNU_ORG_000', '회원관리', '/users', 2, 1, 'User', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_BRD_001', NULL, '게시판', '/board', 1, 3, 'Files', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_SYS_001', NULL, '시스템설정', '/settings', 1, 4, 'Setting', '_SELF', 'Y', 'Y', 'admin');
+
+-- 관리자 설정 그룹 (관리자 전용)
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_000', NULL, '관리자 설정', NULL, 1, 5, 'Tools', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_001', 'MNU_ADM_000', '메뉴설정', '/menu-settings', 2, 1, 'Operation', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_002', 'MNU_ADM_000', '권한설정', '/role-settings', 2, 2, 'Key', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_003', 'MNU_ADM_000', '스케줄관리', '/batch-schedule', 2, 3, 'Timer', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_004', 'MNU_ADM_000', '로그조회', '/menu-logs', 2, 4, 'Document', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_005', 'MNU_ADM_000', 'SQL스크립트', '/sql-scripts', 2, 5, 'Tickets', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_006', 'MNU_ADM_000', '로그조회(그리드)', '/menu-logs-grid', 2, 6, 'DataBoard', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_007', 'MNU_ADM_000', '공통코드관리', '/common-codes', 2, 7, 'Collection', '_SELF', 'Y', 'Y', 'admin');
+
+INSERT INTO TB_COM_MENU (MENU_ID, UPPER_MENU_ID, MENU_NM, MENU_URL, MENU_LVL, SORT_ORD, ICON_CLASS, TARGET_TYPE, DISP_YN, USE_YN, REG_USER_ID)
+VALUES ('MNU_ADM_008', 'MNU_ADM_000', '메뉴설정(그리드)', '/menu-settings-grid', 2, 8, 'Grid', '_SELF', 'Y', 'Y', 'admin');
+
+-- 3. 역할별 메뉴 권한 (일반사용자: 조회만 / 관리자: 전체 권한)
+INSERT INTO TB_COM_ROLE_MENU (ROLE_ID, MENU_ID, AUTH_INQ_YN, AUTH_REG_YN, AUTH_MOD_YN, AUTH_DEL_YN, AUTH_EXC_YN, AUTH_PRT_YN, REG_USER_ID)
+SELECT 'ROLE_USER', MENU_ID, 'Y', 'N', 'N', 'N', 'N', 'N', 'admin' FROM TB_COM_MENU;
+
+INSERT INTO TB_COM_ROLE_MENU (ROLE_ID, MENU_ID, AUTH_INQ_YN, AUTH_REG_YN, AUTH_MOD_YN, AUTH_DEL_YN, AUTH_EXC_YN, AUTH_PRT_YN, REG_USER_ID)
+SELECT 'ROLE_ADMIN', MENU_ID, 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'admin' FROM TB_COM_MENU;
+
+COMMIT;
